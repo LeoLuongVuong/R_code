@@ -75,12 +75,12 @@ PTA_01_overall <- unique(PTA_01[c("PTA_Cmin_75", "PTA_Cmin_80", "PTA_fAUC_200", 
 
 # Export PTA_dos_01 dataset for standard dosing
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/CKDEPI_Sim/")
-write.csv(PTA_01_overall, "PTA_dos_01.csv", quote=F, row.names = FALSE)
+write.csv(PTA_01_overall, "PTA_dos_01.csv", quote = F, row.names = FALSE)
 
 #### 1000 LD 400 MD PTA -------------------------------------------
 
 # Load the dataset
-working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/CKDEPI_Sim/'
+working.directory0 <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/CKDEPI_Sim/'
 directory_CKDEPI_02 <- paste0(working.directory, '/sim_CKDEPI_02.1.npctab.dta') 
 CKDEPI_02 <- read_nonmem_table(directory_CKDEPI_02)
 
