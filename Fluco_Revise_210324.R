@@ -35,25 +35,25 @@ View(FlucTotIV_clean)
 
 # When IHD == 1, converts CRRT == 1, otherwise remains
 
-FlucTotIV_clean$CRRT[FlucTotIV_clean$IHD==1] <- 1
+FlucTotIV_clean$CRRT[FlucTotIV_clean$IHD == 1] <- 1
 
 # Convert AMT == 0 back into NA
 
-FlucTotIV_clean$AMT[FlucTotIV_clean$AMT==0] <- NA
+FlucTotIV_clean$AMT[FlucTotIV_clean$AMT == 0] <- NA
 
 # Convert DV == 0 back into NA
 
-FlucTotIV_clean$DV[FlucTotIV_clean$DV==0] <- NA
+FlucTotIV_clean$DV[FlucTotIV_clean$DV == 0] <- NA
 
 # Convert TAD and RATE == 0 back into NA
 
-FlucTotIV_clean$TAD[FlucTotIV_clean$TAD==0] <- NA
+FlucTotIV_clean$TAD[FlucTotIV_clean$TAD == 0] <- NA
 
-FlucTotIV_clean$RATE[FlucTotIV_clean$RATE==0] <- NA
+FlucTotIV_clean$RATE[FlucTotIV_clean$RATE == 0] <- NA
 
 # Export into Fluco_clean_revised
 
-write.csv(FlucTotIV_clean, "Fluco_clean_revised.csv",quote=F,row.names = FALSE)
+write.csv(FlucTotIV_clean, "Fluco_clean_revised.csv",quote = F,row.names = FALSE)
 
 ## Check the availability of APACHE score ---------------------------------
 
@@ -80,12 +80,12 @@ FlucTotIV_clean |>
 
 # Extract data that each ID has only 1 observation
 
-FlucTotIV_clean2<-FlucTotIV_clean[!duplicated(FlucTotIV_clean$ID),]
+FlucTotIV_clean2 <- FlucTotIV_clean[!duplicated(FlucTotIV_clean$ID),]
 
 # Now summarise BW with table1 at a patient level
 
-table1(~ BW|HOSPITAL, data=FlucTotIV_clean2,render.continuous=
-         c(.="Median [Q1-Q3]"))
+table1(~ BW|HOSPITAL, data = FlucTotIV_clean2,render.continuous =
+         c(. = "Median [Q1-Q3]"))
 
 
 # Multiple imputation - 70 models ------------------------------------------
@@ -139,16 +139,16 @@ impute_CREAT_DOS_INT_nocrrt <- FlucTotIV_clean_nocrrt[, c("ID","TIME","RATE","AM
 
 # For crrt dataset
 
-imp0 <- mice(impute_CREAT_DOS_INT_crrt, maxit=0)
+imp0 <- mice(impute_CREAT_DOS_INT_crrt, maxit = 0)
 predmat <- imp0$predictorMatrix
 predmat["CREAT_DOS_INT","ID"] <- -2
 meth <- imp0$method
 meth["CREAT_DOS_INT"] <- "2l.pan"
 maxit <- 20
 nimp <- 70
-imputed_CREAT_DOS_INT_crrt <- mice::mice(data=impute_CREAT_DOS_INT_crrt,
-                                         method=meth,predictorMatrix = predmat,
-                                         maxit=maxit, m=nimp, printFlag = FALSE,
+imputed_CREAT_DOS_INT_crrt <- mice::mice(data = impute_CREAT_DOS_INT_crrt,
+                                         method = meth, predictorMatrix = predmat,
+                                         maxit = maxit, m = nimp, printFlag = FALSE,
                                          seed = 123)
 for (i in 1:70) {
   FlucTotIV_clean_crrt[[paste0("CREAT", sprintf("%02d", i))]] <- (complete(imputed_CREAT_DOS_INT_crrt, action = i))$CREAT_DOS_INT
@@ -156,16 +156,16 @@ for (i in 1:70) {
 
 # For non-crrt dataset
 
-imp0 <- mice(impute_CREAT_DOS_INT_nocrrt, maxit=0)
+imp0 <- mice(impute_CREAT_DOS_INT_nocrrt, maxit = 0)
 predmat <- imp0$predictorMatrix
 predmat["CREAT_DOS_INT", "ID"] <- -2
 meth <- imp0$method
 meth["CREAT_DOS_INT"] <- "2l.pan"
 maxit <- 20
 nimp <- 70
-imputed_CREAT_DOS_INT_nocrrt <- mice::mice(data=impute_CREAT_DOS_INT_nocrrt,
-                                           method=meth,predictorMatrix = predmat,
-                                           maxit=maxit, m=nimp, printFlag = FALSE,
+imputed_CREAT_DOS_INT_nocrrt <- mice::mice(data = impute_CREAT_DOS_INT_nocrrt,
+                                           method = meth,predictorMatrix = predmat,
+                                           maxit = maxit, m = nimp, printFlag = FALSE,
                                            seed = 123)
 for (i in 1:70) {
   FlucTotIV_clean_nocrrt[[paste0("CREAT", sprintf("%02d", i))]] <- (complete(imputed_CREAT_DOS_INT_nocrrt, action = i))$CREAT_DOS_INT
@@ -430,7 +430,7 @@ Fluc_NONMEM_mul_impute$RATE <- ifelse(Fluc_NONMEM_mul_impute$RATE == 0, ".", Flu
 
 # Remove variables that are not needed
 FlucTotIV_clean_imputed <- Fluc_NONMEM_mul_impute[, !names(Fluc_NONMEM_mul_impute) 
-                                                  %in%c("CMT", "APACHE", "RACE", 
+                                                  %in% c("CMT", "APACHE", "RACE", 
                                                         "CL24", "GGT", "AFT", "ALT", 
                                                         "AST", "BILI", "ALB", "SOFA", 
                                                         "IHD", "UF", "ECMO", "OCC3", 
@@ -449,38 +449,38 @@ FlucTotIV_clean_imputed <- Fluc_NONMEM_mul_impute[, !names(Fluc_NONMEM_mul_imput
 # Then, make Fluco_revised_imputed_01 dataset, which is FlucTotIV_clean_imputed
 # removing BW19 to BW70 and CKDEPI19 to CKDEPI70
 
-Fluco_revised_imputed_01 <- FlucTotIV_clean_imputed[, !names(FlucTotIV_clean_imputed) 
-                                                  %in%c(paste0("BW", sprintf("%02d", 19:70)),
+Fluco_revised_imputed_01 <- FlucTotIV_clean_imputed[, !names(FlucTotIV_clean_imputed) %in% 
+                                                   c(paste0("BW", sprintf("%02d", 19:70)),
                                                         paste0("CKDEPI", sprintf("%02d", 19:70)))]
 
 # Next, make Fluco_revised_imputed_02 dataset, which is FlucTotIV_clean_imputed
 # removing BW01 to BW18 and BW37 to BW70; similarly for CKDEPI
 
-Fluco_revised_imputed_02 <- FlucTotIV_clean_imputed[, !names(FlucTotIV_clean_imputed) 
-                                                  %in%c(paste0("BW", sprintf("%02d", c(1:18, 37:70))),
+Fluco_revised_imputed_02 <- FlucTotIV_clean_imputed[, !names(FlucTotIV_clean_imputed) %in%
+                                                   c(paste0("BW", sprintf("%02d", c(1:18, 37:70))),
                                                         paste0("CKDEPI", sprintf("%02d", c(1:18, 37:70))))]
 
 # Next, make Fluco_revised_imputed_03 dataset, which is FlucTotIV_clean_imputed
 # removing BW01 to BW36 and BW55 to BW70; similarly for CKDEPI
 
-Fluco_revised_imputed_03 <- FlucTotIV_clean_imputed[, !names(FlucTotIV_clean_imputed) 
-                                                    %in% c(paste0("BW", sprintf("%02d", c(1:36, 55:70))),
+Fluco_revised_imputed_03 <- FlucTotIV_clean_imputed[, !names(FlucTotIV_clean_imputed) %in% 
+                                                     c(paste0("BW", sprintf("%02d", c(1:36, 55:70))),
                                                           paste0("CKDEPI", sprintf("%02d", c(1:36, 55:70))))]
 
 # Finally, make Fluco_revised_imputed_04 dataset, which is FlucTotIV_clean_imputed
 # removing BW01 to BW54 and CKDEPI01 to CKDEPI54
 
-Fluco_revised_imputed_04 <- FlucTotIV_clean_imputed[, !names(FlucTotIV_clean_imputed) 
-                                                    %in% c(paste0("BW", sprintf("%02d", 01:54)),
+Fluco_revised_imputed_04 <- FlucTotIV_clean_imputed[, !names(FlucTotIV_clean_imputed) %in%
+                                                     c(paste0("BW", sprintf("%02d", 01:54)),
                                                           paste0("CKDEPI", sprintf("%02d", 01:54)))]
 
 # Export the datasets
 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Imputed")
-write.csv(Fluco_revised_imputed_01, "Fluco_revised_imputed_01.csv", quote=F, row.names = FALSE)
-write.csv(Fluco_revised_imputed_02, "Fluco_revised_imputed_02.csv", quote=F, row.names = FALSE)
-write.csv(Fluco_revised_imputed_03, "Fluco_revised_imputed_03.csv", quote=F, row.names = FALSE)
-write.csv(Fluco_revised_imputed_04, "Fluco_revised_imputed_04.csv", quote=F, row.names = FALSE)
+write.csv(Fluco_revised_imputed_01, "Fluco_revised_imputed_01.csv", quote = F, row.names = FALSE)
+write.csv(Fluco_revised_imputed_02, "Fluco_revised_imputed_02.csv", quote = F, row.names = FALSE)
+write.csv(Fluco_revised_imputed_03, "Fluco_revised_imputed_03.csv", quote = F, row.names = FALSE)
+write.csv(Fluco_revised_imputed_04, "Fluco_revised_imputed_04.csv", quote = F, row.names = FALSE)
 
 ### Generate the overall dataset for making GOF plots and VPC -----------------
 
@@ -493,8 +493,8 @@ Fluc_NONMEM_mul_impute$CKDEPI_ave <- rowMeans(Fluc_NONMEM_mul_impute[,paste0("CK
 
 # Then make Fluco_revised_imputed_overall dataset, which should have TAD & HOSPITAL 
 # to make GOF plots
-Fluco_revised_imputed_overall <- Fluc_NONMEM_mul_impute[, !names(Fluc_NONMEM_mul_impute) 
-                                                  %in%c("CMT", "APACHE", "RACE", 
+Fluco_revised_imputed_overall <- Fluc_NONMEM_mul_impute[, !names(Fluc_NONMEM_mul_impute) %in% 
+                                                        c("CMT", "APACHE", "RACE", 
                                                         "CL24", "GGT", "AFT", "ALT", 
                                                         "AST", "BILI", "ALB", "SOFA", 
                                                         "IHD", "UF", "ECMO", "OCC3", 
@@ -515,51 +515,51 @@ Fluco_revised_imputed_overall <- Fluc_NONMEM_mul_impute[, !names(Fluc_NONMEM_mul
 # Export the dataset
 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Imputed")
-write.csv(Fluco_revised_imputed_overall, "Fluco_revised_imputed_overall.csv", quote=F, row.names = FALSE)
+write.csv(Fluco_revised_imputed_overall, "Fluco_revised_imputed_overall.csv", quote = F, row.names = FALSE)
 
 
 ## Pooling model parameters ----------------------------------------------
 
 # Load the dataset
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Pooled_MI")
-Pooling_Parameters_2l.pan<-read.csv("Pooling_Parameters_2l.pan_220324.csv",sep=",")
+Pooling_Parameters_2l.pan <- read.csv("Pooling_Parameters_2l.pan_220324.csv",sep = ",")
 
 # Creating Var (Variance) column 
-Pooling_Parameters_2l.pan$Var<-(Pooling_Parameters_2l.pan$RSE*Pooling_Parameters_2l.pan$Estimates/100)^2
+Pooling_Parameters_2l.pan$Var <- (Pooling_Parameters_2l.pan$RSE*Pooling_Parameters_2l.pan$Estimates/100)^2
 
 ### First of all, CKDEPI -----------------
 
 # Mean estimate
-CKDEPI<-mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "CKDEPI"]) #0.5316571
+CKDEPI <- mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "CKDEPI"]) #0.5316571
 
-W_CKDEPI<-mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "CKDEPI"]) #0.03150853 #within imputation variance
+W_CKDEPI <- mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "CKDEPI"]) #0.03150853 #within imputation variance
 
-B_CKDEPI<-var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "CKDEPI"]) #0.00929304 #between imputation variance
+B_CKDEPI <- var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "CKDEPI"]) #0.00929304 #between imputation variance
 
 CKDEPI
 W_CKDEPI
 B_CKDEPI
 
 # Variance estimate
-m<-70
-T_CKDEPI<-W_CKDEPI+(1+1/m)*B_CKDEPI #0.04093433
+m <- 70
+T_CKDEPI <- W_CKDEPI + (1 + 1/m) * B_CKDEPI #0.04093433
 T_CKDEPI
 
 # Confidence interval - T distribution
-m<-70 #number of imputations
-k<-12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
-n<-177
+m <- 70 #number of imputations
+k <- 12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
+n <- 177
 
-lambda_CKDEPI<-(B_CKDEPI+B_CKDEPI/m)/T_CKDEPI #proportion of variation attributable to the missing data
-r_CKDEPI<-(lambda_CKDEPI)/(1-lambda_CKDEPI) #relative increase in variance due to nonresponse
-v_old_CKDEPI<-(m-1)*(1+1/r_CKDEPI^2) #old degree of freedom
-v_com=n-k #degree of freedom of parameter estimate (CKDEPI) in the hypothetically complete data
-v_obs_CKDEPI=((v_com+1)/(v_com+3))*v_com*(1-lambda_CKDEPI) #observed data degrees of freedom that accounts for the missing information
-v_CKDEPI<-(v_old_CKDEPI*v_obs_CKDEPI)/(v_old_CKDEPI+v_obs_CKDEPI) 
+lambda_CKDEPI <- (B_CKDEPI + B_CKDEPI/m)/T_CKDEPI #proportion of variation attributable to the missing data
+r_CKDEPI <- (lambda_CKDEPI)/(1 - lambda_CKDEPI) #relative increase in variance due to nonresponse
+v_old_CKDEPI <- (m - 1) * (1 + 1/r_CKDEPI^2) #old degree of freedom
+v_com = n - k #degree of freedom of parameter estimate (CKDEPI) in the hypothetically complete data
+v_obs_CKDEPI = ((v_com + 1)/(v_com + 3)) * v_com * (1 - lambda_CKDEPI) #observed data degrees of freedom that accounts for the missing information
+v_CKDEPI <- (v_old_CKDEPI*v_obs_CKDEPI)/(v_old_CKDEPI + v_obs_CKDEPI) 
 t_crit_CKDEPI <- qt(0.975, v_CKDEPI) 
 
-lower_bound_CKDEPI<-CKDEPI-t_crit_CKDEPI*sqrt(T_CKDEPI) #0.1306684
-upper_bound_CKDEPI<-CKDEPI+t_crit_CKDEPI*sqrt(T_CKDEPI) #0.9326459
+lower_bound_CKDEPI <- CKDEPI - t_crit_CKDEPI*sqrt(T_CKDEPI) #0.1306684
+upper_bound_CKDEPI <- CKDEPI + t_crit_CKDEPI*sqrt(T_CKDEPI) #0.9326459
 
 lower_bound_CKDEPI
 upper_bound_CKDEPI
@@ -567,42 +567,42 @@ upper_bound_CKDEPI
 ### Second of all, CLcrrt -----------------
 
 # Mean estimate
-CLcrrt<-mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "CLcrrt"]) #1.561
+CLcrrt <- mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "CLcrrt"]) #1.561
 
-W_CLcrrt<-mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "CLcrrt"]) #0.02459816 #within imputation variance
+W_CLcrrt <- mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "CLcrrt"]) #0.02459816 #within imputation variance
 
-B_CLcrrt<-var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "CLcrrt"]) #2.362319e-05 #between imputation variance
+B_CLcrrt <- var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "CLcrrt"]) #2.362319e-05 #between imputation variance
 
 CLcrrt
 W_CLcrrt
 B_CLcrrt
 
 # Variance estimate
-m<-70
-T_CLcrrt<-W_CLcrrt+(1+1/m)*B_CLcrrt #0.02462213
+m <- 70
+T_CLcrrt <- W_CLcrrt + (1 + 1/m)*B_CLcrrt #0.02462213
 T_CLcrrt
 
 # Confidence interval - T distribution
-m<-70 #number of imputations
-k<-12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
-n<-177
+m <- 70 #number of imputations
+k <- 12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
+n <- 177
 
-lambda_CLcrrt<-(B_CLcrrt+B_CLcrrt/m)/T_CLcrrt #proportion of variation attributable to the missing data
+lambda_CLcrrt <- (B_CLcrrt + B_CLcrrt/m)/T_CLcrrt #proportion of variation attributable to the missing data
 
-r_CLcrrt<-(lambda_CLcrrt)/(1-lambda_CLcrrt) #relative increase in variance due to nonresponse
+r_CLcrrt <- (lambda_CLcrrt)/(1 - lambda_CLcrrt) #relative increase in variance due to nonresponse
 
-v_old_CLcrrt<-(m-1)*(1+1/r_CLcrrt^2) #old degree of freedom
+v_old_CLcrrt <- (m - 1)*(1 + 1/r_CLcrrt^2) #old degree of freedom
 
-v_com=n-k #degree of freedom of parameter estimate (CLcrrt) in the hypothetically complete data
+v_com = n - k #degree of freedom of parameter estimate (CLcrrt) in the hypothetically complete data
 
-v_obs_CLcrrt=((v_com+1)/(v_com+3))*v_com*(1-lambda_CLcrrt) #observed data degrees of freedom that accounts for the missing information
+v_obs_CLcrrt = ((v_com + 1)/(v_com + 3))*v_com*(1 - lambda_CLcrrt) #observed data degrees of freedom that accounts for the missing information
 
-v_CLcrrt<-(v_old_CLcrrt*v_obs_CLcrrt)/(v_old_CLcrrt+v_obs_CLcrrt)
+v_CLcrrt <- (v_old_CLcrrt*v_obs_CLcrrt)/(v_old_CLcrrt + v_obs_CLcrrt)
 
 t_crit_CLcrrt <- qt(0.975, v_CLcrrt) 
 
-lower_bound_CLcrrt<-CLcrrt-t_crit_CLcrrt*sqrt(T_CLcrrt) #1.251151
-upper_bound_CLcrrt<-CLcrrt+t_crit_CLcrrt*sqrt(T_CLcrrt) #1.870849
+lower_bound_CLcrrt <- CLcrrt - t_crit_CLcrrt*sqrt(T_CLcrrt) #1.251151
+upper_bound_CLcrrt <- CLcrrt + t_crit_CLcrrt*sqrt(T_CLcrrt) #1.870849
 
 lower_bound_CLcrrt
 upper_bound_CLcrrt
@@ -610,11 +610,11 @@ upper_bound_CLcrrt
 ### Third of all, CLr -----------------
 
 # Mean estimate
-CLr<-mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "CLr"]) #0.6137429
+CLr <- mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "CLr"]) #0.6137429
 
-W_CLr<-mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "CLr"]) #0.001016242 #within imputation variance
+W_CLr <- mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "CLr"]) #0.001016242 #within imputation variance
 
-B_CLr<-var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "CLr"]) #8.886046e-05
+B_CLr <- var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "CLr"]) #8.886046e-05
 #between imputation variance
 
 CLr
@@ -622,31 +622,31 @@ W_CLr
 B_CLr
 
 # Variance estimate
-m<-70
-T_CLr<-W_CLr+(1+1/m)*B_CLr #0.001106372
+m <- 70
+T_CLr <- W_CLr + (1 + 1/m)*B_CLr #0.001106372
 T_CLr
 
 # Confidence interval - T distribution
-m<-70 #number of imputations
-k<-12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
-n<-177
+m <- 70 #number of imputations
+k <- 12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
+n <- 177
 
-lambda_CLr<-(B_CLr+B_CLr/m)/T_CLr #proportion of variation attributable to the missing data
+lambda_CLr <- (B_CLr + B_CLr/m)/T_CLr #proportion of variation attributable to the missing data
 
-r_CLr<-(lambda_CLr)/(1-lambda_CLr) #relative increase in variance due to nonresponse
+r_CLr <- (lambda_CLr)/(1 - lambda_CLr) #relative increase in variance due to nonresponse
 
-v_old_CLr<-(m-1)*(1+1/r_CLr^2) #old degree of freedom
+v_old_CLr <- (m - 1)*(1 + 1/r_CLr^2) #old degree of freedom
 
-v_com=n-k #degree of freedom of parameter estimate (CLr) in the hypothetically complete data
+v_com = n - k #degree of freedom of parameter estimate (CLr) in the hypothetically complete data
 
-v_obs_CLr=((v_com+1)/(v_com+3))*v_com*(1-lambda_CLr) #observed data degrees of freedom that accounts for the missing information
+v_obs_CLr = ((v_com + 1)/(v_com + 3))*v_com*(1 - lambda_CLr) #observed data degrees of freedom that accounts for the missing information
 
-v_CLr<-(v_old_CLr*v_obs_CLr)/(v_old_CLr+v_obs_CLr)
+v_CLr <- (v_old_CLr*v_obs_CLr)/(v_old_CLr + v_obs_CLr)
 
 t_crit_CLr <- qt(0.975, v_CLr) 
 
-lower_bound_CLr<-CLr-t_crit_CLr*sqrt(T_CLr) #0.54801
-upper_bound_CLr<-CLr+t_crit_CLr*sqrt(T_CLr) #0.6794757
+lower_bound_CLr <- CLr - t_crit_CLr*sqrt(T_CLr) #0.54801
+upper_bound_CLr <- CLr + t_crit_CLr*sqrt(T_CLr) #0.6794757
 
 lower_bound_CLr
 upper_bound_CLr
@@ -654,11 +654,11 @@ upper_bound_CLr
 ### Next, V1 -----------------
 
 # Mean estimate
-V1<-mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "V1"]) #39.39571
+V1 <- mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "V1"]) #39.39571
 
-W_V1<-mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "V1"]) #10.21739 #within imputation variance
+W_V1 <- mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "V1"]) #10.21739 #within imputation variance
 
-B_V1<-var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "V1"]) #0.09345963
+B_V1 <- var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "V1"]) #0.09345963
 #between imputation variance
 
 V1
@@ -666,31 +666,31 @@ W_V1
 B_V1
 
 # Variance estimate
-m<-70
-T_V1<-W_V1+(1+1/m)*B_V1 #10.31219
+m <- 70
+T_V1 <- W_V1 + (1 + 1/m)*B_V1 #10.31219
 T_V1
 
 # Confidence interval - T distribution
-m<-70 #number of imputations
-k<-12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
-n<-177
+m <- 70 #number of imputations
+k <- 12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
+n <- 177
 
-lambda_V1<-(B_V1+B_V1/m)/T_V1 #proportion of variation attributable to the missing data
+lambda_V1 <- (B_V1 + B_V1/m)/T_V1 #proportion of variation attributable to the missing data
 
-r_V1<-(lambda_V1)/(1-lambda_V1) #relative increase in variance due to nonresponse
+r_V1 <- (lambda_V1)/(1 - lambda_V1) #relative increase in variance due to nonresponse
 
-v_old_V1<-(m-1)*(1+1/r_V1^2) #old degree of freedom
+v_old_V1 <- (m - 1)*(1 + 1/r_V1^2) #old degree of freedom
 
-v_com=n-k #degree of freedom of parameter estimate (V1) in the hypothetically complete data
+v_com = n - k #degree of freedom of parameter estimate (V1) in the hypothetically complete data
 
-v_obs_V1=((v_com+1)/(v_com+3))*v_com*(1-lambda_V1) #observed data degrees of freedom that accounts for the missing information
+v_obs_V1 = ((v_com + 1)/(v_com + 3))*v_com*(1 - lambda_V1) #observed data degrees of freedom that accounts for the missing information
 
-v_V1<-(v_old_V1*v_obs_V1)/(v_old_V1+v_obs_V1)
+v_V1 <- (v_old_V1*v_obs_V1)/(v_old_V1 + v_obs_V1)
 
 t_crit_V1 <- qt(0.975, v_V1) 
 
-lower_bound_V1<-V1-t_crit_V1*sqrt(T_V1) #33.05424
-upper_bound_V1<-V1+t_crit_V1*sqrt(T_V1) #45.73719
+lower_bound_V1 <- V1 - t_crit_V1*sqrt(T_V1) #33.05424
+upper_bound_V1 <- V1 + t_crit_V1*sqrt(T_V1) #45.73719
 
 lower_bound_V1
 upper_bound_V1
@@ -698,11 +698,11 @@ upper_bound_V1
 ### After that, Q -----------------
 
 # Mean estimate
-Q<-mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "Q"]) #12.11286
+Q <- mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "Q"]) #12.11286
 
-W_Q<-mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "Q"]) #18.14542 #within imputation variance
+W_Q <- mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "Q"]) #18.14542 #within imputation variance
 
-B_Q<-var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "Q"]) #0.03620911
+B_Q <- var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "Q"]) #0.03620911
 #between imputation variance
 
 Q
@@ -710,31 +710,31 @@ W_Q
 B_Q
 
 # Variance estimate
-m<-70
-T_Q<-W_Q+(1+1/m)*B_Q #18.18215
+m <- 70
+T_Q <- W_Q + (1 + 1/m)*B_Q #18.18215
 T_Q
 
 # Confidence interval - T distribution
-m<-70 #number of imputations
-k<-12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
-n<-177
+m <- 70 #number of imputations
+k <- 12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
+n <- 177
 
-lambda_Q<-(B_Q+B_Q/m)/T_Q #proportion of variation attributable to the missing data
+lambda_Q <- (B_Q + B_Q/m)/T_Q #proportion of variation attributable to the missing data
 
-r_Q<-(lambda_Q)/(1-lambda_Q) #relative increase in variance due to nonresponse
+r_Q <- (lambda_Q)/(1 - lambda_Q) #relative increase in variance due to nonresponse
 
-v_old_Q<-(m-1)*(1+1/r_Q^2) #old degree of freedom
+v_old_Q <- (m - 1)*(1 + 1/r_Q^2) #old degree of freedom
 
-v_com=n-k #degree of freedom of parameter estimate (Q) in the hypothetically complete data
+v_com = n - k #degree of freedom of parameter estimate (Q) in the hypothetically complete data
 
-v_obs_Q=((v_com+1)/(v_com+3))*v_com*(1-lambda_Q) #observed data degrees of freedom that accounts for the missing information
+v_obs_Q = ((v_com + 1)/(v_com + 3))*v_com*(1 - lambda_Q) #observed data degrees of freedom that accounts for the missing information
 
-v_Q<-(v_old_Q*v_obs_Q)/(v_old_Q+v_obs_Q)
+v_Q <- (v_old_Q * v_obs_Q)/(v_old_Q + v_obs_Q)
 
 t_crit_Q <- qt(0.975, v_Q) 
 
-lower_bound_Q<-Q-t_crit_Q*sqrt(T_Q) #3.692838
-upper_bound_Q<-Q+t_crit_Q*sqrt(T_Q) #20.53288
+lower_bound_Q <- Q - t_crit_Q * sqrt(T_Q) #3.692838
+upper_bound_Q <- Q + t_crit_Q * sqrt(T_Q) #20.53288
 
 lower_bound_Q
 upper_bound_Q
@@ -742,11 +742,11 @@ upper_bound_Q
 ### Next, V2 -----------------
 
 # Mean estimate
-V2<-mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "V2"]) #8.465714
+V2 <- mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "V2"]) #8.465714
 
-W_V2<-mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "V2"]) #8.436197 #within imputation variance
+W_V2 <- mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "V2"]) #8.436197 #within imputation variance
 
-B_V2<-var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "V2"]) #0.006737888
+B_V2 <- var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "V2"]) #0.006737888
 #between imputation variance
 
 V2
@@ -754,31 +754,31 @@ W_V2
 B_V2
 
 # Variance estimate
-m<-70
-T_V2<-W_V2+(1+1/m)*B_V2 #8.443031
+m <- 70
+T_V2 <- W_V2 + (1 + 1/m)*B_V2 #8.443031
 T_V2
 
 # Confidence interval - T distribution
-m<-70 #number of imputations
-k<-12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
-n<-177
+m <- 70 #number of imputations
+k <- 12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
+n <- 177
 
-lambda_V2<-(B_V2+B_V2/m)/T_V2 #proportion of variation attributable to the missing data
+lambda_V2 <- (B_V2 + B_V2/m)/T_V2 #proportion of variation attributable to the missing data
 
-r_V2<-(lambda_V2)/(1-lambda_V2) #relative increase in variance due to nonresponse
+r_V2 <- (lambda_V2)/(1 - lambda_V2) #relative increase in variance due to nonresponse
 
-v_old_V2<-(m-1)*(1+1/r_V2^2) #old degree of freedom
+v_old_V2 <- (m - 1)*(1 + 1/r_V2^2) #old degree of freedom
 
-v_com=n-k #degree of freedom of parameter estimate (V2) in the hypothetically complete data
+v_com = n - k #degree of freedom of parameter estimate (V2) in the hypothetically complete data
 
-v_obs_V2=((v_com+1)/(v_com+3))*v_com*(1-lambda_V2) #observed data degrees of freedom that accounts for the missing information
+v_obs_V2 = ((v_com + 1)/(v_com + 3))*v_com*(1 - lambda_V2) #observed data degrees of freedom that accounts for the missing information
 
-v_V2<-(v_old_V2*v_obs_V2)/(v_old_V2+v_obs_V2)
+v_V2 <- (v_old_V2*v_obs_V2)/(v_old_V2 + v_obs_V2)
 
 t_crit_V2 <- qt(0.975, v_V2) 
 
-lower_bound_V2<-V2-t_crit_V2*sqrt(T_V2) #2.728043
-upper_bound_V2<-V2+t_crit_V2*sqrt(T_V2) #14.20339
+lower_bound_V2 <- V2 - t_crit_V2*sqrt(T_V2) #2.728043
+upper_bound_V2 <- V2 + t_crit_V2*sqrt(T_V2) #14.20339
 
 lower_bound_V2
 upper_bound_V2
@@ -786,11 +786,11 @@ upper_bound_V2
 ### Next, BW -----------------
 
 # Mean estimate
-BW<-mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "BW"]) #0.9076
+BW <- mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "BW"]) #0.9076
 
-W_BW<-mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "BW"]) #0.04289933 #within imputation variance
+W_BW <- mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "BW"]) #0.04289933 #within imputation variance
 
-B_BW<-var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "BW"]) #0.0001656638
+B_BW <- var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "BW"]) #0.0001656638
 #between imputation variance
 
 BW
@@ -798,31 +798,31 @@ W_BW
 B_BW
 
 # Variance estimate
-m<-70
-T_BW<-W_BW+(1+1/m)*B_BW #0.04306736
+m <- 70
+T_BW <- W_BW + (1 + 1/m)*B_BW #0.04306736
 T_BW
 
 # Confidence interval - T distribution
-m<-70 #number of imputations
-k<-12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
-n<-177
+m <- 70 #number of imputations
+k <- 12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
+n <- 177
 
-lambda_BW<-(B_BW+B_BW/m)/T_BW #proportion of variation attributable to the missing data
+lambda_BW <- (B_BW + B_BW/m)/T_BW #proportion of variation attributable to the missing data
 
-r_BW<-(lambda_BW)/(1-lambda_BW) #relative increase in variance due to nonresponse
+r_BW <- (lambda_BW)/(1 - lambda_BW) #relative increase in variance due to nonresponse
 
-v_old_BW<-(m-1)*(1+1/r_BW^2) #old degree of freedom
+v_old_BW <- (m - 1)*(1 + 1/r_BW^2) #old degree of freedom
 
-v_com=n-k #degree of freedom of parameter estimate (BW) in the hypothetically complete data
+v_com = n - k #degree of freedom of parameter estimate (BW) in the hypothetically complete data
 
-v_obs_BW=((v_com+1)/(v_com+3))*v_com*(1-lambda_BW) #observed data degrees of freedom that accounts for the missing information
+v_obs_BW = ((v_com + 1)/(v_com + 3))*v_com*(1 - lambda_BW) #observed data degrees of freedom that accounts for the missing information
 
-v_BW<-(v_old_BW*v_obs_BW)/(v_old_BW+v_obs_BW)
+v_BW <- (v_old_BW * v_obs_BW)/(v_old_BW + v_obs_BW)
 
 t_crit_BW <- qt(0.975, v_BW) 
 
-lower_bound_BW<-BW-t_crit_BW*sqrt(T_BW) #0.4978011
-upper_bound_BW<-BW+t_crit_BW*sqrt(T_BW) #1.317399
+lower_bound_BW <- BW - t_crit_BW*sqrt(T_BW) #0.4978011
+upper_bound_BW <- BW + t_crit_BW*sqrt(T_BW) #1.317399
 
 lower_bound_BW
 upper_bound_BW
@@ -838,11 +838,11 @@ Pooling_Parameters_2l.pan <- Pooling_Parameters_2l.pan |>
   mutate(RSE = ifelse(Parameters == "Cov_CLr_V1", (RSE/Estimates)*100, RSE))
 
 # Mean estimate
-Cov_CLr_V1<-mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "Cov_CLr_V1"]) #0.06732857
+Cov_CLr_V1 <- mean(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "Cov_CLr_V1"]) #0.06732857
 
-W_Cov_CLr_V1<-mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "Cov_CLr_V1"]) #0.001466198 #within imputation variance
+W_Cov_CLr_V1 <- mean(Pooling_Parameters_2l.pan$Var[Pooling_Parameters_2l.pan$Parameters == "Cov_CLr_V1"]) #0.001466198 #within imputation variance
 
-B_Cov_CLr_V1<-var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "Cov_CLr_V1"]) #1.70554e-05
+B_Cov_CLr_V1 <- var(Pooling_Parameters_2l.pan$Estimates[Pooling_Parameters_2l.pan$Parameters == "Cov_CLr_V1"]) #1.70554e-05
 #between imputation variance
 
 Cov_CLr_V1
@@ -850,31 +850,31 @@ W_Cov_CLr_V1
 B_Cov_CLr_V1
 
 # Variance estimate
-m<-70
-T_Cov_CLr_V1<-W_Cov_CLr_V1+(1+1/m)*B_Cov_CLr_V1 #0.001483497
+m <- 70
+T_Cov_CLr_V1 <- W_Cov_CLr_V1 + (1 + 1/m)*B_Cov_CLr_V1 #0.001483497
 T_Cov_CLr_V1
 
 # Confidence interval - T distribution
-m<-70 #number of imputations
-k<-12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
-n<-177
+m <- 70 #number of imputations
+k <- 12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
+n <- 177
 
-lambda_Cov_CLr_V1<-(B_Cov_CLr_V1+B_Cov_CLr_V1/m)/T_Cov_CLr_V1 #proportion of variation attributable to the missing data
+lambda_Cov_CLr_V1 <- (B_Cov_CLr_V1 + B_Cov_CLr_V1/m)/T_Cov_CLr_V1 #proportion of variation attributable to the missing data
 
-r_Cov_CLr_V1<-(lambda_Cov_CLr_V1)/(1-lambda_Cov_CLr_V1) #relative increase in variance due to nonresponse
+r_Cov_CLr_V1 <- (lambda_Cov_CLr_V1)/(1 - lambda_Cov_CLr_V1) #relative increase in variance due to nonresponse
 
-v_old_Cov_CLr_V1<-(m-1)*(1+1/r_Cov_CLr_V1^2) #old degree of freedom
+v_old_Cov_CLr_V1 <- (m - 1)*(1 + 1/r_Cov_CLr_V1^2) #old degree of freedom
 
-v_com=n-k #degree of freedom of parameter estimate (Cov_CLr_V1) in the hypothetically complete data
+v_com = n - k #degree of freedom of parameter estimate (Cov_CLr_V1) in the hypothetically complete data
 
-v_obs_Cov_CLr_V1=((v_com+1)/(v_com+3))*v_com*(1-lambda_Cov_CLr_V1) #observed data degrees of freedom that accounts for the missing information
+v_obs_Cov_CLr_V1 = ((v_com + 1)/(v_com + 3))*v_com*(1 - lambda_Cov_CLr_V1) #observed data degrees of freedom that accounts for the missing information
 
-v_Cov_CLr_V1<-(v_old_Cov_CLr_V1*v_obs_Cov_CLr_V1)/(v_old_Cov_CLr_V1+v_obs_Cov_CLr_V1)
+v_Cov_CLr_V1 <- (v_old_Cov_CLr_V1*v_obs_Cov_CLr_V1)/(v_old_Cov_CLr_V1 + v_obs_Cov_CLr_V1)
 
 t_crit_Cov_CLr_V1 <- qt(0.975, v_Cov_CLr_V1) 
 
-lower_bound_Cov_CLr_V1<-Cov_CLr_V1-t_crit_Cov_CLr_V1*sqrt(T_Cov_CLr_V1) #-0.008733233
-upper_bound_Cov_CLr_V1<-Cov_CLr_V1+t_crit_Cov_CLr_V1*sqrt(T_Cov_CLr_V1) #0.1433904
+lower_bound_Cov_CLr_V1 <- Cov_CLr_V1 - t_crit_Cov_CLr_V1*sqrt(T_Cov_CLr_V1) #-0.008733233
+upper_bound_Cov_CLr_V1 <- Cov_CLr_V1 + t_crit_Cov_CLr_V1*sqrt(T_Cov_CLr_V1) #0.1433904
 
 lower_bound_Cov_CLr_V1
 upper_bound_Cov_CLr_V1
@@ -882,61 +882,61 @@ upper_bound_Cov_CLr_V1
 ### Do transformation for log terms -----------------
 
 # create a log-transformed Log column
-Pooling_Parameters_2l.pan$Log<-log(Pooling_Parameters_2l.pan$Estimates)
+Pooling_Parameters_2l.pan$Log <- log(Pooling_Parameters_2l.pan$Estimates)
 
 # Variance of the log-transformed variable
-Pooling_Parameters_2l.pan$Var_Log<-(1/(Pooling_Parameters_2l.pan$Estimates))^2*Pooling_Parameters_2l.pan$Var 
+Pooling_Parameters_2l.pan$Var_Log <- (1/(Pooling_Parameters_2l.pan$Estimates))^2*Pooling_Parameters_2l.pan$Var 
 #Var(log(x))=[1/(mean(x))]^2*var(x) (log(x) in R is actually ln(x))
 
 ### IIV_CLcrrt -----------------
 
 # Mean estimate
-IIV_CLcrrt_log<-mean(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "IIV_CLcrrt"]) #-1.264295
+IIV_CLcrrt_log <- mean(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "IIV_CLcrrt"]) #-1.264295
 
-W_IIV_CLcrrt_log<-mean(Pooling_Parameters_2l.pan$Var_Log[Pooling_Parameters_2l.pan$Parameters == "IIV_CLcrrt"]) #0.1782487 #within imputation variance
+W_IIV_CLcrrt_log <- mean(Pooling_Parameters_2l.pan$Var_Log[Pooling_Parameters_2l.pan$Parameters == "IIV_CLcrrt"]) #0.1782487 #within imputation variance
 
-B_IIV_CLcrrt_log<-var(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "IIV_CLcrrt"]) #0.0001359124 #between imputation variance
+B_IIV_CLcrrt_log <- var(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "IIV_CLcrrt"]) #0.0001359124 #between imputation variance
 
 IIV_CLcrrt_log
 W_IIV_CLcrrt_log
 B_IIV_CLcrrt_log
 
 # Variance estimate
-m<-70
-T_IIV_CLcrrt_log<-W_IIV_CLcrrt_log+(1+1/m)*B_IIV_CLcrrt_log #0.1783865
+m <- 70
+T_IIV_CLcrrt_log <- W_IIV_CLcrrt_log + (1 + 1/m)*B_IIV_CLcrrt_log #0.1783865
 T_IIV_CLcrrt_log
 
 # Confidence interval - T distribution
-m<-70 #number of imputations
-k<-12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
-n<-177
+m <- 70 #number of imputations
+k <- 12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
+n <- 177
 
-lambda_IIV_CLcrrt_log<-(B_IIV_CLcrrt_log+B_IIV_CLcrrt_log/m)/T_IIV_CLcrrt_log #proportion of variation attributable to the missing data
+lambda_IIV_CLcrrt_log <- (B_IIV_CLcrrt_log + B_IIV_CLcrrt_log/m)/T_IIV_CLcrrt_log #proportion of variation attributable to the missing data
+ 
+r_IIV_CLcrrt_log <- (lambda_IIV_CLcrrt_log)/(1 - lambda_IIV_CLcrrt_log) #relative increase in variance due to nonresponse
 
-r_IIV_CLcrrt_log<-(lambda_IIV_CLcrrt_log)/(1-lambda_IIV_CLcrrt_log) #relative increase in variance due to nonresponse
+v_old_IIV_CLcrrt_log <- (m - 1)*(1 + 1/r_IIV_CLcrrt_log^2) #old degree of freedom
 
-v_old_IIV_CLcrrt_log<-(m-1)*(1+1/r_IIV_CLcrrt_log^2) #old degree of freedom
+v_com = n - k #degree of freedom of parameter estimate (IIV_CLcrrt_log) in the hypothetically complete data
 
-v_com=n-k #degree of freedom of parameter estimate (IIV_CLcrrt_log) in the hypothetically complete data
+v_obs_IIV_CLcrrt_log = ((v_com + 1)/(v_com + 3))*v_com*(1 - lambda_IIV_CLcrrt_log) #observed data degrees of freedom that accounts for the missing information
 
-v_obs_IIV_CLcrrt_log=((v_com+1)/(v_com+3))*v_com*(1-lambda_IIV_CLcrrt_log) #observed data degrees of freedom that accounts for the missing information
-
-v_IIV_CLcrrt_log<-(v_old_IIV_CLcrrt_log*v_obs_IIV_CLcrrt_log)/(v_old_IIV_CLcrrt_log+v_obs_IIV_CLcrrt_log)
+v_IIV_CLcrrt_log <- (v_old_IIV_CLcrrt_log*v_obs_IIV_CLcrrt_log)/(v_old_IIV_CLcrrt_log + v_obs_IIV_CLcrrt_log)
 
 t_crit_IIV_CLcrrt_log <- qt(0.975, v_IIV_CLcrrt_log) 
 
-lower_bound_IIV_CLcrrt_log<-IIV_CLcrrt_log-t_crit_IIV_CLcrrt_log*sqrt(T_IIV_CLcrrt_log) #-2.098298
-upper_bound_IIV_CLcrrt_log<-IIV_CLcrrt_log+t_crit_IIV_CLcrrt_log*sqrt(T_IIV_CLcrrt_log) #-0.4302929
+lower_bound_IIV_CLcrrt_log <- IIV_CLcrrt_log - t_crit_IIV_CLcrrt_log*sqrt(T_IIV_CLcrrt_log) #-2.098298
+upper_bound_IIV_CLcrrt_log <- IIV_CLcrrt_log + t_crit_IIV_CLcrrt_log*sqrt(T_IIV_CLcrrt_log) #-0.4302929
 
 lower_bound_IIV_CLcrrt_log
 upper_bound_IIV_CLcrrt_log
 
 # back transform IIV_CLcrrt_log to IIV_CLcrrt
-IIV_CLcrrt<-exp(IIV_CLcrrt_log) #0.2824382
+IIV_CLcrrt <- exp(IIV_CLcrrt_log) #0.2824382
 
-lower_bound_IIV_CLcrrt<-exp(lower_bound_IIV_CLcrrt_log) #0.122665
+lower_bound_IIV_CLcrrt <- exp(lower_bound_IIV_CLcrrt_log) #0.122665
 
-upper_bound_IIV_CLcrrt<-exp(upper_bound_IIV_CLcrrt_log) #0.6503186
+upper_bound_IIV_CLcrrt <- exp(upper_bound_IIV_CLcrrt_log) #0.6503186
 
 IIV_CLcrrt
 
@@ -947,52 +947,52 @@ upper_bound_IIV_CLcrrt
 ### IIV_CLr -----------------
 
 # Mean estimate
-IIV_CLr_log<-mean(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "IIV_CLr"]) #-1.526628
+IIV_CLr_log <- mean(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "IIV_CLr"]) #-1.526628
 
-W_IIV_CLr_log<-mean(Pooling_Parameters_2l.pan$Var_Log[Pooling_Parameters_2l.pan$Parameters == "IIV_CLr"]) #0.04087116 #within imputation variance
+W_IIV_CLr_log <- mean(Pooling_Parameters_2l.pan$Var_Log[Pooling_Parameters_2l.pan$Parameters == "IIV_CLr"]) #0.04087116 #within imputation variance
 
-B_IIV_CLr_log<-var(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "IIV_CLr"]) #0.001377065 #between imputation variance
+B_IIV_CLr_log <- var(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "IIV_CLr"]) #0.001377065 #between imputation variance
 
 IIV_CLr_log
 W_IIV_CLr_log
 B_IIV_CLr_log
 
 # Variance estimate
-m<-70
-T_IIV_CLr_log<-W_IIV_CLr_log+(1+1/m)*B_IIV_CLr_log #0.04226789
+m <- 70
+T_IIV_CLr_log <- W_IIV_CLr_log + (1 + 1/m)*B_IIV_CLr_log #0.04226789
 T_IIV_CLr_log
 
 # Confidence interval - T distribution
-m<-70 #number of imputations
-k<-12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
-n<-177
+m <- 70 #number of imputations
+k <- 12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
+n <- 177
 
-lambda_IIV_CLr_log<-(B_IIV_CLr_log+B_IIV_CLr_log/m)/T_IIV_CLr_log #proportion of variation attributable to the missing data
+lambda_IIV_CLr_log <- (B_IIV_CLr_log + B_IIV_CLr_log/m)/T_IIV_CLr_log #proportion of variation attributable to the missing data
 
-r_IIV_CLr_log<-(lambda_IIV_CLr_log)/(1-lambda_IIV_CLr_log) #relative increase in variance due to nonresponse
+r_IIV_CLr_log <- (lambda_IIV_CLr_log)/(1 - lambda_IIV_CLr_log) #relative increase in variance due to nonresponse
 
-v_old_IIV_CLr_log<-(m-1)*(1+1/r_IIV_CLr_log^2) #old degree of freedom
+v_old_IIV_CLr_log <- (m - 1)*(1 + 1/r_IIV_CLr_log^2) #old degree of freedom
 
-v_com=n-k #degree of freedom of parameter estimate (IIV_CLr_log) in the hypothetically complete data
+v_com = n - k #degree of freedom of parameter estimate (IIV_CLr_log) in the hypothetically complete data
 
-v_obs_IIV_CLr_log=((v_com+1)/(v_com+3))*v_com*(1-lambda_IIV_CLr_log) #observed data degrees of freedom that accounts for the missing information
+v_obs_IIV_CLr_log = ((v_com + 1)/(v_com + 3))*v_com*(1 - lambda_IIV_CLr_log) #observed data degrees of freedom that accounts for the missing information
 
-v_IIV_CLr_log<-(v_old_IIV_CLr_log*v_obs_IIV_CLr_log)/(v_old_IIV_CLr_log+v_obs_IIV_CLr_log)
+v_IIV_CLr_log <- (v_old_IIV_CLr_log*v_obs_IIV_CLr_log)/(v_old_IIV_CLr_log + v_obs_IIV_CLr_log)
 
 t_crit_IIV_CLr_log <- qt(0.975, v_IIV_CLr_log) 
 
-lower_bound_IIV_CLr_log<-IIV_CLr_log-t_crit_IIV_CLr_log*sqrt(T_IIV_CLr_log) #-1.932705
-upper_bound_IIV_CLr_log<-IIV_CLr_log+t_crit_IIV_CLr_log*sqrt(T_IIV_CLr_log) #-1.12055
+lower_bound_IIV_CLr_log <- IIV_CLr_log - t_crit_IIV_CLr_log*sqrt(T_IIV_CLr_log) #-1.932705
+upper_bound_IIV_CLr_log <- IIV_CLr_log + t_crit_IIV_CLr_log*sqrt(T_IIV_CLr_log) #-1.12055
 
 lower_bound_IIV_CLr_log
 upper_bound_IIV_CLr_log
 
 # back transform IIV_CLr_log to IIV_CLr
-IIV_CLr<-exp(IIV_CLr_log) #0.2172671
+IIV_CLr <- exp(IIV_CLr_log) #0.2172671
 
-lower_bound_IIV_CLr<-exp(lower_bound_IIV_CLr_log) #0.1447561
+lower_bound_IIV_CLr <- exp(lower_bound_IIV_CLr_log) #0.1447561
 
-upper_bound_IIV_CLr<-exp(upper_bound_IIV_CLr_log) #0.3261004
+upper_bound_IIV_CLr <- exp(upper_bound_IIV_CLr_log) #0.3261004
 
 IIV_CLr
 
@@ -1003,52 +1003,52 @@ upper_bound_IIV_CLr
 ### IIV_V1 -----------------
 
 # Mean estimate
-IIV_V1_log<-mean(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "IIV_V1"]) #-1.164145
+IIV_V1_log <- mean(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "IIV_V1"]) #-1.164145
 
-W_IIV_V1_log<-mean(Pooling_Parameters_2l.pan$Var_Log[Pooling_Parameters_2l.pan$Parameters == "IIV_V1"]) #0.04341324 #within imputation variance
+W_IIV_V1_log <- mean(Pooling_Parameters_2l.pan$Var_Log[Pooling_Parameters_2l.pan$Parameters == "IIV_V1"]) #0.04341324 #within imputation variance
 
-B_IIV_V1_log<-var(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "IIV_V1"]) #0.000160931 #between imputation variance
+B_IIV_V1_log <- var(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "IIV_V1"]) #0.000160931 #between imputation variance
 
 IIV_V1_log
 W_IIV_V1_log
 B_IIV_V1_log
 
 # Variance estimate
-m<-70
-T_IIV_V1_log<-W_IIV_V1_log+(1+1/m)*B_IIV_V1_log #0.04357647
+m <- 70
+T_IIV_V1_log <- W_IIV_V1_log + (1 + 1/m)*B_IIV_V1_log #0.04357647
 T_IIV_V1_log
 
 # Confidence interval - T distribution
-m<-70 #number of imputations
-k<-12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
-n<-177
+m <- 70 #number of imputations
+k <- 12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
+n <- 177
 
-lambda_IIV_V1_log<-(B_IIV_V1_log+B_IIV_V1_log/m)/T_IIV_V1_log #proportion of variation attributable to the missing data
+lambda_IIV_V1_log <- (B_IIV_V1_log + B_IIV_V1_log/m)/T_IIV_V1_log #proportion of variation attributable to the missing data
 
-r_IIV_V1_log<-(lambda_IIV_V1_log)/(1-lambda_IIV_V1_log) #relative increase in variance due to nonresponse
+r_IIV_V1_log <- (lambda_IIV_V1_log)/(1 - lambda_IIV_V1_log) #relative increase in variance due to nonresponse
 
-v_old_IIV_V1_log<-(m-1)*(1+1/r_IIV_V1_log^2) #old degree of freedom
+v_old_IIV_V1_log <- (m - 1)*(1 + 1/r_IIV_V1_log^2) #old degree of freedom
 
-v_com=n-k #degree of freedom of parameter estimate (IIV_V1_log) in the hypothetically complete data
+v_com = n - k #degree of freedom of parameter estimate (IIV_V1_log) in the hypothetically complete data
 
-v_obs_IIV_V1_log=((v_com+1)/(v_com+3))*v_com*(1-lambda_IIV_V1_log) #observed data degrees of freedom that accounts for the missing information
+v_obs_IIV_V1_log = ((v_com + 1)/(v_com + 3))*v_com*(1 - lambda_IIV_V1_log) #observed data degrees of freedom that accounts for the missing information
 
-v_IIV_V1_log<-(v_old_IIV_V1_log*v_obs_IIV_V1_log)/(v_old_IIV_V1_log+v_obs_IIV_V1_log)
+v_IIV_V1_log <- (v_old_IIV_V1_log*v_obs_IIV_V1_log)/(v_old_IIV_V1_log + v_obs_IIV_V1_log)
 
 t_crit_IIV_V1_log <- qt(0.975, v_IIV_V1_log) 
 
-lower_bound_IIV_V1_log<-IIV_V1_log-t_crit_IIV_V1_log*sqrt(T_IIV_V1_log) #-1.576358
-upper_bound_IIV_V1_log<-IIV_V1_log+t_crit_IIV_V1_log*sqrt(T_IIV_V1_log) #-0.7519313
+lower_bound_IIV_V1_log <- IIV_V1_log - t_crit_IIV_V1_log*sqrt(T_IIV_V1_log) #-1.576358
+upper_bound_IIV_V1_log <- IIV_V1_log + t_crit_IIV_V1_log*sqrt(T_IIV_V1_log) #-0.7519313
 
 lower_bound_IIV_V1_log
 upper_bound_IIV_V1_log
 
 # back transform IIV_CLr_log to IIV_CLr
-IIV_V1<-exp(IIV_V1_log) #0.3121895
+IIV_V1 <- exp(IIV_V1_log) #0.3121895
 
-lower_bound_IIV_V1<-exp(lower_bound_IIV_V1_log) #0.2067266
+lower_bound_IIV_V1 <- exp(lower_bound_IIV_V1_log) #0.2067266
 
-upper_bound_IIV_V1<-exp(upper_bound_IIV_V1_log) #0.4714551
+upper_bound_IIV_V1 <- exp(upper_bound_IIV_V1_log) #0.4714551
 
 IIV_V1
 
@@ -1059,11 +1059,11 @@ upper_bound_IIV_V1
 ### PropErr -----------------
 
 # Mean estimate
-PropErr_log<-mean(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "PropErr"]) #-3.588325
+PropErr_log <- mean(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "PropErr"]) #-3.588325
 
-W_PropErr_log<-mean(Pooling_Parameters_2l.pan$Var_Log[Pooling_Parameters_2l.pan$Parameters == "PropErr"]) #0.01817211 #within imputation variance
+W_PropErr_log <- mean(Pooling_Parameters_2l.pan$Var_Log[Pooling_Parameters_2l.pan$Parameters == "PropErr"]) #0.01817211 #within imputation variance
 
-B_PropErr_log<-var(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "PropErr"]) #8.316011e-05
+B_PropErr_log <- var(Pooling_Parameters_2l.pan$Log[Pooling_Parameters_2l.pan$Parameters == "PropErr"]) #8.316011e-05
 #between imputation variance
 
 PropErr_log
@@ -1071,41 +1071,41 @@ W_PropErr_log
 B_PropErr_log
 
 # Variance estimate
-m<-70
-T_PropErr_log<-W_PropErr_log+(1+1/m)*B_PropErr_log #0.01825646
+m <- 70
+T_PropErr_log <- W_PropErr_log + (1 + 1/m)*B_PropErr_log #0.01825646
 T_PropErr_log
 
 # Confidence interval - T distribution
-m<-70 #number of imputations
-k<-12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
-n<-177
+m <- 70 #number of imputations
+k <- 12 #my model has 12 parameters (including 6 fixed effects parameters and 6 random effect parameters where covariance is one of them)
+n <- 177
 
-lambda_PropErr_log<-(B_PropErr_log+B_PropErr_log/m)/T_PropErr_log #proportion of variation attributable to the missing data
+lambda_PropErr_log <- (B_PropErr_log + B_PropErr_log/m)/T_PropErr_log #proportion of variation attributable to the missing data
 
-r_PropErr_log<-(lambda_PropErr_log)/(1-lambda_PropErr_log) #relative increase in variance due to nonresponse
+r_PropErr_log <- (lambda_PropErr_log)/(1 - lambda_PropErr_log) #relative increase in variance due to nonresponse
 
-v_old_PropErr_log<-(m-1)*(1+1/r_PropErr_log^2) #old degree of freedom
+v_old_PropErr_log <- (m - 1)*(1 + 1/r_PropErr_log^2) #old degree of freedom
 
-v_com=n-k #degree of freedom of parameter estimate (PropErr_log) in the hypothetically complete data
+v_com = n - k #degree of freedom of parameter estimate (PropErr_log) in the hypothetically complete data
 
-v_obs_PropErr_log=((v_com+1)/(v_com+3))*v_com*(1-lambda_PropErr_log) #observed data degrees of freedom that accounts for the missing information
+v_obs_PropErr_log = ((v_com + 1 )/(v_com + 3))*v_com*(1 - lambda_PropErr_log) #observed data degrees of freedom that accounts for the missing information
 
-v_PropErr_log<-(v_old_PropErr_log*v_obs_PropErr_log)/(v_old_PropErr_log+v_obs_PropErr_log)
+v_PropErr_log <- (v_old_PropErr_log*v_obs_PropErr_log)/(v_old_PropErr_log + v_obs_PropErr_log)
 
 t_crit_PropErr_log <- qt(0.975, v_PropErr_log) 
 
-lower_bound_PropErr_log<-PropErr_log-t_crit_PropErr_log*sqrt(T_PropErr_log) #-3.855139
-upper_bound_PropErr_log<-PropErr_log+t_crit_PropErr_log*sqrt(T_PropErr_log) #-3.321512
+lower_bound_PropErr_log <- PropErr_log - t_crit_PropErr_log*sqrt(T_PropErr_log) #-3.855139
+upper_bound_PropErr_log <- PropErr_log + t_crit_PropErr_log*sqrt(T_PropErr_log) #-3.321512
 
 lower_bound_PropErr_log
 upper_bound_PropErr_log
 
 # back transform IIV_CLr_log to IIV_CLr
-PropErr<-exp(PropErr_log) #0.02764459
+PropErr <- exp(PropErr_log) #0.02764459
 
-lower_bound_PropErr<-exp(lower_bound_PropErr_log) #0.02117067
+lower_bound_PropErr <- exp(lower_bound_PropErr_log) #0.02117067
 
-upper_bound_PropErr<-exp(upper_bound_PropErr_log) #0.03609821
+upper_bound_PropErr <- exp(upper_bound_PropErr_log) #0.03609821
 
 PropErr
 
@@ -1125,33 +1125,33 @@ RSE_CV_Cov_CLr_V1 <- 0.0454/0.111/2*100
 
 # Mean (95% CI) for CV term of IIV_CLcrrt
 
-sqrt(exp(IIV_CLcrrt)-1)*100 # 57.12791
-sqrt(exp(lower_bound_IIV_CLcrrt)-1)*100 # 36.12557
-sqrt(exp(upper_bound_IIV_CLcrrt)-1)*100 # 95.71579
+sqrt(exp(IIV_CLcrrt) - 1)*100 # 57.12791
+sqrt(exp(lower_bound_IIV_CLcrrt) - 1)*100 # 36.12557
+sqrt(exp(upper_bound_IIV_CLcrrt) - 1)*100 # 95.71579
 
 # Mean (95% CI) for CV term of IIV_CLr
 
-sqrt(exp(IIV_CLr)-1)*100 # 49.26216
-sqrt(exp(lower_bound_IIV_CLr)-1)*100 # 39.46614
-sqrt(exp(upper_bound_IIV_CLr)-1)*100 # 62.09303
+sqrt(exp(IIV_CLr) - 1)*100 # 49.26216
+sqrt(exp(lower_bound_IIV_CLr) - 1)*100 # 39.46614
+sqrt(exp(upper_bound_IIV_CLr) - 1)*100 # 62.09303
 
 # Mean (95% CI) for CV term of IIV_V1
 
-sqrt(exp(IIV_V1)-1)*100 # 60.53211
-sqrt(exp(lower_bound_IIV_V1)-1)*100 # 47.92143
-sqrt(exp(upper_bound_IIV_V1)-1)*100 # 77.60954
+sqrt(exp(IIV_V1) - 1)*100 # 60.53211
+sqrt(exp(lower_bound_IIV_V1) - 1)*100 # 47.92143
+sqrt(exp(upper_bound_IIV_V1) - 1)*100 # 77.60954
 
 # Mean (95% CI) for CV term of Cov_CLr_V1
 
-sqrt(exp(Cov_CLr_V1)-1)*100 # 26.39069
-sqrt(exp(-lower_bound_Cov_CLr_V1)-1)*100 # 9.365618
-sqrt(exp(upper_bound_Cov_CLr_V1)-1)*100 # 39.2658
+sqrt(exp(Cov_CLr_V1) - 1)*100 # 26.39069
+sqrt(exp(-lower_bound_Cov_CLr_V1) - 1)*100 # 9.365618
+sqrt(exp(upper_bound_Cov_CLr_V1) - 1)*100 # 39.2658
 
 # Mean (95% CI) for CV term of PropErr
 
-sqrt(exp(PropErr)-1)*100 # 16.74223
-sqrt(exp(lower_bound_PropErr)-1)*100 # 14.62749
-sqrt(exp(upper_bound_PropErr)-1)*100 # 19.17229
+sqrt(exp(PropErr) - 1)*100 # 16.74223
+sqrt(exp(lower_bound_PropErr) - 1)*100 # 14.62749
+sqrt(exp(upper_bound_PropErr) - 1)*100 # 19.17229
 
 # Dose-finding simulations ------------------------------------------
 
@@ -1165,7 +1165,7 @@ sim_dosing_01 <- read.csv("dosing_08.csv")
 
 # Eliminate all rows with PEAK == 1
 sim_dosing_01 <- sim_dosing_01 |>  
-                  dplyr::filter(PEAK==0)
+                  dplyr::filter(PEAK == 0)
 
 # Eliminate PEAK column
 sim_dosing_01$PEAK <- NULL
@@ -1194,7 +1194,7 @@ sim_dosing_01 <- sim_dosing_01 |>
   rename(ID_CKDEPI = ID)
 
 # Replicate each ID_CKDEPI 100 times
-sim_dosing_01<-sim_dosing_01 |> 
+sim_dosing_01 <- sim_dosing_01 |> 
   group_by(ID_CKDEPI) |> 
   slice(rep(1:n(), each = 100)) |> 
   ungroup()
@@ -1246,14 +1246,14 @@ sim_dosing_01 <- sim_dosing_01 |>
   left_join(new_dataset, by = "ID")
 
 # Rename BW
-sim_dosing_01$BW.x<-NULL
+sim_dosing_01$BW.x <- NULL
 sim_dosing_01 <- sim_dosing_01 |> 
   rename(BW = BW.y)
 
 # Eliminate ID_CKDEPI, change the name of the dataset
-sim_CKDEPI_01<-sim_dosing_01 |> 
+sim_CKDEPI_01 <- sim_dosing_01 |> 
   select(ID_CKDEPI, ID, everything())
-sim_CKDEPI_01$ID_CKDEPI<-NULL
+sim_CKDEPI_01$ID_CKDEPI <- NULL
 
 # Sort sim_CKDEPI_01 according to ID
 sim_CKDEPI_01 <- sim_CKDEPI_01 |> 
@@ -1266,56 +1266,56 @@ sim_CKDEPI_01_min <- sim_CKDEPI_01 |>
 ### Standard dosing regimen ------------------------------------------
 
 # Change the dosing follows standard regimen 800 LD & 400 MD
-sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME==0,800,ifelse(sim_CKDEPI_01_min$TAD==0,400,0))
+sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME == 0,800,ifelse(sim_CKDEPI_01_min$TAD == 0,400,0))
 
 # Then export into sim_CKDEPI_01.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Sim")
-write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_01.csv",quote=F,row.names = FALSE)
+write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_01.csv",quote = F,row.names = FALSE)
 
 ### 1000 mg LD & 400 mg MD ------------------------------------------
 
 # Change the dosing regimen
-sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME==0, 1000, ifelse(sim_CKDEPI_01_min$TAD==0, 400, 0))
+sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME == 0, 1000, ifelse(sim_CKDEPI_01_min$TAD == 0, 400, 0))
 
 # Then export into sim_CKDEPI_02.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Sim")
-write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_02.csv", quote=F, row.names = FALSE)
+write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_02.csv", quote = F, row.names = FALSE)
 
 ### 1200 mg LD & 400 mg MD ------------------------------------------
 
 # Change the dosing regimen
-sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME==0, 1200, ifelse(sim_CKDEPI_01_min$TAD==0, 400, 0))
+sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME == 0, 1200, ifelse(sim_CKDEPI_01_min$TAD == 0, 400, 0))
 
 # Then export into sim_CKDEPI_03.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Sim")
-write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_03.csv", quote=F, row.names = FALSE)
+write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_03.csv", quote = F, row.names = FALSE)
 
 ### 12 mg/kg LD & 6 mg/kg MD ------------------------------------------
 
 # Change the dosing regimen
-sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME==0, 12 * sim_CKDEPI_01_min$BW, ifelse(sim_CKDEPI_01_min$TAD==0, 6 * sim_CKDEPI_01_min$BW, 0))
+sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME == 0, 12 * sim_CKDEPI_01_min$BW, ifelse(sim_CKDEPI_01_min$TAD == 0, 6 * sim_CKDEPI_01_min$BW, 0))
 
 # Then export into sim_CKDEPI_04.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Sim")
-write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_04.csv", quote=F, row.names = FALSE)
+write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_04.csv", quote = F, row.names = FALSE)
 
 ### 1200 mg LD & 600 mg MD ------------------------------------------
 
 # Change the dosing regimen
-sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME==0, 1200, ifelse(sim_CKDEPI_01_min$TAD==0, 600, 0))
+sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME == 0, 1200, ifelse(sim_CKDEPI_01_min$TAD == 0, 600, 0))
 
 # Then export into sim_CKDEPI_05.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Sim")
-write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_05.csv", quote=F, row.names = FALSE)
+write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_05.csv", quote = F, row.names = FALSE)
 
 ### 800 mg LD & 200 mg MD ------------------------------------------
 
 # Change the dosing regimen
-sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME==0, 800, ifelse(sim_CKDEPI_01_min$TAD==0, 200, 0))
+sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME == 0, 800, ifelse(sim_CKDEPI_01_min$TAD == 0, 200, 0))
 
 # Then export into sim_CKDEPI_06.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Sim")
-write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_06.csv", quote=F, row.names = FALSE)
+write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_06.csv", quote = F, row.names = FALSE)
 
 
 ## Secondly, the effect of BW on non-CRRT events --------------------------
@@ -1327,7 +1327,7 @@ setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_proje
 sim_dosing_01 <- read.csv("dosing_08.csv")
 
 # Eliminate all rows with PEAK == 1
-sim_dosing_01 <- sim_dosing_01 %>% dplyr::filter(PEAK==0)
+sim_dosing_01 <- sim_dosing_01 %>% dplyr::filter(PEAK == 0)
 
 # Eliminate PEAK column
 sim_dosing_01$PEAK <- NULL
@@ -1343,7 +1343,7 @@ sim_dosing_01 <- sim_dosing_01 %>%
   rename(ID_BW = ID)
 
 # Replicate each ID_CKDEPI 100 times
-sim_dosing_01<-sim_dosing_01 %>%
+sim_dosing_01 <- sim_dosing_01 %>%
   group_by(ID_BW) %>%
   slice(rep(1:n(), each = 100)) %>%
   ungroup()
@@ -1358,7 +1358,7 @@ sim_dosing_01 <- sim_dosing_01 %>%
 ##  Assign a unique CKDEPI per each ID
 
 # Step 1: Get unique, non-missing values of CKDEPI from FlucTotIV_clean with CRRT = 0
-unique_CKDEPI <- FlucTotIV_clean %>% dplyr::filter (CRRT==0) %>%
+unique_CKDEPI <- FlucTotIV_clean %>% dplyr::filter(CRRT == 0) %>%
   dplyr::filter(!is.na(CKDEPI)) %>%
   pull(CKDEPI)
 
@@ -1409,74 +1409,74 @@ sim_BW_01_min <- sim_BW_01 %>%
 ### Standard dosing regimen ------------------------------------------
 
 # Change the dosing follows standard regimen 800 LD & 400 MD
-sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME==0,800,ifelse(sim_BW_01_min$TAD==0,400,0))
+sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0,800,ifelse(sim_BW_01_min$TAD == 0,400,0))
 
 # Then export into sim_BW_noCRRT_01.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_01.csv",quote=F,row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_01.csv",quote = F,row.names = FALSE)
 
 ### 1000 mg LD & 400 mg MD ------------------------------------------
 
 # Change the dosing regimen
-sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME==0, 1000, ifelse(sim_BW_01_min$TAD==0, 400, 0))
+sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0, 1000, ifelse(sim_BW_01_min$TAD == 0, 400, 0))
 
 # Then export into sim_BW_noCRRT_02.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_02.csv", quote=F, row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_02.csv", quote = F, row.names = FALSE)
 
 ### 1200 mg LD & 400 mg MD ------------------------------------------
 
 # Change the dosing regimen
-sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME==0, 1200, ifelse(sim_BW_01_min$TAD==0, 400, 0))
+sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0, 1200, ifelse(sim_BW_01_min$TAD == 0, 400, 0))
 
 # Then export into sim_BW_noCRRT_03.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_03.csv", quote=F, row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_03.csv", quote = F, row.names = FALSE)
 
 ### 1400 mg LD & 400 mg MD ------------------------------------------
 
 # Change the dosing regimen
-sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME==0, 1400, ifelse(sim_BW_01_min$TAD==0, 400, 0))
+sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0, 1400, ifelse(sim_BW_01_min$TAD == 0, 400, 0))
 
 # Then export into sim_BW_noCRRT_04.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_04.csv", quote=F, row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_04.csv", quote = F, row.names = FALSE)
 
 ### 1600 mg LD & 400 mg MD ------------------------------------------
 
 # Change the dosing regimen
-sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME==0, 1600, ifelse(sim_BW_01_min$TAD==0, 400, 0))
+sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0, 1600, ifelse(sim_BW_01_min$TAD == 0, 400, 0))
 
 # Then export into sim_BW_noCRRT_05.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_05.csv", quote=F, row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_05.csv", quote = F, row.names = FALSE)
 
 ### 1800 mg LD & 400 mg MD ------------------------------------------
 
 # Change the dosing regimen
-sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME==0, 1800, ifelse(sim_BW_01_min$TAD==0, 400, 0))
+sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0, 1800, ifelse(sim_BW_01_min$TAD == 0, 400, 0))
 
 # Then export into sim_BW_noCRRT_06.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_06.csv", quote=F, row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_06.csv", quote = F, row.names = FALSE)
 
 ### 12 mg/kg LD & 6 mg/kg MD ------------------------------------------
 
 # Change the dosing regimen
-sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME==0, 12 * sim_BW_01_min$BW, ifelse(sim_BW_01_min$TAD==0, 6 * sim_BW_01_min$BW, 0))
+sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0, 12 * sim_BW_01_min$BW, ifelse(sim_BW_01_min$TAD == 0, 6 * sim_BW_01_min$BW, 0))
 
 # Then export into sim_BW_noCRRT_07.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_07.csv", quote=F, row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_07.csv", quote = F, row.names = FALSE)
 
 ### 800 mg LD & 200 mg MD ------------------------------------------
 
 # Change the dosing regimen
-sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME==0, 800, ifelse(sim_BW_01_min$TAD==0, 200, 0))
+sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0, 800, ifelse(sim_BW_01_min$TAD == 0, 200, 0))
 
 # Then export into sim_BW_noCRRT_08.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_08.csv", quote=F, row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_08.csv", quote = F, row.names = FALSE)
 
 ## Third, the effect of BW on CRRT events --------------------------
 
@@ -1487,10 +1487,10 @@ setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_proje
 sim_dosing_01 <- read.csv("dosing_08.csv")
 
 # Eliminate all rows with PEAK == 1
-sim_dosing_01 <- sim_dosing_01 %>% dplyr::filter(PEAK==0)
+sim_dosing_01 <- sim_dosing_01 %>% dplyr::filter(PEAK == 0)
 
 # Eliminate PEAK column
-sim_dosing_01$PEAK<-NULL
+sim_dosing_01$PEAK <- NULL
 
 # BW CRRT sim dataset
 sim_BW_CRRT_01 <- sim_dosing_01 %>%
@@ -1505,7 +1505,7 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 800, ifelse(sim_BW_CRRT_0
 
 # Then export into sim_BW_CRRT_01.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_01.csv", quote=F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_01.csv", quote = F, row.names = FALSE)
 
 ### 1000 mg LD & 800 mg MD ------------------------------------------
 
@@ -1514,7 +1514,7 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 1000, ifelse(sim_BW_CRRT_
 
 # Then export into sim_BW_CRRT_02.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_02.csv", quote=F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_02.csv", quote = F, row.names = FALSE)
 
 ### 1200 mg LD & 800 mg MD ------------------------------------------
 
@@ -1523,7 +1523,7 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 1200, ifelse(sim_BW_CRRT_
 
 # Then export into sim_BW_CRRT_03.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_03.csv", quote=F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_03.csv", quote = F, row.names = FALSE)
 
 ### 1400 mg LD & 800 mg MD ------------------------------------------
 
@@ -1532,7 +1532,7 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 1400, ifelse(sim_BW_CRRT_
 
 # Then export into sim_BW_CRRT_04.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_04.csv", quote=F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_04.csv", quote = F, row.names = FALSE)
 
 ### 1600 mg LD & 800 mg MD ------------------------------------------
 
@@ -1541,7 +1541,7 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 1600, ifelse(sim_BW_CRRT_
 
 # Then export into sim_BW_CRRT_03.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_05.csv", quote=F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_05.csv", quote = F, row.names = FALSE)
 
 ### 1800 mg LD & 800 mg MD ------------------------------------------
 
@@ -1550,7 +1550,7 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 1800, ifelse(sim_BW_CRRT_
 
 # Then export into sim_BW_CRRT_03.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_06.csv", quote=F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_06.csv", quote = F, row.names = FALSE)
 
 ### 12 mg/kg LD & 6 mg/kg MD ------------------------------------------
 
@@ -1559,7 +1559,7 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 12 * sim_BW_CRRT_01$BW, i
 
 # Then export into sim_BW_CRRT_04.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_07.csv", quote=F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_07.csv", quote = F, row.names = FALSE)
 
 ### 800 mg LD & 600 mg MD ------------------------------------------
 
@@ -1568,5 +1568,5 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 800, ifelse(sim_BW_CRRT_0
 
 # Then export into sim_BW_CRRT_03.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_08.csv", quote=F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_08.csv", quote = F, row.names = FALSE)
 
