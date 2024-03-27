@@ -24,7 +24,8 @@ library(vpc) #for making vpcs
 library(PsNR) #for making vpcs
 library(ggtext) #create latex axis labels - does not work
 library(latex2exp) #to create latex label
-library(table1) #create descriptive statistic table1
+library(table1) # create descriptive statistic table1
+library(ggpubr) # for ggarrange function 
 
 
 # Analyzing simulation datasets -------------------------------------------
@@ -47,12 +48,12 @@ CKDEPI_dos_01 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
 CKDEPI_dos_01$ID <- as.integer(CKDEPI_dos_01$ID)
 
 # Create a new variable AUC24 for each ID
-CKDEPI_dos_01 <- CKDEPI_dos_01 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+CKDEPI_dos_01 <- CKDEPI_dos_01 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-CKDEPI_dos_01<- CKDEPI_dos_01 %>% 
+CKDEPI_dos_01 <- CKDEPI_dos_01 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -91,12 +92,12 @@ CKDEPI_dos_02 <- CKDEPI_02[CKDEPI_02$TROUGH == 1,]
 CKDEPI_dos_02$ID <- as.integer(CKDEPI_dos_02$ID)
 
 # Create a new variable AUC24 for each ID
-CKDEPI_dos_02 <- CKDEPI_dos_02 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+CKDEPI_dos_02 <- CKDEPI_dos_02 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-CKDEPI_dos_02<- CKDEPI_dos_02 %>% 
+CKDEPI_dos_02 <- CKDEPI_dos_02 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -135,12 +136,12 @@ CKDEPI_dos_03 <- CKDEPI_03[CKDEPI_03$TROUGH == 1,]
 CKDEPI_dos_03$ID <- as.integer(CKDEPI_dos_03$ID)
 
 # Create a new variable AUC24 for each ID
-CKDEPI_dos_03 <- CKDEPI_dos_03 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+CKDEPI_dos_03 <- CKDEPI_dos_03 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-CKDEPI_dos_03<- CKDEPI_dos_03 %>% 
+CKDEPI_dos_03 <- CKDEPI_dos_03 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2, AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -179,12 +180,12 @@ CKDEPI_dos_04 <- CKDEPI_04[CKDEPI_04$TROUGH == 1,]
 CKDEPI_dos_04$ID <- as.integer(CKDEPI_dos_04$ID)
 
 # Create a new variable AUC24 for each ID
-CKDEPI_dos_04 <- CKDEPI_dos_04 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+CKDEPI_dos_04 <- CKDEPI_dos_04 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-CKDEPI_dos_04 <- CKDEPI_dos_04 %>% 
+CKDEPI_dos_04 <- CKDEPI_dos_04 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2, AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -223,12 +224,12 @@ CKDEPI_dos_05 <- CKDEPI_05[CKDEPI_05$TROUGH == 1,]
 CKDEPI_dos_05$ID <- as.integer(CKDEPI_dos_05$ID)
 
 # Create a new variable AUC24 for each ID
-CKDEPI_dos_05 <- CKDEPI_dos_05 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+CKDEPI_dos_05 <- CKDEPI_dos_05 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-CKDEPI_dos_05<- CKDEPI_dos_05 %>% 
+CKDEPI_dos_05 <- CKDEPI_dos_05 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2, AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -251,7 +252,7 @@ PTA_05_overall <- unique(PTA_05[c("PTA_Cmin_75", "PTA_Cmin_80", "PTA_fAUC_200", 
 
 # Export PTA_dos_05 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/CKDEPI_Sim/")
-write.csv(PTA_05_overall, "PTA_dos_05.csv", quote=F, row.names = FALSE)
+write.csv(PTA_05_overall, "PTA_dos_05.csv", quote = F, row.names = FALSE)
 
 #### 800 LD 200 MD PTA -------------------------------------------
 
@@ -267,12 +268,12 @@ CKDEPI_dos_06 <- CKDEPI_06[CKDEPI_06$TROUGH == 1,]
 CKDEPI_dos_06$ID <- as.integer(CKDEPI_dos_06$ID)
 
 # Create a new variable AUC24 for each ID
-CKDEPI_dos_06 <- CKDEPI_dos_06 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+CKDEPI_dos_06 <- CKDEPI_dos_06 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-CKDEPI_dos_06 <- CKDEPI_dos_06 %>% 
+CKDEPI_dos_06 <- CKDEPI_dos_06 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2, AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -295,7 +296,188 @@ PTA_06_overall <- unique(PTA_06[c("PTA_Cmin_75", "PTA_Cmin_80", "PTA_fAUC_200", 
 
 # Export PTA_dos_06 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/CKDEPI_Sim/")
-write.csv(PTA_06_overall, "PTA_dos_06.csv", quote=F, row.names = FALSE)
+write.csv(PTA_06_overall, "PTA_dos_06.csv", quote = F, row.names = FALSE)
+
+### Making PTA plots -------------------------------------------
+
+#### Some preps -------------------------------------------
+
+# Import PTA_dos_ datasets
+setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/CKDEPI_Sim/")
+PTA_dos_01 <- read.csv("PTA_dos_01.csv")
+PTA_dos_02 <- read.csv("PTA_dos_02.csv")
+PTA_dos_03 <- read.csv("PTA_dos_03.csv")
+PTA_dos_04 <- read.csv("PTA_dos_04.csv")
+PTA_dos_05 <- read.csv("PTA_dos_05.csv")
+PTA_dos_06 <- read.csv("PTA_dos_06.csv")
+
+# Add regimens
+PTA_dos_01$Regimen <- 1
+PTA_dos_02$Regimen <- 2
+PTA_dos_03$Regimen <- 3
+PTA_dos_04$Regimen <- 4
+PTA_dos_05$Regimen <- 5
+PTA_dos_06$Regimen <- 6
+
+# Combine 6 PTA datasets into 1 - PTA_CKDEPI
+PTA_CKDEPI <- rbind(PTA_dos_01, PTA_dos_02, PTA_dos_03, 
+                    PTA_dos_04, PTA_dos_05, PTA_dos_06)
+
+# Define the labels and colors
+dosing_labels_day12 <- c("800 mg q24h LD",
+                        "1000 mg q24h LD",
+                        "1200 mg q24h LD",
+                        "12 mg/kg q24h LD")
+# Regimens 6, 2, 5, 4, respectively
+
+dosing_labels_day714 <- c("200 mg q24h MD", 
+                         "400 mg q24h MD", 
+                         "600 mg q24h MD",
+                         "6 mg/kg q24h MD")
+# Regimens 6, 2, 5, 4, respectively
+
+dosing_colors_day12714 <- c("#5ec962",
+                           "#21918c",
+                           "#3b528b",
+                           "#440154")
+
+# Reorder the levels of the dosing regimens
+PTA_CKDEPI$Regimen <- factor(PTA_CKDEPI$Regimen,
+                             levels = c(6, 2, 5, 4, 3, 1))
+
+#### Day 1 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_CKDEPI200_DAY1 <-  ggplot(PTA_CKDEPI[PTA_CKDEPI$DAY == 1 & PTA_CKDEPI$Regimen %in% c(6, 2, 5, 4), ], 
+                              aes(x = CKDEPI, 
+                                  y = PTA_fAUC_200, 
+                                  group = factor(Regimen), 
+                                  color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(5, 215), breaks = seq(5, 215, by = 10), expand = c(0,0)) +
+  xlab(TeX(r"($\eGFR_{CKD-EPI}\ (ml/min/1.73m^2)$)")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 1") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7),
+        axis.text = element_text(size = 7),
+        legend.title = element_text(size = 6),
+        legend.text = element_text(size = 6),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day12714, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day12) +
+  geom_hline(yintercept = 90, linetype = "dashed", color = "gray50", size = 0.6) 
+PTA_CKDEPI200_DAY1
+
+#### Day 14 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_CKDEPI200_DAY14 <-  ggplot(PTA_CKDEPI[PTA_CKDEPI$DAY == 14 & PTA_CKDEPI$Regimen %in% c(6, 2, 5, 4), ], 
+                              aes(x = CKDEPI, 
+                                  y = PTA_fAUC_200, 
+                                  group = factor(Regimen), 
+                                  color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(5, 215), breaks = seq(5, 215, by = 10), expand = c(0,0)) +
+  xlab(TeX(r"($\eGFR_{CKD-EPI}\ (ml/min/1.73m^2)$)")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 14") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7),
+        axis.text = element_text(size = 7),
+        legend.title = element_text(size = 6),
+        legend.text = element_text(size = 6),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day12714, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day714) +
+  geom_hline(yintercept = 90, linetype = "dashed", color = "gray50", size = 0.6) 
+PTA_CKDEPI200_DAY14
+
+#### Day 2 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_CKDEPI200_DAY2 <-  ggplot(PTA_CKDEPI[PTA_CKDEPI$DAY == 2 & PTA_CKDEPI$Regimen %in% c(6, 2, 5, 4), ], 
+                              aes(x = CKDEPI, 
+                                  y = PTA_fAUC_200, 
+                                  group = factor(Regimen), 
+                                  color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(5, 215), breaks = seq(5, 215, by = 10), expand = c(0,0)) +
+  xlab(TeX(r"($\eGFR_{CKD-EPI}\ (ml/min/1.73m^2)$)")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 2") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7),
+        axis.text = element_text(size = 7),
+        legend.title = element_text(size = 6),
+        legend.text = element_text(size = 6),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day12714, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day12) +
+  geom_hline(yintercept = 90, linetype = "dashed", color = "gray50", size = 0.6) 
+PTA_CKDEPI200_DAY2
+
+#### Day 7 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_CKDEPI200_DAY7 <-  ggplot(PTA_CKDEPI[PTA_CKDEPI$DAY == 7 & PTA_CKDEPI$Regimen %in% c(6, 2, 5, 4), ], 
+                               aes(x = CKDEPI, 
+                                   y = PTA_fAUC_200, 
+                                   group = factor(Regimen), 
+                                   color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(5, 215), breaks = seq(5, 215, by = 10), expand = c(0,0)) +
+  xlab(TeX(r"($\eGFR_{CKD-EPI}\ (ml/min/1.73m^2)$)")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 7") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7),
+        axis.text = element_text(size = 7),
+        legend.title = element_text(size = 6),
+        legend.text = element_text(size = 6),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day12714, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day714) +
+  geom_hline(yintercept = 90, linetype = "dashed", color = "gray50", size = 0.6) 
+PTA_CKDEPI200_DAY7
+
+#### Combining these 4 plots into 1 -------------------------------------------
+
+ggarrange(PTA_CKDEPI200_DAY1, PTA_CKDEPI200_DAY2, PTA_CKDEPI200_DAY7, PTA_CKDEPI200_DAY14,
+          labels = c("a", "b", "c", "d"),
+          ncol = 2, nrow = 2,
+          font.label = list(size = 8, face = "bold"))
+
+# Arrange the title and grid using plot_grid()
+grid_BW_noCRRT <- plot_grid(title, grid_BW_noCRRT, ncol = 1, rel_heights = c(0.02, 1))
+
+# Export the combined plots
+setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Bootstrap and dosing simulation/2l.method/2l.pan/BW_Sim/PTA plots")
+ggsave("grid_BW_noCRRT.png", grid_BW_noCRRT, dpi = 300, width = 16, height = 8.27)
 
 ## Secondly, BW non-CRRT effect -------------------------------------------
 
@@ -304,7 +486,7 @@ write.csv(PTA_06_overall, "PTA_dos_06.csv", quote=F, row.names = FALSE)
 #### Standard dosing PTA -------------------------------------------
 
 # Use read_nonmem_table function to import data
-working.directory <-'/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
 directory_BW_noCRRT_01 <- paste0(working.directory, '/sim_BW_noCRRT_01.1.npctab.dta') 
 BW_noCRRT_01 <- read_nonmem_table(directory_BW_noCRRT_01)
 
@@ -312,15 +494,15 @@ BW_noCRRT_01 <- read_nonmem_table(directory_BW_noCRRT_01)
 BW_noCRRT_dos_01 <- BW_noCRRT_01[BW_noCRRT_01$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_noCRRT_dos_01$ID <-as.integer(BW_noCRRT_dos_01$ID)
+BW_noCRRT_dos_01$ID <- as.integer(BW_noCRRT_dos_01$ID)
 
 # Create a new variable AUC24 for each ID
-BW_noCRRT_dos_01 <- BW_noCRRT_dos_01 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_noCRRT_dos_01 <- BW_noCRRT_dos_01 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_noCRRT_dos_01 <- BW_noCRRT_dos_01 %>% 
+BW_noCRRT_dos_01 <- BW_noCRRT_dos_01 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -346,16 +528,16 @@ PTA_noCRRT_01_overall <- unique(PTA_noCRRT_01[c("PTA_Cmin_75","PTA_Cmin_80", "PT
 
 # Export PTA_noCRRT_dos_01 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(PTA_noCRRT_01_overall, "PTA_noCRRT_dos_01.csv", quote=F, row.names = FALSE)
+write.csv(PTA_noCRRT_01_overall, "PTA_noCRRT_dos_01.csv", quote = F, row.names = FALSE)
 
 # Export BW_noCRRT_dos_01.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(BW_noCRRT_dos_01, "BW_noCRRT_dos_01.csv", quote=F, row.names = FALSE)
+write.csv(BW_noCRRT_dos_01, "BW_noCRRT_dos_01.csv", quote = F, row.names = FALSE)
 
 #### 1000 LD 400 MD PTA -------------------------------------------
 
 # Use read_nonmem_table function to import data
-working.directory <-'/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
 directory_BW_noCRRT_02 <- paste0(working.directory, '/sim_BW_noCRRT_02.1.npctab.dta') 
 BW_noCRRT_02 <- read_nonmem_table(directory_BW_noCRRT_02)
 
@@ -363,15 +545,15 @@ BW_noCRRT_02 <- read_nonmem_table(directory_BW_noCRRT_02)
 BW_noCRRT_dos_02 <- BW_noCRRT_02[BW_noCRRT_02$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_noCRRT_dos_02$ID <-as.integer(BW_noCRRT_dos_02$ID)
+BW_noCRRT_dos_02$ID <- as.integer(BW_noCRRT_dos_02$ID)
 
 # Create a new variable AUC24 for each ID
-BW_noCRRT_dos_02 <- BW_noCRRT_dos_02 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_noCRRT_dos_02 <- BW_noCRRT_dos_02 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_noCRRT_dos_02 <- BW_noCRRT_dos_02 %>% 
+BW_noCRRT_dos_02 <- BW_noCRRT_dos_02 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -397,16 +579,16 @@ PTA_noCRRT_02_overall <- unique(PTA_noCRRT_02[c("PTA_Cmin_75","PTA_Cmin_80", "PT
 
 # Export PTA_noCRRT_dos_02 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(PTA_noCRRT_02_overall, "PTA_noCRRT_dos_02.csv", quote=F, row.names = FALSE)
+write.csv(PTA_noCRRT_02_overall, "PTA_noCRRT_dos_02.csv", quote = F, row.names = FALSE)
 
 # Export BW_noCRRT_dos_02.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(BW_noCRRT_dos_02, "BW_noCRRT_dos_02.csv", quote=F, row.names = FALSE)
+write.csv(BW_noCRRT_dos_02, "BW_noCRRT_dos_02.csv", quote = F, row.names = FALSE)
 
 #### 1200 LD 400 MD PTA -------------------------------------------
 
 # Use read_nonmem_table function to import data
-working.directory <-'/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
 directory_BW_noCRRT_03 <- paste0(working.directory, '/sim_BW_noCRRT_03.1.npctab.dta') 
 BW_noCRRT_03 <- read_nonmem_table(directory_BW_noCRRT_03)
 
@@ -414,15 +596,15 @@ BW_noCRRT_03 <- read_nonmem_table(directory_BW_noCRRT_03)
 BW_noCRRT_dos_03 <- BW_noCRRT_03[BW_noCRRT_03$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_noCRRT_dos_03$ID <-as.integer(BW_noCRRT_dos_03$ID)
+BW_noCRRT_dos_03$ID <- as.integer(BW_noCRRT_dos_03$ID)
 
 # Create a new variable AUC24 for each ID
-BW_noCRRT_dos_03 <- BW_noCRRT_dos_03 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_noCRRT_dos_03 <- BW_noCRRT_dos_03 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_noCRRT_dos_03 <- BW_noCRRT_dos_03 %>% 
+BW_noCRRT_dos_03 <- BW_noCRRT_dos_03 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -448,16 +630,16 @@ PTA_noCRRT_03_overall <- unique(PTA_noCRRT_03[c("PTA_Cmin_75","PTA_Cmin_80", "PT
 
 # Export PTA_noCRRT_dos_03 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(PTA_noCRRT_03_overall, "PTA_noCRRT_dos_03.csv", quote=F, row.names = FALSE)
+write.csv(PTA_noCRRT_03_overall, "PTA_noCRRT_dos_03.csv", quote = F, row.names = FALSE)
 
 # Export BW_noCRRT_dos_03.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(BW_noCRRT_dos_03, "BW_noCRRT_dos_03.csv", quote=F, row.names = FALSE)
+write.csv(BW_noCRRT_dos_03, "BW_noCRRT_dos_03.csv", quote = F, row.names = FALSE)
 
 #### 1400 LD 400 MD PTA -------------------------------------------
 
 # Use read_nonmem_table function to import data
-working.directory <-'/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
 directory_BW_noCRRT_04 <- paste0(working.directory, '/sim_BW_noCRRT_04.1.npctab.dta') 
 BW_noCRRT_04 <- read_nonmem_table(directory_BW_noCRRT_04)
 
@@ -465,15 +647,15 @@ BW_noCRRT_04 <- read_nonmem_table(directory_BW_noCRRT_04)
 BW_noCRRT_dos_04 <- BW_noCRRT_04[BW_noCRRT_04$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_noCRRT_dos_04$ID <-as.integer(BW_noCRRT_dos_04$ID)
+BW_noCRRT_dos_04$ID <- as.integer(BW_noCRRT_dos_04$ID)
 
 # Create a new variable AUC24 for each ID
-BW_noCRRT_dos_04 <- BW_noCRRT_dos_04 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_noCRRT_dos_04 <- BW_noCRRT_dos_04 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_noCRRT_dos_04 <- BW_noCRRT_dos_04 %>% 
+BW_noCRRT_dos_04 <- BW_noCRRT_dos_04 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -516,15 +698,15 @@ BW_noCRRT_05 <- read_nonmem_table(directory_BW_noCRRT_05)
 BW_noCRRT_dos_05 <- BW_noCRRT_05[BW_noCRRT_05$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_noCRRT_dos_05$ID <-as.integer(BW_noCRRT_dos_05$ID)
+BW_noCRRT_dos_05$ID <- as.integer(BW_noCRRT_dos_05$ID)
 
 # Create a new variable AUC24 for each ID
-BW_noCRRT_dos_05 <- BW_noCRRT_dos_05 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_noCRRT_dos_05 <- BW_noCRRT_dos_05 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_noCRRT_dos_05 <- BW_noCRRT_dos_05 %>% 
+BW_noCRRT_dos_05 <- BW_noCRRT_dos_05 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -567,15 +749,15 @@ BW_noCRRT_06 <- read_nonmem_table(directory_BW_noCRRT_06)
 BW_noCRRT_dos_06 <- BW_noCRRT_06[BW_noCRRT_06$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_noCRRT_dos_06$ID <-as.integer(BW_noCRRT_dos_06$ID)
-
+BW_noCRRT_dos_06$ID <- as.integer(BW_noCRRT_dos_06$ID)
+ 
 # Create a new variable AUC24 for each ID
-BW_noCRRT_dos_06 <- BW_noCRRT_dos_06 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_noCRRT_dos_06 <- BW_noCRRT_dos_06 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_noCRRT_dos_06 <- BW_noCRRT_dos_06 %>% 
+BW_noCRRT_dos_06 <- BW_noCRRT_dos_06 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -618,15 +800,15 @@ BW_noCRRT_07 <- read_nonmem_table(directory_BW_noCRRT_07)
 BW_noCRRT_dos_07 <- BW_noCRRT_07[BW_noCRRT_07$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_noCRRT_dos_07$ID <-as.integer(BW_noCRRT_dos_07$ID)
+BW_noCRRT_dos_07$ID <- as.integer(BW_noCRRT_dos_07$ID)
 
 # Create a new variable AUC24 for each ID
-BW_noCRRT_dos_07 <- BW_noCRRT_dos_07 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_noCRRT_dos_07 <- BW_noCRRT_dos_07 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_noCRRT_dos_07 <- BW_noCRRT_dos_07 %>% 
+BW_noCRRT_dos_07 <- BW_noCRRT_dos_07 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -672,12 +854,12 @@ BW_noCRRT_dos_08 <- BW_noCRRT_08[BW_noCRRT_08$TROUGH == 1,]
 BW_noCRRT_dos_08$ID <-as.integer(BW_noCRRT_dos_08$ID)
 
 # Create a new variable AUC24 for each ID
-BW_noCRRT_dos_08 <- BW_noCRRT_dos_08 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_noCRRT_dos_08 <- BW_noCRRT_dos_08 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_noCRRT_dos_08 <- BW_noCRRT_dos_08 %>% 
+BW_noCRRT_dos_08 <- BW_noCRRT_dos_08 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -724,15 +906,15 @@ BW_CRRT_01 <- read_nonmem_table(directory_BW_CRRT_01)
 BW_CRRT_dos_01 <- BW_CRRT_01[BW_CRRT_01$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_CRRT_dos_01$ID <-as.integer(BW_CRRT_dos_01$ID)
+BW_CRRT_dos_01$ID <- as.integer(BW_CRRT_dos_01$ID)
 
 # Create a new variable AUC24 for each ID
-BW_CRRT_dos_01 <- BW_CRRT_dos_01 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_CRRT_dos_01 <- BW_CRRT_dos_01 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_CRRT_dos_01 <- BW_CRRT_dos_01 %>% 
+BW_CRRT_dos_01 <- BW_CRRT_dos_01 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -775,15 +957,15 @@ BW_CRRT_02 <- read_nonmem_table(directory_BW_CRRT_02)
 BW_CRRT_dos_02 <- BW_CRRT_02[BW_CRRT_02$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_CRRT_dos_02$ID <-as.integer(BW_CRRT_dos_02$ID)
+BW_CRRT_dos_02$ID <- as.integer(BW_CRRT_dos_02$ID)
 
 # Create a new variable AUC24 for each ID
-BW_CRRT_dos_02 <- BW_CRRT_dos_02 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_CRRT_dos_02 <- BW_CRRT_dos_02 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_CRRT_dos_02 <- BW_CRRT_dos_02 %>% 
+BW_CRRT_dos_02 <- BW_CRRT_dos_02 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -826,15 +1008,15 @@ BW_CRRT_03 <- read_nonmem_table(directory_BW_CRRT_03)
 BW_CRRT_dos_03 <- BW_CRRT_03[BW_CRRT_03$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_CRRT_dos_03$ID <-as.integer(BW_CRRT_dos_03$ID)
+BW_CRRT_dos_03$ID <- as.integer(BW_CRRT_dos_03$ID)
 
 # Create a new variable AUC24 for each ID
-BW_CRRT_dos_03 <- BW_CRRT_dos_03 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_CRRT_dos_03 <- BW_CRRT_dos_03 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_CRRT_dos_03 <- BW_CRRT_dos_03 %>% 
+BW_CRRT_dos_03 <- BW_CRRT_dos_03 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -877,15 +1059,15 @@ BW_CRRT_04 <- read_nonmem_table(directory_BW_CRRT_04)
 BW_CRRT_dos_04 <- BW_CRRT_04[BW_CRRT_04$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_CRRT_dos_04$ID <-as.integer(BW_CRRT_dos_04$ID)
+BW_CRRT_dos_04$ID <- as.integer(BW_CRRT_dos_04$ID)
 
 # Create a new variable AUC24 for each ID
-BW_CRRT_dos_04 <- BW_CRRT_dos_04 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_CRRT_dos_04 <- BW_CRRT_dos_04 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_CRRT_dos_04 <- BW_CRRT_dos_04 %>% 
+BW_CRRT_dos_04 <- BW_CRRT_dos_04 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -928,15 +1110,15 @@ BW_CRRT_05 <- read_nonmem_table(directory_BW_CRRT_05)
 BW_CRRT_dos_05 <- BW_CRRT_05[BW_CRRT_05$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_CRRT_dos_05$ID <-as.integer(BW_CRRT_dos_05$ID)
+BW_CRRT_dos_05$ID <- as.integer(BW_CRRT_dos_05$ID)
 
 # Create a new variable AUC24 for each ID
-BW_CRRT_dos_05 <- BW_CRRT_dos_05 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_CRRT_dos_05 <- BW_CRRT_dos_05 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_CRRT_dos_05 <- BW_CRRT_dos_05 %>% 
+BW_CRRT_dos_05 <- BW_CRRT_dos_05 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -979,15 +1161,15 @@ BW_CRRT_06 <- read_nonmem_table(directory_BW_CRRT_06)
 BW_CRRT_dos_06 <- BW_CRRT_06[BW_CRRT_06$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_CRRT_dos_06$ID <-as.integer(BW_CRRT_dos_06$ID)
+BW_CRRT_dos_06$ID <- as.integer(BW_CRRT_dos_06$ID)
 
 # Create a new variable AUC24 for each ID
-BW_CRRT_dos_06 <- BW_CRRT_dos_06 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_CRRT_dos_06 <- BW_CRRT_dos_06 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_CRRT_dos_06 <- BW_CRRT_dos_06 %>% 
+BW_CRRT_dos_06 <- BW_CRRT_dos_06 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -1013,16 +1195,16 @@ PTA_CRRT_06_overall <- unique(PTA_CRRT_06[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fA
 
 # Export PTA_CRRT_dos_06 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(PTA_CRRT_06_overall, "PTA_CRRT_dos_06.csv", quote=F, row.names = FALSE)
+write.csv(PTA_CRRT_06_overall, "PTA_CRRT_dos_06.csv", quote = F, row.names = FALSE)
 
 # Export BW_CRRT_dos_06.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(BW_CRRT_dos_06, "BW_CRRT_dos_06.csv", quote=F, row.names = FALSE)
+write.csv(BW_CRRT_dos_06, "BW_CRRT_dos_06.csv", quote = F, row.names = FALSE)
 
 #### 12 mg/kg LD 6 mg/kg MD PTA -------------------------------------------
 
 # Use read_nonmem_table function to import data
-working.directory <-'/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/'
 directory_BW_CRRT_07 <- paste0(working.directory, '/sim_BW_CRRT_07.1.npctab.dta') 
 BW_CRRT_07 <- read_nonmem_table(directory_BW_CRRT_07)
 
@@ -1030,15 +1212,15 @@ BW_CRRT_07 <- read_nonmem_table(directory_BW_CRRT_07)
 BW_CRRT_dos_07 <- BW_CRRT_07[BW_CRRT_07$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_CRRT_dos_07$ID <-as.integer(BW_CRRT_dos_07$ID)
+BW_CRRT_dos_07$ID <- as.integer(BW_CRRT_dos_07$ID)
 
 # Create a new variable AUC24 for each ID
-BW_CRRT_dos_07 <- BW_CRRT_dos_07 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_CRRT_dos_07 <- BW_CRRT_dos_07 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_CRRT_dos_07 <- BW_CRRT_dos_07 %>% 
+BW_CRRT_dos_07 <- BW_CRRT_dos_07 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -1064,16 +1246,16 @@ PTA_CRRT_07_overall <- unique(PTA_CRRT_07[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fA
 
 # Export PTA_CRRT_dos_07 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(PTA_CRRT_07_overall, "PTA_CRRT_dos_07.csv", quote=F, row.names = FALSE)
+write.csv(PTA_CRRT_07_overall, "PTA_CRRT_dos_07.csv", quote = F, row.names = FALSE)
 
 # Export BW_CRRT_dos_07.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(BW_CRRT_dos_07, "BW_CRRT_dos_07.csv", quote=F, row.names = FALSE)
+write.csv(BW_CRRT_dos_07, "BW_CRRT_dos_07.csv", quote = F, row.names = FALSE)
 
 #### 800 mg LD 600 mg MD PTA -------------------------------------------
 
 # Use read_nonmem_table function to import data
-working.directory <-'/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/'
 directory_BW_CRRT_08 <- paste0(working.directory, '/sim_BW_CRRT_08.1.npctab.dta') 
 BW_CRRT_08 <- read_nonmem_table(directory_BW_CRRT_08)
 
@@ -1081,15 +1263,15 @@ BW_CRRT_08 <- read_nonmem_table(directory_BW_CRRT_08)
 BW_CRRT_dos_08 <- BW_CRRT_08[BW_CRRT_08$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_CRRT_dos_08$ID <-as.integer(BW_CRRT_dos_08$ID)
+BW_CRRT_dos_08$ID <- as.integer(BW_CRRT_dos_08$ID)
 
 # Create a new variable AUC24 for each ID
-BW_CRRT_dos_08 <- BW_CRRT_dos_08 %>% 
-  group_by(ID) %>% 
-  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>% 
+BW_CRRT_dos_08 <- BW_CRRT_dos_08 |> 
+  group_by(ID) |> 
+  mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) |> 
   ungroup()
 
-BW_CRRT_dos_08 <- BW_CRRT_dos_08 %>% 
+BW_CRRT_dos_08 <- BW_CRRT_dos_08 |> 
   mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
@@ -1115,10 +1297,10 @@ PTA_CRRT_08_overall <- unique(PTA_CRRT_08[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fA
 
 # Export PTA_CRRT_dos_08 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(PTA_CRRT_08_overall, "PTA_CRRT_dos_08.csv", quote=F, row.names = FALSE)
+write.csv(PTA_CRRT_08_overall, "PTA_CRRT_dos_08.csv", quote = F, row.names = FALSE)
 
 # Export BW_CRRT_dos_08.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(BW_CRRT_dos_08, "BW_CRRT_dos_08.csv", quote=F, row.names = FALSE)
+write.csv(BW_CRRT_dos_08, "BW_CRRT_dos_08.csv", quote = F, row.names = FALSE)
 
 
