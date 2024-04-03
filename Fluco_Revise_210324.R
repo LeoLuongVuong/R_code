@@ -1181,6 +1181,61 @@ summary(Fluco_clean_revised$CKDEPI[Fluco_clean_revised$CRRT == 0])
 # Min 5 - max 215 - so I will try firstly distance = 10, and then = 5.
 # Note: Normal kidney function is from 90 to 120 mL/min/1.73 m2
 
+# Count the number of observed CKDEPI in non-CRRT events
+Fluco_clean_revised |> 
+  dplyr::filter(CRRT == 0) |>
+  select(CKDEPI) |> 
+  na.omit() |>
+  summarize(n = n()) # 485
+
+# Count the number of observed CKDEPI >= 195 in non-CRRT events
+Fluco_clean_revised |> 
+  dplyr::filter(CRRT == 0 & CKDEPI >= 195) |>
+  select(CKDEPI) |> 
+  na.omit() |>
+  summarize(n = n()) # 8
+
+# The percentage of CKDEPI >= 195 in non-CRRT events - Erwin's question
+8/485 # 1.6%
+
+# Count the number of observed CKDEPI <= 25 in non-CRRT events
+Fluco_clean_revised |> 
+  dplyr::filter(CRRT == 0 & CKDEPI <= 25) |>
+  select(CKDEPI) |> 
+  na.omit() |>
+  summarize(n = n()) # 23 
+
+# The percentage of CKDEPI <= 25 in non-CRRT events
+23/485 # 4.7%
+# Based on the analysis that follows, these are from 13 patients, only 2 of which
+# have CRRT after having CKDEPI <= 25.
+
+# Count the number of observed CKDEPI <= 15 in non-CRRT events
+Fluco_clean_revised |> 
+  dplyr::filter(CRRT == 0 & CKDEPI <= 15) |>
+  select(CKDEPI) |> 
+  na.omit() |>
+  summarize(n = n()) # 5 - which is only 1.03%
+
+## Exploratory code from chat GPT
+
+# First, identify patient IDs with at least one CKDEPI <= 25 and CRRT == 0
+ID_CKDEPI25 <- Fluco_clean_revised |>
+  filter(CKDEPI <= 25 & CRRT == 0) |> 
+  pull(ID) |>
+  unique()
+
+# Next, identify patients having CRRT among those IDs above
+CKDEPI_25 <- Fluco_clean_revised |>
+  filter(ID %in% ID_CKDEPI25) |>
+  filter(CRRT == 1) |>
+  pull(ID) |>
+  unique()
+
+CKDEPI_25_CRRT <- Fluco_clean_revised |>
+  filter(ID %in% CKDEPI_25)
+## End of exploratory code from chat GPT
+
 # Creat a new column "CKDEPI" for sim_dosing_01 dataset
 sim_dosing_01 <- sim_dosing_01 |> 
   mutate(CKDEPI = ifelse(ID == 1, 5, 5 + (ID - 1) * 10))
@@ -1212,6 +1267,13 @@ sim_dosing_01 <- sim_dosing_01 |>
 unique_BW2 <- Fluco_clean_revised  |> 
   distinct(BW2, .keep_all = TRUE) |> 
   dplyr::filter(!is.na(BW2)) |> 
+  pull(BW2)
+
+# Step 1 - revised 020424: Get unique, non-missing values of BW2 per ID level
+unique_BW2 <- Fluco_clean_revised  |>
+  group_by(ID) |>
+  distinct(BW2, .keep_all = TRUE) |>
+  dplyr::filter(!is.na(BW2)) |>
   pull(BW2)
 
 # Create a new dataset "new_dataset" with ID from 1 to 2200
@@ -1317,7 +1379,6 @@ sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME == 0, 800, ifelse(sim_CKD
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Sim")
 write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_06.csv", quote = F, row.names = FALSE)
 
-
 ## Secondly, the effect of BW on non-CRRT events --------------------------
 
 ### Some data manipulations ------------------------------------------
@@ -1327,7 +1388,7 @@ setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_proje
 sim_dosing_01 <- read.csv("dosing_08.csv")
 
 # Eliminate all rows with PEAK == 1
-sim_dosing_01 <- sim_dosing_01 %>% dplyr::filter(PEAK == 0)
+sim_dosing_01 <- sim_dosing_01 |> dplyr::filter(PEAK == 0)
 
 # Eliminate PEAK column
 sim_dosing_01$PEAK <- NULL
@@ -1339,27 +1400,27 @@ sim_dosing_01$CRRT <- 0
 summary(Fluco_clean_revised$BW2) # range: 34 - 142 kg. However Erwin said 30 - 150
 
 # Change ID into ID_BW
-sim_dosing_01 <- sim_dosing_01 %>%
+sim_dosing_01 <- sim_dosing_01 |>
   rename(ID_BW = ID)
 
 # Replicate each ID_CKDEPI 100 times
-sim_dosing_01 <- sim_dosing_01 %>%
-  group_by(ID_BW) %>%
-  slice(rep(1:n(), each = 100)) %>%
+sim_dosing_01 <- sim_dosing_01 |>
+  group_by(ID_BW) |>
+  slice(rep(1:n(), each = 100)) |>
   ungroup()
 
 # Assign an ID for each replication
-sim_dosing_01 <- sim_dosing_01 %>%
-  arrange(TIME) %>%
-  group_by(TIME) %>%
-  mutate(ID = row_number()) %>%
+sim_dosing_01 <- sim_dosing_01 |>
+  arrange(TIME) |>
+  group_by(TIME) |>
+  mutate(ID = row_number()) |>
   ungroup()
 
 ##  Assign a unique CKDEPI per each ID
 
 # Step 1: Get unique, non-missing values of CKDEPI from FlucTotIV_clean with CRRT = 0
-unique_CKDEPI <- FlucTotIV_clean %>% dplyr::filter(CRRT == 0) %>%
-  dplyr::filter(!is.na(CKDEPI)) %>%
+unique_CKDEPI <- FlucTotIV_clean |> dplyr::filter(CRRT == 0) |>
+  dplyr::filter(!is.na(CKDEPI)) |>
   pull(CKDEPI)
 
 # Create a new dataset "new_dataset" with ID from 1 to 2500
@@ -1390,20 +1451,20 @@ new_dataset$CKDEPI <- sampled_CKDEPIs
 # Now, you have "new_dataset" with unique BW values for each set of 100 IDs
 
 # Merge "new_dataset" with "sim_dosing_01" dataset based on ID
-sim_dosing_01 <- sim_dosing_01 %>%
+sim_dosing_01 <- sim_dosing_01 |>
   left_join(new_dataset, by = "ID")
 
 # Eliminate ID_BW, change the name of the dataset
-sim_BW_01 <- sim_dosing_01 %>%
+sim_BW_01 <- sim_dosing_01 |>
   select(ID_BW, ID, everything())
 sim_BW_01$ID_BW <- NULL
 
 # Sort sim_BW_01 according to ID
-sim_BW_01 <- sim_BW_01 %>%
+sim_BW_01 <- sim_BW_01 |>
   arrange(ID)
 
 # Minimizing the dataset where all dosing events are kept, and all redundant dummy lines can be eliminated
-sim_BW_01_min <- sim_BW_01 %>%
+sim_BW_01_min <- sim_BW_01 |>
   dplyr::filter((DAY %in% c(3, 4, 5, 8, 9, 10, 11, 12) & TAD == 0) | (!DAY %in% c(3, 4,5, 8, 9, 10, 11, 12)))
 
 ### Standard dosing regimen ------------------------------------------
@@ -1487,13 +1548,13 @@ setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_proje
 sim_dosing_01 <- read.csv("dosing_08.csv")
 
 # Eliminate all rows with PEAK == 1
-sim_dosing_01 <- sim_dosing_01 %>% dplyr::filter(PEAK == 0)
+sim_dosing_01 <- sim_dosing_01 |> dplyr::filter(PEAK == 0)
 
 # Eliminate PEAK column
 sim_dosing_01$PEAK <- NULL
 
 # BW CRRT sim dataset
-sim_BW_CRRT_01 <- sim_dosing_01 %>%
+sim_BW_CRRT_01 <- sim_dosing_01 |>
   dplyr::filter((DAY %in% c(3, 4, 5, 8, 9, 10, 11, 12) & TAD == 0) | (!DAY %in% c(3, 4,5, 8, 9, 10, 11, 12)))
 
 sim_BW_CRRT_01$CKDEPI <- 0
@@ -1570,3 +1631,456 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 800, ifelse(sim_BW_CRRT_0
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
 write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_08.csv", quote = F, row.names = FALSE)
 
+## Fourth, verify the BW-based dosing on CKDEPI range --------------------------
+
+### Some data manipulations ------------------------------------------
+
+# load the dataset
+setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Bootstrap and dosing simulation/BW_Simulations/Simulation datasets")
+core_sim <- read.csv("dosing_08.csv") # core_sim stands for core simulation dataset
+
+# Eliminate all rows with PEAK == 1
+core_sim <- core_sim |>  
+  dplyr::filter(PEAK == 0)
+
+# Eliminate PEAK column
+core_sim$PEAK <- NULL
+
+# Convert CRRT into 0
+core_sim$CRRT <- 0
+
+# Creat a new column "CKDEPI" for core_sim dataset
+core_sim <- core_sim |> 
+  mutate(CKDEPI = ifelse(ID == 1, 5, 5 + (ID - 1) * 10))
+
+# Delete all the rows with CKDEPI > 215
+core_sim <- core_sim |> 
+  dplyr::filter(CKDEPI <= 215)
+
+# Change ID into ID_CKDEPI
+core_sim <- core_sim |> 
+  rename(ID_CKDEPI = ID)
+
+# Hereon I will create 5 different datasets with different dosing regimens, 
+# each will be assigned 20 different BWs. 
+
+### 800 mg LD, 400 MD for BW <= 60kg -------------------------------
+
+# Replicate each ID_CKDEPI 20 times
+LD_800 <- core_sim |> 
+  group_by(ID_CKDEPI) |> 
+  slice(rep(1:n(), each = 20)) |> 
+  ungroup()
+
+# Assign an ID for each replication
+LD_800 <- LD_800 |> 
+  arrange(TIME) |> 
+  group_by(TIME) |> 
+  mutate(ID = row_number()) |> 
+  ungroup()
+
+##  Assign a unique BW per each ID
+
+# Extract only BW values that are <= 60 kg
+BW_LD_800 <- Fluco_clean_revised |>
+  group_by(ID) |>
+  distinct(BW2, .keep_all = TRUE) |>
+  dplyr::filter(!is.na(BW2)) |>
+  dplyr::filter(BW2 <= 60) |>
+  pull(BW2)
+
+# Create a new dataset "LD_800_BW" with ID from 1 to 440
+set.seed(123)
+LD_800_BW <- data.frame(ID = 1:440)
+
+# Step 2: Create an ECDF based on unique BW2 values
+ecdf_LD_800_BW <- ecdf(BW_LD_800)
+
+# Create a vector to store the sampled BWs
+sampled_LD_800_BWs <- numeric(0)
+
+# Loop 22 times to get 22 sets of 20 random values
+for (i in 1:22) {
+  # Generate random values from the ECDF
+  random_values <- runif(20)
+  
+  # Map the random values to the empirical distribution using the inverse transform sampling method
+  sampled_LD_800_BW <- round(quantile(BW_LD_800, random_values), 1)
+  
+  # Append the sampled BWs to the vector
+  sampled_LD_800_BWs <- c(sampled_LD_800_BWs, sampled_LD_800_BW)
+}
+
+# Assuming new_dataset is your data frame with IDs
+LD_800_BW$BW <- sampled_LD_800_BWs
+
+# Now, you have "LD_800_BW" with unique BW values for each set of 20 IDs
+
+# Merge "new_dataset" with "core_sim" dataset based on ID
+LD_800 <- LD_800 |> 
+  left_join(LD_800_BW, by = "ID")
+
+# Rename BW
+LD_800$BW.x <- NULL
+LD_800 <- LD_800 |> 
+  rename(BW = BW.y)
+
+# Re-arrange the dataset
+LD_800_CKDEPI <- LD_800 |> 
+  select(ID_CKDEPI, ID, everything())
+
+LD_800_CKDEPI <- LD_800_CKDEPI |> 
+  arrange(ID)
+
+# Add regimen column
+LD_800_CKDEPI$Regimen <- 1
+
+# Here I keep all dosing events, and eliminate all redundant dummy lines
+LD_800_CKDEPI <- LD_800_CKDEPI |> 
+  dplyr::filter((DAY %in% c(3, 4, 5, 8, 9, 10, 11, 12) & TAD == 0) | (!DAY %in% c(3, 4,5, 8, 9, 10, 11, 12)))
+
+# Change the dosing follows 800 LD & 400 MD
+LD_800_CKDEPI$AMT <- ifelse(LD_800_CKDEPI$TIME == 0, 800, ifelse(LD_800_CKDEPI$TAD == 0, 400, 0))
+
+### 1000 mg LD, 400 MD for 60 < BW <= 80kg -------------------------------
+
+# Replicate each ID_CKDEPI 20 times
+LD_1000 <- core_sim |> 
+  group_by(ID_CKDEPI) |> 
+  slice(rep(1:n(), each = 20)) |> 
+  ungroup()
+
+# Assign an ID for each replication
+LD_1000 <- LD_1000 |> 
+  arrange(TIME) |> 
+  group_by(TIME) |> 
+  mutate(ID = row_number()) |> 
+  ungroup()
+
+##  Assign a unique BW per each ID
+
+# Extract only 60 < BW <= 80 values
+BW_LD_1000 <- Fluco_clean_revised |>
+  group_by(ID) |>
+  distinct(BW2, .keep_all = TRUE) |>
+  dplyr::filter(!is.na(BW2)) |>
+  dplyr::filter(60 < BW2 & BW2 <= 80) |>
+  pull(BW2)
+
+# Create a new dataset "LD_1000_BW" with ID from 1 to 440
+set.seed(123)
+LD_1000_BW <- data.frame(ID = 1:440)
+
+# Step 2: Create an ECDF based on unique BW2 values
+ecdf_LD_1000_BW <- ecdf(BW_LD_1000)
+
+# Create a vector to store the sampled BWs
+sampled_LD_1000_BWs <- numeric(0)
+
+# Loop 22 times to get 22 sets of 20 random values
+for (i in 1:22) {
+  # Generate random values from the ECDF
+  random_values <- runif(20)
+  
+  # Map the random values to the empirical distribution using the inverse transform sampling method
+  sampled_LD_1000_BW <- round(quantile(BW_LD_1000, random_values), 1)
+  
+  # Append the sampled BWs to the vector
+  sampled_LD_1000_BWs <- c(sampled_LD_1000_BWs, sampled_LD_1000_BW)
+}
+
+# Assuming new_dataset is your data frame with IDs
+LD_1000_BW$BW <- sampled_LD_1000_BWs
+
+# Now, you have "LD_1000_BW" with unique BW values for each set of 20 IDs
+
+# Merge "new_dataset" with "core_sim" dataset based on ID
+LD_1000 <- LD_1000 |> 
+  left_join(LD_1000_BW, by = "ID")
+
+# Rename BW
+LD_1000$BW.x <- NULL
+LD_1000 <- LD_1000 |> 
+  rename(BW = BW.y)
+
+# Re-arrange the dataset
+LD_1000_CKDEPI <- LD_1000 |> 
+  select(ID_CKDEPI, ID, everything())
+
+LD_1000_CKDEPI <- LD_1000_CKDEPI |> 
+  arrange(ID)
+
+# Add regimen column
+LD_1000_CKDEPI$Regimen <- 2
+
+# Here I keep all dosing events, and eliminate all redundant dummy lines
+LD_1000_CKDEPI <- LD_1000_CKDEPI |> 
+  dplyr::filter((DAY %in% c(3, 4, 5, 8, 9, 10, 11, 12) & TAD == 0) | (!DAY %in% c(3, 4,5, 8, 9, 10, 11, 12)))
+
+# Change the dosing follows 1000 LD & 400 MD
+LD_1000_CKDEPI$AMT <- ifelse(LD_1000_CKDEPI$TIME == 0, 1000, ifelse(LD_1000_CKDEPI$TAD == 0, 400, 0))
+
+### 1200 mg LD, 400 MD for 80 < BW <= 100kg -------------------------------
+
+# Replicate each ID_CKDEPI 20 times
+LD_1200 <- core_sim |> 
+  group_by(ID_CKDEPI) |> 
+  slice(rep(1:n(), each = 20)) |> 
+  ungroup()
+
+# Assign an ID for each replication
+LD_1200 <- LD_1200 |> 
+  arrange(TIME) |> 
+  group_by(TIME) |> 
+  mutate(ID = row_number()) |> 
+  ungroup()
+
+##  Assign a unique BW per each ID
+
+# Extract only 80 < BW <= 100 values
+BW_LD_1200 <- Fluco_clean_revised |>
+  group_by(ID) |>
+  distinct(BW2, .keep_all = TRUE) |>
+  dplyr::filter(!is.na(BW2)) |>
+  dplyr::filter(80 < BW2 & BW2 <= 100) |>
+  pull(BW2)
+
+# Create a new dataset "LD_1200_BW" with ID from 1 to 440
+set.seed(123)
+LD_1200_BW <- data.frame(ID = 1:440)
+
+# Step 2: Create an ECDF based on unique BW2 values
+ecdf_LD_1200_BW <- ecdf(BW_LD_1200)
+
+# Create a vector to store the sampled BWs
+sampled_LD_1200_BWs <- numeric(0)
+
+# Loop 22 times to get 22 sets of 20 random values
+for (i in 1:22) {
+  # Generate random values from the ECDF
+  random_values <- runif(20)
+  
+  # Map the random values to the empirical distribution using the inverse transform sampling method
+  sampled_LD_1200_BW <- round(quantile(BW_LD_1200, random_values), 1)
+  
+  # Append the sampled BWs to the vector
+  sampled_LD_1200_BWs <- c(sampled_LD_1200_BWs, sampled_LD_1200_BW)
+}
+
+# Assuming new_dataset is your data frame with IDs
+LD_1200_BW$BW <- sampled_LD_1200_BWs
+
+# Now, you have "LD_1200_BW" with unique BW values for each set of 20 IDs
+
+# Merge "new_dataset" with "core_sim" dataset based on ID
+LD_1200 <- LD_1200 |> 
+  left_join(LD_1200_BW, by = "ID")
+
+# Rename BW
+LD_1200$BW.x <- NULL
+LD_1200 <- LD_1200 |> 
+  rename(BW = BW.y)
+
+# Re-arrange the dataset
+LD_1200_CKDEPI <- LD_1200 |> 
+  select(ID_CKDEPI, ID, everything())
+
+LD_1200_CKDEPI <- LD_1200_CKDEPI |> 
+  arrange(ID)
+
+# Add regimen column
+LD_1200_CKDEPI$Regimen <- 3
+
+# Here I keep all dosing events, and eliminate all redundant dummy lines
+LD_1200_CKDEPI <- LD_1200_CKDEPI |> 
+  dplyr::filter((DAY %in% c(3, 4, 5, 8, 9, 10, 11, 12) & TAD == 0) | (!DAY %in% c(3, 4,5, 8, 9, 10, 11, 12)))
+
+# Change the dosing follows 1200 LD & 400 MD
+LD_1200_CKDEPI$AMT <- ifelse(LD_1200_CKDEPI$TIME == 0, 1200, ifelse(LD_1200_CKDEPI$TAD == 0, 400, 0))
+
+### 1400 mg LD, 400 MD for 100 < BW <= 120kg -------------------------------
+
+# Replicate each ID_CKDEPI 20 times
+LD_1400 <- core_sim |> 
+  group_by(ID_CKDEPI) |> 
+  slice(rep(1:n(), each = 20)) |> 
+  ungroup()
+
+# Assign an ID for each replication
+LD_1400 <- LD_1400 |> 
+  arrange(TIME) |> 
+  group_by(TIME) |> 
+  mutate(ID = row_number()) |> 
+  ungroup()
+
+##  Assign a unique BW per each ID
+
+# Extract only 100 < BW <= 120 values
+BW_LD_1400 <- Fluco_clean_revised |>
+  group_by(ID) |>
+  distinct(BW2, .keep_all = TRUE) |>
+  dplyr::filter(!is.na(BW2)) |>
+  dplyr::filter(100 < BW2 & BW2 <= 120) |>
+  pull(BW2)
+
+# Create a new dataset "LD_1400_BW" with ID from 1 to 440
+set.seed(123)
+LD_1400_BW <- data.frame(ID = 1:440)
+
+# Step 2: Create an ECDF based on unique BW2 values
+ecdf_LD_1400_BW <- ecdf(BW_LD_1400)
+
+# Create a vector to store the sampled BWs
+sampled_LD_1400_BWs <- numeric(0)
+
+# Loop 22 times to get 22 sets of 20 random values
+for (i in 1:22) {
+  # Generate random values from the ECDF
+  random_values <- runif(20)
+  
+  # Map the random values to the empirical distribution using the inverse transform sampling method
+  sampled_LD_1400_BW <- round(quantile(BW_LD_1400, random_values), 1)
+  
+  # Append the sampled BWs to the vector
+  sampled_LD_1400_BWs <- c(sampled_LD_1400_BWs, sampled_LD_1400_BW)
+}
+
+# Assuming new_dataset is your data frame with IDs
+LD_1400_BW$BW <- sampled_LD_1400_BWs
+
+# Now, you have "LD_1400_BW" with unique BW values for each set of 20 IDs
+
+# Merge "new_dataset" with "core_sim" dataset based on ID
+LD_1400 <- LD_1400 |> 
+  left_join(LD_1400_BW, by = "ID")
+
+# Rename BW
+LD_1400$BW.x <- NULL
+LD_1400 <- LD_1400 |> 
+  rename(BW = BW.y)
+
+# Re-arrange the dataset
+LD_1400_CKDEPI <- LD_1400 |> 
+  select(ID_CKDEPI, ID, everything())
+
+LD_1400_CKDEPI <- LD_1400_CKDEPI |> 
+  arrange(ID)
+
+# Add regimen column
+LD_1400_CKDEPI$Regimen <- 4
+
+# Here I keep all dosing events, and eliminate all redundant dummy lines
+LD_1400_CKDEPI <- LD_1400_CKDEPI |> 
+  dplyr::filter((DAY %in% c(3, 4, 5, 8, 9, 10, 11, 12) & TAD == 0) | (!DAY %in% c(3, 4,5, 8, 9, 10, 11, 12)))
+
+# Change the dosing follows 1400 LD & 400 MD
+LD_1400_CKDEPI$AMT <- ifelse(LD_1400_CKDEPI$TIME == 0, 1400, ifelse(LD_1400_CKDEPI$TAD == 0, 400, 0))
+
+### 1600 mg LD, 400 MD for 120kg < BW  -------------------------------
+
+# Replicate each ID_CKDEPI 20 times
+LD_1600 <- core_sim |> 
+  group_by(ID_CKDEPI) |> 
+  slice(rep(1:n(), each = 20)) |> 
+  ungroup()
+
+# Assign an ID for each replication
+LD_1600 <- LD_1600 |> 
+  arrange(TIME) |> 
+  group_by(TIME) |> 
+  mutate(ID = row_number()) |> 
+  ungroup()
+
+##  Assign a unique BW per each ID
+
+# Extract only 120 < BW values
+BW_LD_1600 <- Fluco_clean_revised |>
+  group_by(ID) |>
+  distinct(BW2, .keep_all = TRUE) |>
+  dplyr::filter(!is.na(BW2)) |>
+  dplyr::filter(120 < BW2) |>
+  pull(BW2)
+
+# Create a new dataset "LD_1600_BW" with ID from 1 to 440
+set.seed(123)
+LD_1600_BW <- data.frame(ID = 1:440)
+
+# Step 2: Create an ECDF based on unique BW2 values
+ecdf_LD_1600_BW <- ecdf(BW_LD_1600)
+
+# Create a vector to store the sampled BWs
+sampled_LD_1600_BWs <- numeric(0)
+
+# Loop 22 times to get 22 sets of 20 random values
+for (i in 1:22) {
+  # Generate random values from the ECDF
+  random_values <- runif(20)
+  
+  # Map the random values to the empirical distribution using the inverse transform sampling method
+  sampled_LD_1600_BW <- round(quantile(BW_LD_1600, random_values), 1)
+  
+  # Append the sampled BWs to the vector
+  sampled_LD_1600_BWs <- c(sampled_LD_1600_BWs, sampled_LD_1600_BW)
+}
+
+# Assuming new_dataset is your data frame with IDs
+LD_1600_BW$BW <- sampled_LD_1600_BWs
+
+# Now, you have "LD_1600_BW" with unique BW values for each set of 20 IDs
+
+# Merge "new_dataset" with "core_sim" dataset based on ID
+LD_1600 <- LD_1600 |> 
+  left_join(LD_1600_BW, by = "ID")
+
+# Rename BW
+LD_1600$BW.x <- NULL
+LD_1600 <- LD_1600 |> 
+  rename(BW = BW.y)
+
+# Re-arrange the dataset
+LD_1600_CKDEPI <- LD_1600 |> 
+  select(ID_CKDEPI, ID, everything())
+
+LD_1600_CKDEPI <- LD_1600_CKDEPI |> 
+  arrange(ID)
+
+# Add regimen column
+LD_1600_CKDEPI$Regimen <- 5
+
+# Here I keep all dosing events, and eliminate all redundant dummy lines
+LD_1600_CKDEPI <- LD_1600_CKDEPI |> 
+  dplyr::filter((DAY %in% c(3, 4, 5, 8, 9, 10, 11, 12) & TAD == 0) | (!DAY %in% c(3, 4,5, 8, 9, 10, 11, 12)))
+
+# Change the dosing follows 1600 LD & 400 MD
+LD_1600_CKDEPI$AMT <- ifelse(LD_1600_CKDEPI$TIME == 0, 1600, ifelse(LD_1600_CKDEPI$TAD == 0, 400, 0))
+
+### Combining the 5 datasets  -------------------------------
+
+# Remove ID_CKDEPI column from LD_800_CKDEPI, LD_1000_CKDEPI, LD_1200_CKDEPI, 
+# LD_1400_CKDEPI, LD_1600_CKDEPI
+
+LD_800_CKDEPI$ID_CKDEPI <- NULL
+LD_1000_CKDEPI$ID_CKDEPI <- NULL
+LD_1200_CKDEPI$ID_CKDEPI <- NULL
+LD_1400_CKDEPI$ID_CKDEPI <- NULL
+LD_1600_CKDEPI$ID_CKDEPI <- NULL
+
+# Update ID of LD_1000_CKDEPI, from 1 to 440 to 441 to 880
+LD_1000_CKDEPI$ID <- LD_1000_CKDEPI$ID + 440
+
+# Update ID of LD_1200_CKDEPI, from 1 to 440 to 881 to 1320
+LD_1200_CKDEPI$ID <- LD_1200_CKDEPI$ID + 880
+
+# Update ID of LD_1400_CKDEPI, from 1 to 440 to 1321 to 1760
+LD_1400_CKDEPI$ID <- LD_1400_CKDEPI$ID + 1320
+
+# Update ID of LD_1600_CKDEPI, from 1 to 440 to 1761 to 2200
+LD_1600_CKDEPI$ID <- LD_1600_CKDEPI$ID + 1760
+
+# Combine all datasets
+BW_stra_LD_CKDEPI <- rbind(LD_800_CKDEPI, LD_1000_CKDEPI, LD_1200_CKDEPI, 
+                           LD_1400_CKDEPI, LD_1600_CKDEPI)
+
+# Then export into BW_stra_LD_CKDEPI.csv dataset 
+setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Opt_dose")
+write.csv(BW_stra_LD_CKDEPI, "BW_stra_LD_CKDEPI.csv",quote = F,row.names = FALSE)
