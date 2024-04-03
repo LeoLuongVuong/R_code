@@ -165,7 +165,7 @@ PTA_03_overall <- unique(PTA_03[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200", "
 
 # Export PTA_dos_03 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/CKDEPI_Sim/")
-write.csv(PTA_03_overall, "PTA_dos_03.csv",quote=F,row.names = FALSE)
+write.csv(PTA_03_overall, "PTA_dos_03.csv",quote = F,row.names = FALSE)
 
 #### 12 mg/kg LD 6 mg/kg MD PTA -------------------------------------------
 
@@ -209,7 +209,11 @@ PTA_04_overall <- unique(PTA_04[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200", "
 
 # Export PTA_dos_04 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/CKDEPI_Sim/")
+<<<<<<< HEAD
 write.csv(PTA_04_overall, "PTA_dos_04.csv",quote = F, row.names = FALSE)
+=======
+write.csv(PTA_04_overall, "PTA_dos_04.csv",quote = F,row.names = FALSE)
+>>>>>>> 068208c (Adjusting the coding style)
 
 #### 1200 LD 600 MD PTA -------------------------------------------
 
@@ -886,11 +890,11 @@ PTA_noCRRT_04_overall <- unique(PTA_noCRRT_04[c("PTA_Cmin_75","PTA_Cmin_80", "PT
 
 # Export PTA_noCRRT_dos_04 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(PTA_noCRRT_04_overall, "PTA_noCRRT_dos_04.csv", quote=F, row.names = FALSE)
+write.csv(PTA_noCRRT_04_overall, "PTA_noCRRT_dos_04.csv", quote = F, row.names = FALSE)
 
 # Export BW_noCRRT_dos_04.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(BW_noCRRT_dos_04, "BW_noCRRT_dos_04.csv", quote=F, row.names = FALSE)
+write.csv(BW_noCRRT_dos_04, "BW_noCRRT_dos_04.csv", quote = F, row.names = FALSE)
 
 #### 1600 LD 400 MD PTA -------------------------------------------
 
@@ -937,11 +941,11 @@ PTA_noCRRT_05_overall <- unique(PTA_noCRRT_05[c("PTA_Cmin_75","PTA_Cmin_80", "PT
 
 # Export PTA_noCRRT_dos_05 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(PTA_noCRRT_05_overall, "PTA_noCRRT_dos_05.csv", quote=F, row.names = FALSE)
+write.csv(PTA_noCRRT_05_overall, "PTA_noCRRT_dos_05.csv", quote = F, row.names = FALSE)
 
 # Export BW_noCRRT_dos_05.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(BW_noCRRT_dos_05, "BW_noCRRT_dos_05.csv", quote=F, row.names = FALSE)
+write.csv(BW_noCRRT_dos_05, "BW_noCRRT_dos_05.csv", quote = F, row.names = FALSE)
 
 #### 1800 LD 400 MD PTA -------------------------------------------
 
@@ -988,11 +992,11 @@ PTA_noCRRT_06_overall <- unique(PTA_noCRRT_06[c("PTA_Cmin_75","PTA_Cmin_80", "PT
 
 # Export PTA_noCRRT_dos_06 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(PTA_noCRRT_06_overall, "PTA_noCRRT_dos_06.csv", quote=F, row.names = FALSE)
+write.csv(PTA_noCRRT_06_overall, "PTA_noCRRT_dos_06.csv", quote = F, row.names = FALSE)
 
 # Export BW_noCRRT_dos_06.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(BW_noCRRT_dos_06, "BW_noCRRT_dos_06.csv", quote=F, row.names = FALSE)
+write.csv(BW_noCRRT_dos_06, "BW_noCRRT_dos_06.csv", quote = F, row.names = FALSE)
 
 #### 12 mg/kg LD 6 mg/kg MD PTA -------------------------------------------
 
@@ -1039,11 +1043,11 @@ PTA_noCRRT_07_overall <- unique(PTA_noCRRT_07[c("PTA_Cmin_75","PTA_Cmin_80", "PT
 
 # Export PTA_noCRRT_dos_07 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(PTA_noCRRT_07_overall, "PTA_noCRRT_dos_07.csv", quote=F, row.names = FALSE)
+write.csv(PTA_noCRRT_07_overall, "PTA_noCRRT_dos_07.csv", quote = F, row.names = FALSE)
 
 # Export BW_noCRRT_dos_07.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(BW_noCRRT_dos_07, "BW_noCRRT_dos_07.csv", quote=F, row.names = FALSE)
+write.csv(BW_noCRRT_dos_07, "BW_noCRRT_dos_07.csv", quote = F, row.names = FALSE)
 
 #### 800 LD 200 MD PTA -------------------------------------------
 
@@ -1095,6 +1099,7 @@ write.csv(PTA_noCRRT_08_overall, "PTA_noCRRT_dos_08.csv", quote = F, row.names =
 # Export BW_noCRRT_dos_08.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
 write.csv(BW_noCRRT_dos_08, "BW_noCRRT_dos_08.csv", quote = F, row.names = FALSE)
+<<<<<<< HEAD
 
 ### Making PTA plots -------------------------------------------
 
@@ -1491,6 +1496,8 @@ ggsave("PTA_BW_noCRRT80_DAY114.EPS",
        width = 19, 
        height = 19,
        unit = "cm")
+=======
+>>>>>>> 068208c (Adjusting the coding style)
 
 ## Third, BW CRRT effect -------------------------------------------
 
@@ -1541,11 +1548,11 @@ PTA_CRRT_01_overall <- unique(PTA_CRRT_01[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fA
 
 # Export PTA_CRRT_dos_01 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(PTA_CRRT_01_overall, "PTA_CRRT_dos_01.csv", quote=F, row.names = FALSE)
+write.csv(PTA_CRRT_01_overall, "PTA_CRRT_dos_01.csv", quote = F, row.names = FALSE)
 
 # Export BW_CRRT_dos_01.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(BW_CRRT_dos_01, "BW_CRRT_dos_01.csv", quote=F, row.names = FALSE)
+write.csv(BW_CRRT_dos_01, "BW_CRRT_dos_01.csv", quote = F, row.names = FALSE)
 
 #### 1000 LD 800 MD PTA -------------------------------------------
 
@@ -1592,11 +1599,11 @@ PTA_CRRT_02_overall <- unique(PTA_CRRT_02[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fA
 
 # Export PTA_CRRT_dos_02 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(PTA_CRRT_02_overall, "PTA_CRRT_dos_02.csv", quote=F, row.names = FALSE)
+write.csv(PTA_CRRT_02_overall, "PTA_CRRT_dos_02.csv", quote = F, row.names = FALSE)
 
 # Export BW_CRRT_dos_02.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(BW_CRRT_dos_02, "BW_CRRT_dos_02.csv", quote=F, row.names = FALSE)
+write.csv(BW_CRRT_dos_02, "BW_CRRT_dos_02.csv", quote = F, row.names = FALSE)
 
 #### 1200 LD 800 MD PTA -------------------------------------------
 
@@ -1643,11 +1650,11 @@ PTA_CRRT_03_overall <- unique(PTA_CRRT_03[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fA
 
 # Export PTA_CRRT_dos_03 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(PTA_CRRT_03_overall, "PTA_CRRT_dos_03.csv", quote=F, row.names = FALSE)
+write.csv(PTA_CRRT_03_overall, "PTA_CRRT_dos_03.csv", quote = F, row.names = FALSE)
 
 # Export BW_CRRT_dos_03.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(BW_CRRT_dos_03, "BW_CRRT_dos_03.csv", quote=F, row.names = FALSE)
+write.csv(BW_CRRT_dos_03, "BW_CRRT_dos_03.csv", quote = F, row.names = FALSE)
 
 #### 1400 LD 800 MD PTA -------------------------------------------
 
@@ -1694,11 +1701,11 @@ PTA_CRRT_04_overall <- unique(PTA_CRRT_04[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fA
 
 # Export PTA_CRRT_dos_04 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(PTA_CRRT_04_overall, "PTA_CRRT_dos_04.csv", quote=F, row.names = FALSE)
+write.csv(PTA_CRRT_04_overall, "PTA_CRRT_dos_04.csv", quote = F, row.names = FALSE)
 
 # Export BW_CRRT_dos_04.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(BW_CRRT_dos_04, "BW_CRRT_dos_04.csv", quote=F, row.names = FALSE)
+write.csv(BW_CRRT_dos_04, "BW_CRRT_dos_04.csv", quote = F, row.names = FALSE)
 
 #### 1600 LD 800 MD PTA -------------------------------------------
 
@@ -1745,11 +1752,11 @@ PTA_CRRT_05_overall <- unique(PTA_CRRT_05[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fA
 
 # Export PTA_CRRT_dos_05 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(PTA_CRRT_05_overall, "PTA_CRRT_dos_05.csv", quote=F, row.names = FALSE)
+write.csv(PTA_CRRT_05_overall, "PTA_CRRT_dos_05.csv", quote = F, row.names = FALSE)
 
 # Export BW_CRRT_dos_05.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
-write.csv(BW_CRRT_dos_05, "BW_CRRT_dos_05.csv", quote=F, row.names = FALSE)
+write.csv(BW_CRRT_dos_05, "BW_CRRT_dos_05.csv", quote = F, row.names = FALSE)
 
 #### 1800 LD 800 MD PTA -------------------------------------------
 
