@@ -26,6 +26,7 @@ library(ggtext) #create latex axis labels - does not work
 library(latex2exp) #to create latex label
 library(table1) # create descriptive statistic table1
 library(ggpubr) # for ggarrange function 
+library(extrafont)
 
 
 # Analyzing simulation datasets -------------------------------------------
@@ -208,7 +209,7 @@ PTA_04_overall <- unique(PTA_04[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200", "
 
 # Export PTA_dos_04 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/CKDEPI_Sim/")
-write.csv(PTA_04_overall, "PTA_dos_04.csv",quote=F,row.names = FALSE)
+write.csv(PTA_04_overall, "PTA_dos_04.csv",quote = F, row.names = FALSE)
 
 #### 1200 LD 600 MD PTA -------------------------------------------
 
@@ -303,13 +304,12 @@ write.csv(PTA_06_overall, "PTA_dos_06.csv", quote = F, row.names = FALSE)
 #### Some preps -------------------------------------------
 
 # Import PTA_dos_ datasets
-setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/CKDEPI_Sim/")
-PTA_dos_01 <- read.csv("PTA_dos_01.csv")
-PTA_dos_02 <- read.csv("PTA_dos_02.csv")
-PTA_dos_03 <- read.csv("PTA_dos_03.csv")
-PTA_dos_04 <- read.csv("PTA_dos_04.csv")
-PTA_dos_05 <- read.csv("PTA_dos_05.csv")
-PTA_dos_06 <- read.csv("PTA_dos_06.csv")
+PTA_dos_01 <- read.csv("PTA_CKDEPI/PTA_dos_01.csv")
+PTA_dos_02 <- read.csv("PTA_CKDEPI/PTA_dos_02.csv")
+PTA_dos_03 <- read.csv("PTA_CKDEPI/PTA_dos_03.csv")
+PTA_dos_04 <- read.csv("PTA_CKDEPI/PTA_dos_04.csv")
+PTA_dos_05 <- read.csv("PTA_CKDEPI/PTA_dos_05.csv")
+PTA_dos_06 <- read.csv("PTA_CKDEPI/PTA_dos_06.csv")
 
 # Add regimens
 PTA_dos_01$Regimen <- 1
@@ -361,11 +361,11 @@ PTA_CKDEPI200_DAY1 <-  ggplot(PTA_CKDEPI[PTA_CKDEPI$DAY == 1 & PTA_CKDEPI$Regime
   theme_minimal() +
   ggtitle("Day 1") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7),
-        axis.text = element_text(size = 7),
-        legend.title = element_text(size = 6),
-        legend.text = element_text(size = 6),
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
   labs(color = "Regimen") +
@@ -391,11 +391,11 @@ PTA_CKDEPI200_DAY14 <-  ggplot(PTA_CKDEPI[PTA_CKDEPI$DAY == 14 & PTA_CKDEPI$Regi
   theme_minimal() +
   ggtitle("Day 14") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7),
-        axis.text = element_text(size = 7),
-        legend.title = element_text(size = 6),
-        legend.text = element_text(size = 6),
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
   labs(color = "Regimen") +
@@ -421,11 +421,11 @@ PTA_CKDEPI200_DAY2 <-  ggplot(PTA_CKDEPI[PTA_CKDEPI$DAY == 2 & PTA_CKDEPI$Regime
   theme_minimal() +
   ggtitle("Day 2") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7),
-        axis.text = element_text(size = 7),
-        legend.title = element_text(size = 6),
-        legend.text = element_text(size = 6),
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
   labs(color = "Regimen") +
@@ -451,11 +451,11 @@ PTA_CKDEPI200_DAY7 <-  ggplot(PTA_CKDEPI[PTA_CKDEPI$DAY == 7 & PTA_CKDEPI$Regime
   theme_minimal() +
   ggtitle("Day 7") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7),
-        axis.text = element_text(size = 7),
-        legend.title = element_text(size = 6),
-        legend.text = element_text(size = 6),
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
   labs(color = "Regimen") +
@@ -467,17 +467,222 @@ PTA_CKDEPI200_DAY7
 
 #### Combining these 4 plots into 1 -------------------------------------------
 
-ggarrange(PTA_CKDEPI200_DAY1, PTA_CKDEPI200_DAY2, PTA_CKDEPI200_DAY7, PTA_CKDEPI200_DAY14,
-          labels = c("a", "b", "c", "d"),
-          ncol = 2, nrow = 2,
-          font.label = list(size = 8, face = "bold"))
+## Combining DAY 1 & 2 into 1
 
-# Arrange the title and grid using plot_grid()
-grid_BW_noCRRT <- plot_grid(title, grid_BW_noCRRT, ncol = 1, rel_heights = c(0.02, 1))
+# Define common legend for both plots
+common_legend_CKDEPI_200_DAY12 <- ggpubr::get_legend(PTA_CKDEPI200_DAY1)
+
+# Remove legends from individual plots
+PTA_CKDEPI200_DAY1_no_legend <- PTA_CKDEPI200_DAY1 + 
+  theme(legend.position = "none")
+
+PTA_CKDEPI200_DAY2_no_legend <- PTA_CKDEPI200_DAY2 +
+  theme(legend.position = "none")
+
+# Combine the two plots
+PTA_CKDEPI200_DAY12_no_legend <- ggarrange(PTA_CKDEPI200_DAY1_no_legend, 
+                                           PTA_CKDEPI200_DAY2_no_legend,
+                                           labels = c("a", "b"),
+                                           ncol = 2, nrow = 1,
+                                           font.label = list(size = 8, face = "bold"))
+
+# Add common legend
+
+grid_CKDEPI_200_DAY12 <- plot_grid(PTA_CKDEPI200_DAY12_no_legend, 
+                                   common_legend_CKDEPI_200_DAY12,
+                                   rel_widths = c(1, 0.13),
+                                   nrow = 1)
+
+grid_CKDEPI_200_DAY12
+
+## Combining these DAY 7 & 14 into 1
+
+# Define common legend for both plots
+common_legend_CKDEPI_200_DAY714 <- ggpubr::get_legend(PTA_CKDEPI200_DAY7)
+
+# Remove legends from individual plots
+PTA_CKDEPI200_DAY7_no_legend <- PTA_CKDEPI200_DAY7 + 
+  theme(legend.position = "none")
+
+PTA_CKDEPI200_DAY14_no_legend <- PTA_CKDEPI200_DAY14 +
+  theme(legend.position = "none")
+
+# Combine the two plots
+PTA_CKDEPI200_DAY714_no_legend <- ggarrange(PTA_CKDEPI200_DAY7_no_legend, 
+                                            PTA_CKDEPI200_DAY14_no_legend,
+                                           labels = c("c", "d"),
+                                           ncol = 2, nrow = 1,
+                                           font.label = list(size = 8, face = "bold"))
+
+# Add common legend
+
+grid_CKDEPI_200_DAY714 <- plot_grid(PTA_CKDEPI200_DAY714_no_legend, 
+                                   common_legend_CKDEPI_200_DAY714,
+                                   rel_widths = c(1, 0.13),
+                                   nrow = 1)
+
+grid_CKDEPI_200_DAY714
+
+## Then combining these 4 plots
+grid_CKDEPI_200 <- plot_grid(grid_CKDEPI_200_DAY12, 
+                             grid_CKDEPI_200_DAY714, 
+                             nrow = 2, 
+                             align = "v")
+
+grid_CKDEPI_200
+
+## Combining DAY 1 & 14 into 1
+
+# Combine the two plots
+PTA_CKDEPI200_DAY114 <- ggarrange(PTA_CKDEPI200_DAY1,
+                                  PTA_CKDEPI200_DAY14,
+                                     labels = c("a", "b"),
+                                     ncol = 1, 
+                                     nrow = 2,
+                                     font.label = list(size = 8, face = "bold"))
 
 # Export the combined plots
-setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Bootstrap and dosing simulation/2l.method/2l.pan/BW_Sim/PTA plots")
-ggsave("grid_BW_noCRRT.png", grid_BW_noCRRT, dpi = 300, width = 16, height = 8.27)
+setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Plots/Dose_finding_simulations/CKDEPI")
+
+# SVG
+ggsave("grid_CKDEPI_200.svg", 
+       grid_CKDEPI_200, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+# This is the part when I realised that PTA of day 2 is affected by not just
+# the loading dose, but also the maintenance dose. The same for PTA of day 7,
+# which is not just influenced by the MD alone. So I decided to plot PTA of 
+# day 1 and 14 only as below. Doing so will make sure that the effects of LD and MD are
+# reflected to the fullest.
+
+ggsave("PTA_CKDEPI200_DAY114.svg", 
+       PTA_CKDEPI200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# JPEG
+ggsave("PTA_CKDEPI200_DAY114.JPEG", 
+       PTA_CKDEPI200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# EPS
+ggsave("PTA_CKDEPI200_DAY114.EPS", 
+       PTA_CKDEPI200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+### Assessing toxicity PTA Cmin80 --------------------------------------------
+
+# PTA_CKDEPI dataset was created above
+
+#### Day 1 -------------------------------------------
+
+# Check the title if it's correct
+plot(TeX(r"($Probability\ of\ \C_{min}\ \geq 80 \, \mg/L\ (\%)$)"))
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_CKDEPI80_DAY1 <-  ggplot(PTA_CKDEPI[PTA_CKDEPI$DAY == 1 & PTA_CKDEPI$Regimen %in% c(6, 2, 5, 4), ], 
+                              aes(x = CKDEPI, 
+                                  y = PTA_Cmin_80, 
+                                  group = factor(Regimen), 
+                                  color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(5, 215), breaks = seq(5, 215, by = 10), expand = c(0,0)) +
+  xlab(TeX(r"($\eGFR_{CKD-EPI}\ (ml/min/1.73m^2)$)")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \C_{min}\ \geq 80 \, \mg/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 1") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day12714, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day12) 
+PTA_CKDEPI80_DAY1
+
+#### Day 14 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_CKDEPI80_DAY14 <-  ggplot(PTA_CKDEPI[PTA_CKDEPI$DAY == 14 & PTA_CKDEPI$Regimen %in% c(6, 2, 5, 4), ], 
+                               aes(x = CKDEPI, 
+                                   y = PTA_Cmin_80, 
+                                   group = factor(Regimen), 
+                                   color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(5, 215), breaks = seq(5, 215, by = 10), expand = c(0,0)) +
+  xlab(TeX(r"($\eGFR_{CKD-EPI}\ (ml/min/1.73m^2)$)")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \C_{min}\ \geq 80 \, \mg/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 14") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day12714, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day714)  
+PTA_CKDEPI80_DAY14
+
+#### Combining these 4 plots into 1 -------------------------------------------
+
+## Combining DAY 1 & 14 into 1
+
+# Combine the two plots
+PTA_CKDEPI80_DAY114 <- ggarrange(PTA_CKDEPI80_DAY1,
+                                 PTA_CKDEPI80_DAY14,
+                                 labels = c("a", "b"),
+                                 ncol = 1,
+                                 nrow = 2,
+                                 font.label = list(size = 8, face = "bold"))
+
+# Export the combined plots
+setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Plots/Dose_finding_simulations/CKDEPI")
+
+# SVG
+ggsave("PTA_CKDEPI80_DAY114.svg", 
+       PTA_CKDEPI80_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# JPEG
+ggsave("PTA_CKDEPI80_DAY114.JPEG", 
+       PTA_CKDEPI80_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# EPS
+ggsave("PTA_CKDEPI80_DAY114.EPS", 
+       PTA_CKDEPI80_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
 
 ## Secondly, BW non-CRRT effect -------------------------------------------
 
@@ -885,11 +1090,407 @@ PTA_noCRRT_08_overall <- unique(PTA_noCRRT_08[c("PTA_Cmin_75","PTA_Cmin_80", "PT
 
 # Export PTA_noCRRT_dos_08 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(PTA_noCRRT_08_overall, "PTA_noCRRT_dos_08.csv", quote=F, row.names = FALSE)
+write.csv(PTA_noCRRT_08_overall, "PTA_noCRRT_dos_08.csv", quote = F, row.names = FALSE)
 
 # Export BW_noCRRT_dos_08.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
-write.csv(BW_noCRRT_dos_08, "BW_noCRRT_dos_08.csv", quote=F, row.names = FALSE)
+write.csv(BW_noCRRT_dos_08, "BW_noCRRT_dos_08.csv", quote = F, row.names = FALSE)
+
+### Making PTA plots -------------------------------------------
+
+#### Some preps -------------------------------------------
+
+# Import PTA_dos_ datasets
+PTA_noCRRT_dos_01 <- read.csv("PTA_BW_noCRRT/PTA_noCRRT_dos_01.csv")
+PTA_noCRRT_dos_02 <- read.csv("PTA_BW_noCRRT/PTA_noCRRT_dos_02.csv")
+PTA_noCRRT_dos_03 <- read.csv("PTA_BW_noCRRT/PTA_noCRRT_dos_03.csv")
+PTA_noCRRT_dos_04 <- read.csv("PTA_BW_noCRRT/PTA_noCRRT_dos_04.csv")
+PTA_noCRRT_dos_05 <- read.csv("PTA_BW_noCRRT/PTA_noCRRT_dos_05.csv")
+PTA_noCRRT_dos_06 <- read.csv("PTA_BW_noCRRT/PTA_noCRRT_dos_06.csv")
+PTA_noCRRT_dos_07 <- read.csv("PTA_BW_noCRRT/PTA_noCRRT_dos_07.csv")
+PTA_noCRRT_dos_08 <- read.csv("PTA_BW_noCRRT/PTA_noCRRT_dos_08.csv")
+
+# Add regimens
+PTA_noCRRT_dos_01$Regimen <- 1
+PTA_noCRRT_dos_02$Regimen <- 2
+PTA_noCRRT_dos_03$Regimen <- 3
+PTA_noCRRT_dos_04$Regimen <- 4
+PTA_noCRRT_dos_05$Regimen <- 5
+PTA_noCRRT_dos_06$Regimen <- 6
+PTA_noCRRT_dos_07$Regimen <- 7
+PTA_noCRRT_dos_08$Regimen <- 8
+
+# Combine 6 PTA datasets into 1 - PTA_BW_noCRRT
+PTA_BW_noCRRT <- rbind(PTA_noCRRT_dos_01, PTA_noCRRT_dos_02, PTA_noCRRT_dos_03, 
+                    PTA_noCRRT_dos_04, PTA_noCRRT_dos_05, PTA_noCRRT_dos_06,
+                    PTA_noCRRT_dos_07, PTA_noCRRT_dos_08)
+
+# Define the labels and colors
+dosing_labels_day12 <- c("800 mg q24h LD",
+                         "1000 mg q24h LD",
+                         "1200 mg q24h LD",
+                         "1400 mg q24h LD",
+                         "1600 mg q24h LD",
+                         "12 mg/kg q24h LD")
+# Regimens 8, 2, 3, 4, 5, 6, 7, respectively
+
+dosing_labels_day714 <- c("200 mg q24h MD", 
+                          "400 mg q24h MD", 
+                          "6 mg/kg q24h MD")
+# Regimens 8, 2, 7, respectively
+
+dosing_colors_day12 <- c("#a0da39",
+                         "#4ac16d",
+                         "#1fa187",
+                         "#277f8e",
+                         "#365c8d",
+                         "#46327e",
+                         "#440154")
+
+dosing_colors_day714 <- c("#a0da39",
+                          "#4ac16d",
+                          "#440154")
+
+# Reorder the levels of the dosing regimens
+PTA_BW_noCRRT$Regimen <- factor(PTA_BW_noCRRT$Regimen,
+                             levels = c(8, 2, 3, 4, 5, 6, 7, 1))
+
+# It's not necessary to have regimen 6 after I did some explorations
+
+# I also enforce limits on vertical lines here
+
+# Firstly, create dataset with BW, Regimen and PTA on day 1 
+BW_Reg <- data.frame( #BW and Regimen dataset
+  BW = c(60, 80, 100, 120),
+  Regimen = c(8, 2, 3, 4)
+)
+
+BW_Reg$Regimen <- factor(BW_Reg$Regimen,
+                         levels = c(8, 2, 3, 4))
+
+# Then, make a dataset of PTA on Day 1 per BW per Regimen
+BW_PTA_DaY1 <- BW_Reg %>%
+  left_join(
+    PTA_BW_noCRRT %>% 
+      dplyr::filter(DAY == 1),
+    by = c("BW", "Regimen")
+  )
+
+# Similarly for day 2
+BW_PTA_DaY2 <- BW_Reg %>%
+  left_join(
+    PTA_BW_noCRRT %>% 
+      dplyr::filter(DAY == 2),
+    by = c("BW", "Regimen")
+  )
+
+#### Day 1 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_BW_noCRRT200_DAY1 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 1 & !PTA_BW_noCRRT$Regimen %in% c(1, 6), ], 
+                              aes(x = BW, 
+                                  y = PTA_fAUC_200, 
+                                  group = factor(Regimen), 
+                                  color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 1") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day12, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day12) +
+  geom_hline(yintercept = 90, 
+             linetype = "dashed", 
+             color = "gray50", 
+             size = 0.6) +
+  geom_segment(
+    data = BW_PTA_DaY1,
+    aes(
+      x = BW,
+      xend = BW,
+      y = 0,  # Starting from the x-axis
+      yend = PTA_fAUC_200  # Ending at the corresponding PTA_fAUC_200 value
+    ),
+    linetype = "dashed",
+    color = "gray50",
+    size = 0.6
+  )
+PTA_BW_noCRRT200_DAY1
+
+#### Day 2 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_BW_noCRRT200_DAY2 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 2 & !PTA_BW_noCRRT$Regimen %in% c(1, 6), ], 
+                                 aes(x = BW, 
+                                     y = PTA_fAUC_200, 
+                                     group = factor(Regimen), 
+                                     color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 2") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day12, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day12) +
+  geom_hline(yintercept = 90, 
+             linetype = "dashed", 
+             color = "gray50", 
+             size = 0.6) +
+  geom_segment(
+    data = BW_PTA_DaY2,
+    aes(
+      x = BW,
+      xend = BW,
+      y = 0,  # Starting from the x-axis
+      yend = PTA_fAUC_200  # Ending at the corresponding PTA_fAUC_200 value
+    ),
+    linetype = "dashed",
+    color = "gray50",
+    size = 0.6
+  )
+PTA_BW_noCRRT200_DAY2
+
+#### Day 14 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_BW_noCRRT200_DAY14 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 14 & PTA_BW_noCRRT$Regimen %in% c(8, 2, 7), ], 
+                                 aes(x = BW, 
+                                     y = PTA_fAUC_200, 
+                                     group = factor(Regimen), 
+                                     color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 14") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day714, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day714) +
+  geom_hline(yintercept = 90, 
+             linetype = "dashed", 
+             color = "gray50", 
+             size = 0.6) 
+PTA_BW_noCRRT200_DAY14
+
+#### Day 7 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_BW_noCRRT200_DAY7 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 7 & PTA_BW_noCRRT$Regimen %in% c(8, 2, 7), ], 
+                                  aes(x = BW, 
+                                      y = PTA_fAUC_200, 
+                                      group = factor(Regimen), 
+                                      color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 7") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day714, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day714) +
+  geom_hline(yintercept = 90, 
+             linetype = "dashed", 
+             color = "gray50", 
+             size = 0.6) 
+PTA_BW_noCRRT200_DAY7
+
+#### Combining these 4 plots into 1 -------------------------------------------
+
+## Combining DAY 1 & 14 into 1
+
+# Combine the two plots
+PTA_BW_noCRRT200_DAY114 <- ggarrange(PTA_BW_noCRRT200_DAY1, 
+                                               PTA_BW_noCRRT200_DAY14,
+                                               labels = c("a", "b"),
+                                               ncol = 1, 
+                                               nrow = 2,
+                                               font.label = list(size = 8, face = "bold"))
+
+# Export the combined plots
+setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Plots/Dose_finding_simulations/BW_noCRRT")
+
+# SVG
+ggsave("PTA_BW_noCRRT200_DAY114.svg", 
+       PTA_BW_noCRRT200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# JPEG
+ggsave("PTA_BW_noCRRT200_DAY114.JPEG", 
+       PTA_BW_noCRRT200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# EPS
+ggsave("PTA_BW_noCRRT200_DAY114.EPS", 
+       PTA_BW_noCRRT200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+### Assessing toxicity PTA Cmin80 -------------------------------------------
+
+# PTA_CKDEPI dataset was created above
+
+#### Day 1 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_BW_noCRRT80_DAY1 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 1 & !PTA_BW_noCRRT$Regimen %in% c(1, 6), ], 
+                             aes(x = BW, 
+                                 y = PTA_Cmin_80, 
+                                 group = factor(Regimen), 
+                                 color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \C_{min}\ \geq 80 \, \mg/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 1") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day12, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day12) +
+  geom_segment(
+    data = BW_PTA_DaY1,
+    aes(
+      x = BW,
+      xend = BW,
+      y = 0,  # Starting from the x-axis
+      yend = PTA_Cmin_80  # Ending at the corresponding PTA_Cmin_80 value
+    ),
+    linetype = "dashed",
+    color = "gray50",
+    size = 0.6
+  )
+PTA_BW_noCRRT80_DAY1
+
+#### Day 14 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_BW_noCRRT80_DAY14 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 14 & PTA_BW_noCRRT$Regimen %in% c(8, 2, 7), ], 
+                                aes(x = BW, 
+                                    y = PTA_Cmin_80, 
+                                    group = factor(Regimen), 
+                                    color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \C_{min}\ \geq 80 \, \mg/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 14") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day714, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day714) 
+PTA_BW_noCRRT80_DAY14
+
+#### Combining these 4 plots into 1 -------------------------------------------
+
+## Combining DAY 1 & 14 into 1
+
+# Combine the two plots
+PTA_BW_noCRRT80_DAY114 <- ggarrange(PTA_BW_noCRRT80_DAY1,
+                                    PTA_BW_noCRRT80_DAY14,
+                                    labels = c("a", "b"),
+                                    ncol = 1,
+                                    nrow = 2,
+                                    font.label = list(size = 8, face = "bold"))
+
+# Export the combined plots
+setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Plots/Dose_finding_simulations/BW_noCRRT")
+
+# SVG
+ggsave("PTA_BW_noCRRT80_DAY114.svg", 
+       PTA_BW_noCRRT80_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# JPEG
+ggsave("PTA_BW_noCRRT80_DAY114.JPEG", 
+       PTA_BW_noCRRT80_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# EPS
+ggsave("PTA_BW_noCRRT80_DAY114.EPS", 
+       PTA_BW_noCRRT80_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
 
 ## Third, BW CRRT effect -------------------------------------------
 
@@ -1303,4 +1904,322 @@ write.csv(PTA_CRRT_08_overall, "PTA_CRRT_dos_08.csv", quote = F, row.names = FAL
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
 write.csv(BW_CRRT_dos_08, "BW_CRRT_dos_08.csv", quote = F, row.names = FALSE)
 
+### Making PTA plots -------------------------------------------
 
+#### Some preps -------------------------------------------
+
+# Import PTA_dos_ datasets
+PTA_CRRT_dos_01 <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos_01.csv")
+PTA_CRRT_dos_02 <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos_02.csv")
+PTA_CRRT_dos_03 <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos_03.csv")
+PTA_CRRT_dos_04 <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos_04.csv")
+PTA_CRRT_dos_05 <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos_05.csv")
+PTA_CRRT_dos_06 <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos_06.csv")
+PTA_CRRT_dos_07 <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos_07.csv")
+PTA_CRRT_dos_08 <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos_08.csv")
+
+# Add regimens
+PTA_CRRT_dos_01$Regimen <- 1
+PTA_CRRT_dos_02$Regimen <- 2
+PTA_CRRT_dos_03$Regimen <- 3
+PTA_CRRT_dos_04$Regimen <- 4
+PTA_CRRT_dos_05$Regimen <- 5
+PTA_CRRT_dos_06$Regimen <- 6
+PTA_CRRT_dos_07$Regimen <- 7
+PTA_CRRT_dos_08$Regimen <- 8
+
+# Combine 8 PTA datasets into 1 - PTA_BW_CRRT
+PTA_BW_CRRT <- rbind(PTA_CRRT_dos_01, PTA_CRRT_dos_02, PTA_CRRT_dos_03, 
+                       PTA_CRRT_dos_04, PTA_CRRT_dos_05, PTA_CRRT_dos_06,
+                       PTA_CRRT_dos_07, PTA_CRRT_dos_08)
+
+# Define the labels and colors
+dosing_labels_day12 <- c("800  mg  q24h LD",
+                         "1000 mg  q24h LD",
+                         "1200 mg  q24h LD",
+                         "1400 mg  q24h LD",
+                         "1600 mg  q24h LD",
+                         "1800 mg  q24h LD",
+                         "12 mg/kg q24h LD")
+# Regimens 1, 2, 3, 4, 5, 6, 7, respectively
+
+dosing_labels_day714 <- c("400 mg q24h MD", 
+                          "600 mg q24h MD",
+                          "800 mg q24h MD",
+                          "6 mg/kg q24h MD")
+# Regimens 1, 8, 3, 7, respectively
+
+dosing_colors_day12 <- c("#addc30",
+                         "#5ec962",
+                         "#28ae80",
+                         "#21918c",
+                         "#2c728e",
+                         "#3b528b",
+                         "#472d7b")
+
+dosing_colors_day714 <- c("#addc30",
+                          "#440154",
+                          "#28ae80",
+                          "#3b528b")
+
+# Reorder the levels of the dosing regimens
+PTA_BW_CRRT$Regimen <- factor(PTA_BW_CRRT$Regimen,
+                                levels = c(1, 8, 2, 3, 4, 5, 6, 7))
+
+
+# I also enforce limits on vertical lines here
+
+# Firstly, create dataset with BW, Regimen and PTA on day 1 
+BW_Reg <- data.frame( #BW and Regimen dataset
+  BW = c(60, 80, 100, 120, 140),
+  Regimen = c(2, 3, 4, 5, 6)
+)
+
+BW_Reg$Regimen <- factor(BW_Reg$Regimen,
+                         levels = c(2, 3, 4, 5, 6))
+
+# Then, make a dataset of PTA on Day 1 per BW per Regimen
+BW_PTA_DaY1 <- BW_Reg %>%
+  left_join(
+    PTA_BW_CRRT %>% 
+      dplyr::filter(DAY == 1),
+    by = c("BW", "Regimen")
+  )
+
+# Similarly for day 2
+BW_PTA_DaY2 <- BW_Reg %>%
+  left_join(
+    PTA_BW_CRRT %>% 
+      dplyr::filter(DAY == 2),
+    by = c("BW", "Regimen")
+  )
+
+#### Day 1 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_BW_CRRT200_DAY1 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 1 & !PTA_BW_CRRT$Regimen == 8, ], 
+                                 aes(x = BW, 
+                                     y = PTA_fAUC_200, 
+                                     group = factor(Regimen), 
+                                     color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 1") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day12, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day12) +
+  geom_hline(yintercept = 90, 
+             linetype = "dashed", 
+             color = "gray50", 
+             size = 0.6) +
+  geom_segment(
+    data = BW_PTA_DaY1,
+    aes(
+      x = BW,
+      xend = BW,
+      y = 0,  # Starting from the x-axis
+      yend = PTA_fAUC_200  # Ending at the corresponding PTA_fAUC_200 value
+    ),
+    linetype = "dashed",
+    color = "gray50",
+    size = 0.6
+  )
+PTA_BW_CRRT200_DAY1
+
+#### Day 14 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_BW_CRRT200_DAY14 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 14 & PTA_BW_CRRT$Regimen %in% c(1, 8, 3, 7), ], 
+                                  aes(x = BW, 
+                                      y = PTA_fAUC_200, 
+                                      group = factor(Regimen), 
+                                      color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 14") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day714, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day714) +
+  geom_hline(yintercept = 90, 
+             linetype = "dashed", 
+             color = "gray50", 
+             size = 0.6) 
+PTA_BW_CRRT200_DAY14
+
+#### Combining these 4 plots into 1 -------------------------------------------
+
+## Combining DAY 1 & 14 into 1
+
+# Combine the two plots
+PTA_BW_CRRT200_DAY114 <- ggarrange(PTA_BW_CRRT200_DAY1, 
+                                     PTA_BW_CRRT200_DAY14,
+                                     labels = c("a", "b"),
+                                     ncol = 1, 
+                                     nrow = 2,
+                                     font.label = list(size = 8, face = "bold"))
+
+# Export the combined plots
+setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Plots/Dose_finding_simulations/BW_CRRT")
+
+# SVG
+ggsave("PTA_BW_CRRT200_DAY114.svg", 
+       PTA_BW_CRRT200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# JPEG
+ggsave("PTA_BW_CRRT200_DAY114.JPEG", 
+       PTA_BW_CRRT200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# EPS
+ggsave("PTA_BW_CRRT200_DAY114.EPS", 
+       PTA_BW_CRRT200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+### Assessing toxicity PTA Cmin80 -------------------------------------------
+
+# PTA_CKDEPI dataset was created above
+
+#### Day 1 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_BW_CRRT80_DAY1 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 1 & !PTA_BW_CRRT$Regimen == 8, ], 
+                                aes(x = BW, 
+                                    y = PTA_Cmin_80, 
+                                    group = factor(Regimen), 
+                                    color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \C_{min}\ \geq 80 \, \mg/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 1") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day12, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day12) +
+  geom_segment(
+    data = BW_PTA_DaY1,
+    aes(
+      x = BW,
+      xend = BW,
+      y = 0,  # Starting from the x-axis
+      yend = PTA_Cmin_80  # Ending at the corresponding PTA_Cmin_80 value
+    ),
+    linetype = "dashed",
+    color = "gray50",
+    size = 0.6
+  )
+PTA_BW_CRRT80_DAY1
+
+#### Day 14 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_BW_CRRT80_DAY14 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 14 & PTA_BW_CRRT$Regimen %in% c(1, 8, 3, 7), ], 
+                                 aes(x = BW, 
+                                     y = PTA_Cmin_80, 
+                                     group = factor(Regimen), 
+                                     color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \C_{min}\ \geq 80 \, \mg/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 14") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 6, family = "Helvetica"),
+        axis.text = element_text(size = 5.5, family = "Helvetica"),
+        legend.title = element_text(size = 5, family = "Helvetica"),
+        legend.text = element_text(size = 5, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day714, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day714) 
+PTA_BW_CRRT80_DAY14
+
+#### Combining these 4 plots into 1 -------------------------------------------
+
+## Combining DAY 1 & 14 into 1
+
+# Combine the two plots
+PTA_BW_CRRT80_DAY114 <- ggarrange(PTA_BW_CRRT80_DAY1,
+                                  PTA_BW_CRRT80_DAY14,
+                                  labels = c("a", "b"),
+                                  ncol = 1,
+                                  nrow = 2,
+                                  font.label = list(size = 8, face = "bold"))
+
+# Export the combined plots
+setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Plots/Dose_finding_simulations/BW_CRRT")
+
+# SVG
+ggsave("PTA_BW_CRRT80_DAY114.svg", 
+       PTA_BW_CRRT80_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# JPEG
+ggsave("PTA_BW_CRRT80_DAY114.JPEG", 
+       PTA_BW_CRRT80_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# EPS
+ggsave("PTA_BW_CRRT80_DAY114.EPS", 
+       PTA_BW_CRRT80_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
