@@ -209,11 +209,7 @@ PTA_04_overall <- unique(PTA_04[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200", "
 
 # Export PTA_dos_04 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/CKDEPI_Sim/")
-<<<<<<< HEAD
 write.csv(PTA_04_overall, "PTA_dos_04.csv",quote = F, row.names = FALSE)
-=======
-write.csv(PTA_04_overall, "PTA_dos_04.csv",quote = F,row.names = FALSE)
->>>>>>> 068208c (Adjusting the coding style)
 
 #### 1200 LD 600 MD PTA -------------------------------------------
 
@@ -899,7 +895,7 @@ write.csv(BW_noCRRT_dos_04, "BW_noCRRT_dos_04.csv", quote = F, row.names = FALSE
 #### 1600 LD 400 MD PTA -------------------------------------------
 
 # Use read_nonmem_table function to import data
-working.directory <-'/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
 directory_BW_noCRRT_05 <- paste0(working.directory, '/sim_BW_noCRRT_05.1.npctab.dta') 
 BW_noCRRT_05 <- read_nonmem_table(directory_BW_noCRRT_05)
 
@@ -950,7 +946,7 @@ write.csv(BW_noCRRT_dos_05, "BW_noCRRT_dos_05.csv", quote = F, row.names = FALSE
 #### 1800 LD 400 MD PTA -------------------------------------------
 
 # Use read_nonmem_table function to import data
-working.directory <-'/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
 directory_BW_noCRRT_06 <- paste0(working.directory, '/sim_BW_noCRRT_06.1.npctab.dta') 
 BW_noCRRT_06 <- read_nonmem_table(directory_BW_noCRRT_06)
 
@@ -1001,7 +997,7 @@ write.csv(BW_noCRRT_dos_06, "BW_noCRRT_dos_06.csv", quote = F, row.names = FALSE
 #### 12 mg/kg LD 6 mg/kg MD PTA -------------------------------------------
 
 # Use read_nonmem_table function to import data
-working.directory <-'/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
 directory_BW_noCRRT_07 <- paste0(working.directory, '/sim_BW_noCRRT_07.1.npctab.dta') 
 BW_noCRRT_07 <- read_nonmem_table(directory_BW_noCRRT_07)
 
@@ -1052,7 +1048,7 @@ write.csv(BW_noCRRT_dos_07, "BW_noCRRT_dos_07.csv", quote = F, row.names = FALSE
 #### 800 LD 200 MD PTA -------------------------------------------
 
 # Use read_nonmem_table function to import data
-working.directory <-'/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/'
 directory_BW_noCRRT_08 <- paste0(working.directory, '/sim_BW_noCRRT_08.1.npctab.dta') 
 BW_noCRRT_08 <- read_nonmem_table(directory_BW_noCRRT_08)
 
@@ -1060,7 +1056,7 @@ BW_noCRRT_08 <- read_nonmem_table(directory_BW_noCRRT_08)
 BW_noCRRT_dos_08 <- BW_noCRRT_08[BW_noCRRT_08$TROUGH == 1,]
 
 # Convert ID into numeric
-BW_noCRRT_dos_08$ID <-as.integer(BW_noCRRT_dos_08$ID)
+BW_noCRRT_dos_08$ID <- as.integer(BW_noCRRT_dos_08$ID)
 
 # Create a new variable AUC24 for each ID
 BW_noCRRT_dos_08 <- BW_noCRRT_dos_08 |> 
@@ -1099,7 +1095,6 @@ write.csv(PTA_noCRRT_08_overall, "PTA_noCRRT_dos_08.csv", quote = F, row.names =
 # Export BW_noCRRT_dos_08.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
 write.csv(BW_noCRRT_dos_08, "BW_noCRRT_dos_08.csv", quote = F, row.names = FALSE)
-<<<<<<< HEAD
 
 ### Making PTA plots -------------------------------------------
 
@@ -1496,8 +1491,6 @@ ggsave("PTA_BW_noCRRT80_DAY114.EPS",
        width = 19, 
        height = 19,
        unit = "cm")
-=======
->>>>>>> 068208c (Adjusting the coding style)
 
 ## Third, BW CRRT effect -------------------------------------------
 
@@ -1557,7 +1550,7 @@ write.csv(BW_CRRT_dos_01, "BW_CRRT_dos_01.csv", quote = F, row.names = FALSE)
 #### 1000 LD 800 MD PTA -------------------------------------------
 
 # Use read_nonmem_table function to import data
-working.directory <-'/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/'
 directory_BW_CRRT_02 <- paste0(working.directory, '/sim_BW_CRRT_02.1.npctab.dta') 
 BW_CRRT_02 <- read_nonmem_table(directory_BW_CRRT_02)
 
@@ -1608,7 +1601,7 @@ write.csv(BW_CRRT_dos_02, "BW_CRRT_dos_02.csv", quote = F, row.names = FALSE)
 #### 1200 LD 800 MD PTA -------------------------------------------
 
 # Use read_nonmem_table function to import data
-working.directory <-'/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/'
 directory_BW_CRRT_03 <- paste0(working.directory, '/sim_BW_CRRT_03.1.npctab.dta') 
 BW_CRRT_03 <- read_nonmem_table(directory_BW_CRRT_03)
 
@@ -1659,7 +1652,7 @@ write.csv(BW_CRRT_dos_03, "BW_CRRT_dos_03.csv", quote = F, row.names = FALSE)
 #### 1400 LD 800 MD PTA -------------------------------------------
 
 # Use read_nonmem_table function to import data
-working.directory <-'/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/'
 directory_BW_CRRT_04 <- paste0(working.directory, '/sim_BW_CRRT_04.1.npctab.dta') 
 BW_CRRT_04 <- read_nonmem_table(directory_BW_CRRT_04)
 
@@ -1710,7 +1703,7 @@ write.csv(BW_CRRT_dos_04, "BW_CRRT_dos_04.csv", quote = F, row.names = FALSE)
 #### 1600 LD 800 MD PTA -------------------------------------------
 
 # Use read_nonmem_table function to import data
-working.directory <-'/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/'
 directory_BW_CRRT_05 <- paste0(working.directory, '/sim_BW_CRRT_05.1.npctab.dta') 
 BW_CRRT_05 <- read_nonmem_table(directory_BW_CRRT_05)
 
@@ -1761,7 +1754,7 @@ write.csv(BW_CRRT_dos_05, "BW_CRRT_dos_05.csv", quote = F, row.names = FALSE)
 #### 1800 LD 800 MD PTA -------------------------------------------
 
 # Use read_nonmem_table function to import data
-working.directory <-'/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/'
 directory_BW_CRRT_06 <- paste0(working.directory, '/sim_BW_CRRT_06.1.npctab.dta') 
 BW_CRRT_06 <- read_nonmem_table(directory_BW_CRRT_06)
 
