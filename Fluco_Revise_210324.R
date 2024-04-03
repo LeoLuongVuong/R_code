@@ -2083,4 +2083,4 @@ BW_stra_LD_CKDEPI <- rbind(LD_800_CKDEPI, LD_1000_CKDEPI, LD_1200_CKDEPI,
 
 # Then export into BW_stra_LD_CKDEPI.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Opt_dose")
-write.csv(BW_stra_LD_CKDEPI, "BW_stra_LD_CKDEPI.csv",quote = F,row.names = FALSE)
+write.csv(BW_stra_LD_CKDEPI, "BW_stra_LD_CKDEPI.csv", quote = F, row.names = FALSE)
