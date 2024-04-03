@@ -121,7 +121,7 @@ PTA_02_overall <- unique(PTA_02[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200", "
 
 # Export PTA_dos_02 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/CKDEPI_Sim/")
-write.csv(PTA_02_overall, "PTA_dos_02.csv",quote=F,row.names = FALSE)
+write.csv(PTA_02_overall, "PTA_dos_02.csv",quote = F,row.names = FALSE)
 
 #### 1200 LD 400 MD PTA -------------------------------------------
 
