@@ -209,7 +209,11 @@ PTA_04_overall <- unique(PTA_04[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200", "
 
 # Export PTA_dos_04 dataset
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/CKDEPI_Sim/")
+<<<<<<< HEAD
 write.csv(PTA_04_overall, "PTA_dos_04.csv",quote = F, row.names = FALSE)
+=======
+write.csv(PTA_04_overall, "PTA_dos_04.csv",quote = F,row.names = FALSE)
+>>>>>>> 068208c (Adjusting the coding style)
 
 #### 1200 LD 600 MD PTA -------------------------------------------
 
@@ -1095,6 +1099,7 @@ write.csv(PTA_noCRRT_08_overall, "PTA_noCRRT_dos_08.csv", quote = F, row.names =
 # Export BW_noCRRT_dos_08.csv for future use
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
 write.csv(BW_noCRRT_dos_08, "BW_noCRRT_dos_08.csv", quote = F, row.names = FALSE)
+<<<<<<< HEAD
 
 ### Making PTA plots -------------------------------------------
 
@@ -1491,6 +1496,8 @@ ggsave("PTA_BW_noCRRT80_DAY114.EPS",
        width = 19, 
        height = 19,
        unit = "cm")
+=======
+>>>>>>> 068208c (Adjusting the coding style)
 
 ## Third, BW CRRT effect -------------------------------------------
 
