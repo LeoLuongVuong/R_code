@@ -55,6 +55,92 @@ FlucTotIV_clean$RATE[FlucTotIV_clean$RATE == 0] <- NA
 
 write.csv(FlucTotIV_clean, "Fluco_clean_revised.csv",quote = F,row.names = FALSE)
 
+## Check the CRRT pattern -------------------------
+
+# Filter every patient that has at least one observation with CRRT == 1
+
+CRRT_one <- Fluco_clean_revised |> 
+  group_by(ID) |>
+  dplyr::filter(any(CRRT == 1)) 
+# 34 patients
+
+# Check how many patients have CRRT == 1 all the time
+CRRT_one |> 
+  group_by(ID) |> 
+  summarise(CRRT = all(CRRT == 1)) |> 
+  summarise(n = sum(CRRT))
+# 18 patients have CRRT == 1 all the time
+
+# Add DAY column, which equals 1 if TIME <=24, 2 if 24 < TIME <= 48, and so on
+
+CRRT_one <- CRRT_one |> 
+  mutate(DAY = cut(TIME, breaks = seq(0, 648, 24), labels = 1:27))
+
+# If TIME == 0, DAY == 1
+
+CRRT_one$DAY[CRRT_one$TIME == 0] <- 1
+
+# For those who have both CRRT == 1 and CRRT == 0, calculate the percentage of 
+# DAY that CRRT == 1 over all DAY
+
+# First select ID that has CRRT == 1 and CRRT == 0
+
+Miscel_CRRT <- CRRT_one |>
+  group_by(ID) |> 
+  summarise(CRRT = n_distinct(CRRT)) |> 
+  dplyr::filter(CRRT == 2) |> 
+  select(ID)
+
+# Percentage of days that CRRT == 1
+CRRT_one |> 
+  dplyr::filter(ID %in% Miscel_CRRT$ID) |>
+  group_by(ID) |> 
+  group_by(DAY) |>
+  summarise(CRRT = mean(CRRT == 1, na.rm = T)) |> 
+  summarise(mean = mean(CRRT, na.rm = T))
+
+# Try another way, calculate the total number of days that CRRT == 1, then divided
+# by the total number of days
+CRRT_one |> 
+  dplyr::filter(ID %in% Miscel_CRRT$ID) |>
+  group_by(DAY) |>
+  select(DAY, CRRT) |>
+  summarise(total_days = n(), CRRT_days = sum(CRRT == 1, na.rm = T)) |>
+  summarise(mean = sum(CRRT_days) / sum(total_days))
+
+# Another way, extract the unique combination of ID, DAY and CRRT == 1,
+# Sum up the number of days, then divided by the total number of days
+
+# Total CRRT days
+CRRT_one |> 
+  dplyr::filter(ID %in% Miscel_CRRT$ID) |>
+  group_by(ID, DAY) |>
+  dplyr::filter(CRRT == 1) |>
+  unique() |>
+  ungroup() |>
+  group_by(ID) |>
+  select(ID, DAY) |>
+  summarise(CRRT_days = n()) |>
+  summarise(Total_CRRT_days = sum(CRRT_days))
+# 199 CRRT days
+
+# Total number of days
+CRRT_one |> 
+  dplyr::filter(ID %in% Miscel_CRRT$ID) |>
+  group_by(ID, DAY) |>
+  unique() |>
+  ungroup() |>
+  group_by(ID) |>
+  select(ID, DAY) |>
+  summarise(total_days = n()) |>
+  summarise(Total_days = sum(total_days))
+# 340 total days
+
+## Conclude about data for population simulation: I have 18 (10.2%) patients 
+## that have CRRT == 1 all the time, and 16 patients that have CRRT == 1 only 
+## for 199 days out of 340 days (58.5% of days). The rest of the patients 
+## have CRRT == 0.
+
 ## Check the availability of APACHE score ---------------------------------
 
 ### The percentage of missing APACHE originally ---------------------------
@@ -2084,7 +2170,6 @@ BW_stra_LD_CKDEPI <- rbind(LD_800_CKDEPI, LD_1000_CKDEPI, LD_1200_CKDEPI,
 # Then export into BW_stra_LD_CKDEPI.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Opt_dose")
 write.csv(BW_stra_LD_CKDEPI, "BW_stra_LD_CKDEPI.csv", quote = F, row.names = FALSE)
-
 
 # VPC ------------------------------------------
 
