@@ -2084,3 +2084,33 @@ BW_stra_LD_CKDEPI <- rbind(LD_800_CKDEPI, LD_1000_CKDEPI, LD_1200_CKDEPI,
 # Then export into BW_stra_LD_CKDEPI.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Opt_dose")
 write.csv(BW_stra_LD_CKDEPI, "BW_stra_LD_CKDEPI.csv", quote = F, row.names = FALSE)
+
+
+# VPC ------------------------------------------
+
+## Refine vpc datasets, exclude all observations having either DV>70 or TAD>25.5
+
+# Import the overall dataset
+setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Imputed")
+
+Fluco_revised_imputed_overall <- read.csv("Fluco_revised_imputed_overall.csv")
+
+# Convert DV & TAD into numeric
+Fluco_revised_imputed_overall$DV <- as.numeric(Fluco_revised_imputed_overall$DV)
+Fluco_revised_imputed_overall$TAD <- as.numeric(Fluco_revised_imputed_overall$TAD)
+
+# The refined dataset
+Fluco_revised_imputed_overall_refined <- Fluco_revised_imputed_overall  |> 
+  dplyr::filter((TAD <= 25.5 | is.na(DV)))
+
+Fluco_revised_imputed_overall_refined <- Fluco_revised_imputed_overall_refined |> 
+  dplyr::filter((DV <= 70 | is.na(DV)))
+# eliminated 25 concentration - time points
+
+# Replace NAs in DV & TAD with "."
+Fluco_revised_imputed_overall_refined$DV[is.na(Fluco_revised_imputed_overall_refined$DV)] <- "."
+Fluco_revised_imputed_overall_refined$TAD[is.na(Fluco_revised_imputed_overall_refined$TAD)] <- "."
+
+# Export into refined dataset
+setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/VPC")
+write.csv(Fluco_revised_imputed_overall_refined, "Fluco_revised_imputed_overall_refined.csv",quote = F,row.names = FALSE)
