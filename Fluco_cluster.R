@@ -2282,103 +2282,44 @@ write.csv(CKDEPI_Opt_dos, "CKDEPI_Opt_dos.csv", quote = F, row.names = FALSE)
 #### Some preps -------------------------------------------
 
 # Import PTA_dos_ datasets
-PTA_CRRT_dos <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos.csv")
-PTA_CRRT_dos_02 <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos_02.csv")
-PTA_CRRT_dos_03 <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos_03.csv")
-PTA_CRRT_dos_04 <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos_04.csv")
-PTA_CRRT_dos_05 <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos_05.csv")
-PTA_CRRT_dos_06 <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos_06.csv")
-PTA_CRRT_dos_07 <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos_07.csv")
-PTA_CRRT_dos_08 <- read.csv("PTA_BW_CRRT/PTA_CRRT_dos_08.csv")
-
-# Add regimens
-PTA_CRRT_dos$Regimen <- 1
-PTA_CRRT_dos_02$Regimen <- 2
-PTA_CRRT_dos_03$Regimen <- 3
-PTA_CRRT_dos_04$Regimen <- 4
-PTA_CRRT_dos_05$Regimen <- 5
-PTA_CRRT_dos_06$Regimen <- 6
-PTA_CRRT_dos_07$Regimen <- 7
-PTA_CRRT_dos_08$Regimen <- 8
-
-# Combine 8 PTA datasets into 1 - PTA_BW_CRRT
-PTA_BW_CRRT <- rbind(PTA_CRRT_dos, PTA_CRRT_dos_02, PTA_CRRT_dos_03, 
-                     PTA_CRRT_dos_04, PTA_CRRT_dos_05, PTA_CRRT_dos_06,
-                     PTA_CRRT_dos_07, PTA_CRRT_dos_08)
+PTA_CKDEPI_Opt <- read.csv("PTA_CKDEPI_Opt/PTA_CKDEPI_Opt_dos.csv")
 
 # Define the labels and colors
-dosing_labels_day12 <- c("800  mg  q24h LD",
+dosing_labels_day1 <-  c("800  mg  q24h LD",
                          "1000 mg  q24h LD",
                          "1200 mg  q24h LD",
                          "1400 mg  q24h LD",
-                         "1600 mg  q24h LD",
-                         "1800 mg  q24h LD",
-                         "12 mg/kg q24h LD")
-# Regimens 1, 2, 3, 4, 5, 6, 7, respectively
+                         "1600 mg  q24h LD")
 
-dosing_labels_day714 <- c("400 mg q24h MD", 
-                          "600 mg q24h MD",
-                          "800 mg q24h MD",
-                          "6 mg/kg q24h MD")
-# Regimens 1, 8, 3, 7, respectively
+dosing_labels_day27 <- c("800  mg  q24h LD / 400 mg q24h MD",
+                         "1000 mg  q24h LD / 400 mg q24h MD",
+                         "1200 mg  q24h LD / 400 mg q24h MD",
+                         "1400 mg  q24h LD / 400 mg q24h MD",
+                         "1600 mg  q24h LD / 400 mg q24h MD")
 
-dosing_colors_day12 <- c("#addc30",
-                         "#5ec962",
-                         "#28ae80",
-                         "#21918c",
-                         "#2c728e",
-                         "#3b528b",
-                         "#472d7b")
+dosing_labels_day14 <- c("400 mg q24h MD")
 
-dosing_colors_day714 <- c("#addc30",
-                          "#440154",
-                          "#28ae80",
-                          "#3b528b")
+dosing_colors_day127 <- c("#7ad151",
+                          "#22a884",
+                          "#2a788e",
+                          "#414487",
+                          "#440154")
 
-# Reorder the levels of the dosing regimens
-PTA_BW_CRRT$Regimen <- factor(PTA_BW_CRRT$Regimen,
-                              levels = c(1, 8, 2, 3, 4, 5, 6, 7))
-
-
-# I also enforce limits on vertical lines here
-
-# Firstly, create dataset with BW, Regimen and PTA on day 1 
-BW_Reg <- data.frame( #BW and Regimen dataset
-  BW = c(60, 80, 100, 120, 140),
-  Regimen = c(2, 3, 4, 5, 6)
-)
-
-BW_Reg$Regimen <- factor(BW_Reg$Regimen,
-                         levels = c(2, 3, 4, 5, 6))
-
-# Then, make a dataset of PTA on Day 1 per BW per Regimen
-BW_PTA_DaY1 <- BW_Reg %>%
-  left_join(
-    PTA_BW_CRRT %>% 
-      dplyr::filter(DAY == 1),
-    by = c("BW", "Regimen")
-  )
-
-# Similarly for day 2
-BW_PTA_DaY2 <- BW_Reg %>%
-  left_join(
-    PTA_BW_CRRT %>% 
-      dplyr::filter(DAY == 2),
-    by = c("BW", "Regimen")
-  )
+dosing_colors_day14  <- c("#440154")
 
 #### Day 1 -------------------------------------------
 
 # Here we use Colorblind-Friendly Palette Viridis
-PTA_BW_CRRT200_DAY1 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 1 & !PTA_BW_CRRT$Regimen == 8, ], 
-                               aes(x = BW, 
+PTA_CKDEPI_Opt200_DAY1 <-  ggplot(PTA_CKDEPI_Opt[PTA_CKDEPI_Opt$DAY == 1, ], 
+                               aes(x = CKDEPI, 
                                    y = PTA_fAUC_200, 
                                    group = factor(Regimen), 
                                    color = factor(Regimen))) +
   geom_line(size = 1) +
-  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
-  xlab(TeX(r"(Total body weight (kg))")) + 
-  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  scale_x_continuous(limits = c(5, 215), breaks = seq(5, 215, by = 10), expand = c(0,0)) +
+  xlab(TeX(r"($\eGFR_{CKD-EPI}\ (ml/min/1.73m^2)$)")) + 
+  scale_y_continuous(limits = c(80, 100), breaks = seq(80, 100, by = 5), expand = c(0,0)) + 
+  # The y-axis ranging from 80 to 100 to make the distinction clearer
   ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
   theme_minimal() +
   ggtitle("Day 1") +
@@ -2391,39 +2332,27 @@ PTA_BW_CRRT200_DAY1 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 1 & !PTA_BW_CRRT$R
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
   labs(color = "Regimen") +
-  scale_color_manual(values = dosing_colors_day12, 
+  scale_color_manual(values = dosing_colors_day127, 
                      name = "Dosing regimen",
-                     labels = dosing_labels_day12) +
-  geom_hline(yintercept = 90, 
-             linetype = "dashed", 
-             color = "gray50", 
-             size = 0.6) +
-  geom_segment(
-    data = BW_PTA_DaY1,
-    aes(
-      x = BW,
-      xend = BW,
-      y = 0,  # Starting from the x-axis
-      yend = PTA_fAUC_200  # Ending at the corresponding PTA_fAUC_200 value
-    ),
-    linetype = "dashed",
-    color = "gray50",
-    size = 0.6
-  )
-PTA_BW_CRRT200_DAY1
+                     labels = dosing_labels_day1) +
+  geom_hline(yintercept = 90, linetype = "dashed", color = "gray50", size = 0.6) 
+PTA_CKDEPI_Opt200_DAY1
+
+# Tomorrow work from here
 
 #### Day 14 -------------------------------------------
 
 # Here we use Colorblind-Friendly Palette Viridis
-PTA_BW_CRRT200_DAY14 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 14 & PTA_BW_CRRT$Regimen %in% c(1, 8, 3, 7), ], 
-                                aes(x = BW, 
+PTA_CKDEPI_Opt200_DAY14 <-  ggplot(PTA_CKDEPI_Opt[PTA_CKDEPI_Opt$DAY == 14 & PTA_CKDEPI_Opt$Regimen %in% c(1), ], 
+                                aes(x = CKDEPI, 
                                     y = PTA_fAUC_200, 
                                     group = factor(Regimen), 
                                     color = factor(Regimen))) +
   geom_line(size = 1) +
-  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
-  xlab(TeX(r"(Total body weight (kg))")) + 
-  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  scale_x_continuous(limits = c(5, 215), breaks = seq(5, 215, by = 10), expand = c(0,0)) +
+  xlab(TeX(r"($\eGFR_{CKD-EPI}\ (ml/min/1.73m^2)$)")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) + 
+  # The y-axis ranging from 80 to 100 to make the distinction clearer
   ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
   theme_minimal() +
   ggtitle("Day 14") +
@@ -2436,49 +2365,49 @@ PTA_BW_CRRT200_DAY14 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 14 & PTA_BW_CRRT$
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
   labs(color = "Regimen") +
-  scale_color_manual(values = dosing_colors_day714, 
+  scale_color_manual(values = dosing_colors_day14, 
                      name = "Dosing regimen",
-                     labels = dosing_labels_day714) +
+                     labels = dosing_labels_day14) +
   geom_hline(yintercept = 90, 
              linetype = "dashed", 
              color = "gray50", 
              size = 0.6) 
-PTA_BW_CRRT200_DAY14
+PTA_CKDEPI_Opt200_DAY14
 
 #### Combining these 4 plots into 1 -------------------------------------------
 
 ## Combining DAY 1 & 14 into 1
 
 # Combine the two plots
-PTA_BW_CRRT200_DAY114 <- ggarrange(PTA_BW_CRRT200_DAY1, 
-                                   PTA_BW_CRRT200_DAY14,
+PTA_CKDEPI_Opt200_DAY114 <- ggarrange(PTA_CKDEPI_Opt200_DAY1, 
+                                   PTA_CKDEPI_Opt200_DAY14,
                                    labels = c("a", "b"),
                                    ncol = 1, 
                                    nrow = 2,
                                    font.label = list(size = 8, face = "bold"))
 
 # Export the combined plots
-setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Plots/Dose_finding_simulations/BW_CRRT")
+setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Plots/Dose_finding_simulations/CKDEPI_Opt")
 
 # SVG
-ggsave("PTA_BW_CRRT200_DAY114.svg", 
-       PTA_BW_CRRT200_DAY114, 
+ggsave("PTA_CKDEPI_Opt200_DAY114.svg", 
+       PTA_CKDEPI_Opt200_DAY114, 
        dpi = 300, 
        width = 19, 
        height = 19,
        unit = "cm")
 
 # JPEG
-ggsave("PTA_BW_CRRT200_DAY114.JPEG", 
-       PTA_BW_CRRT200_DAY114, 
+ggsave("PTA_CKDEPI_Opt200_DAY114.JPEG", 
+       PTA_CKDEPI_Opt200_DAY114, 
        dpi = 300, 
        width = 19, 
        height = 19,
        unit = "cm")
 
 # EPS
-ggsave("PTA_BW_CRRT200_DAY114.EPS", 
-       PTA_BW_CRRT200_DAY114, 
+ggsave("PTA_CKDEPI_Opt200_DAY114.EPS", 
+       PTA_CKDEPI_Opt200_DAY114, 
        dpi = 300, 
        width = 19, 
        height = 19,
@@ -2491,15 +2420,15 @@ ggsave("PTA_BW_CRRT200_DAY114.EPS",
 #### Day 1 -------------------------------------------
 
 # Here we use Colorblind-Friendly Palette Viridis
-PTA_BW_CRRT80_DAY1 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 1 & !PTA_BW_CRRT$Regimen == 8, ], 
-                              aes(x = BW, 
+PTA_CKDEPI_Opt80_DAY1 <-  ggplot(PTA_CKDEPI_Opt[PTA_CKDEPI_Opt$DAY == 1, ], 
+                              aes(x = CKDEPI, 
                                   y = PTA_Cmin_80, 
                                   group = factor(Regimen), 
                                   color = factor(Regimen))) +
   geom_line(size = 1) +
-  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
-  xlab(TeX(r"(Total body weight (kg))")) + 
-  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  scale_x_continuous(limits = c(5, 215), breaks = seq(5, 215, by = 10), expand = c(0,0)) +
+  xlab(TeX(r"($\eGFR_{CKD-EPI}\ (ml/min/1.73m^2)$)")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) + 
   ylab(TeX(r"($Probability\ of\ \C_{min}\ \geq 80 \, \mg/L\ (\%)$)")) +
   theme_minimal() +
   ggtitle("Day 1") +
@@ -2512,35 +2441,23 @@ PTA_BW_CRRT80_DAY1 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 1 & !PTA_BW_CRRT$Re
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
   labs(color = "Regimen") +
-  scale_color_manual(values = dosing_colors_day12, 
+  scale_color_manual(values = dosing_colors_day127, 
                      name = "Dosing regimen",
-                     labels = dosing_labels_day12) +
-  geom_segment(
-    data = BW_PTA_DaY1,
-    aes(
-      x = BW,
-      xend = BW,
-      y = 0,  # Starting from the x-axis
-      yend = PTA_Cmin_80  # Ending at the corresponding PTA_Cmin_80 value
-    ),
-    linetype = "dashed",
-    color = "gray50",
-    size = 0.6
-  )
-PTA_BW_CRRT80_DAY1
+                     labels = dosing_labels_day1) 
+PTA_CKDEPI_Opt80_DAY1
 
 #### Day 14 -------------------------------------------
 
 # Here we use Colorblind-Friendly Palette Viridis
-PTA_BW_CRRT80_DAY14 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 14 & PTA_BW_CRRT$Regimen %in% c(1, 8, 3, 7), ], 
-                               aes(x = BW, 
+PTA_CKDEPI_Opt80_DAY14 <-  ggplot(PTA_CKDEPI_Opt[PTA_CKDEPI_Opt$DAY == 14 & PTA_CKDEPI_Opt$Regimen %in% c(1), ], 
+                               aes(x = CKDEPI, 
                                    y = PTA_Cmin_80, 
                                    group = factor(Regimen), 
                                    color = factor(Regimen))) +
   geom_line(size = 1) +
-  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
-  xlab(TeX(r"(Total body weight (kg))")) + 
-  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  scale_x_continuous(limits = c(5, 215), breaks = seq(5, 215, by = 10), expand = c(0,0)) +
+  xlab(TeX(r"($\eGFR_{CKD-EPI}\ (ml/min/1.73m^2)$)")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) + 
   ylab(TeX(r"($Probability\ of\ \C_{min}\ \geq 80 \, \mg/L\ (\%)$)")) +
   theme_minimal() +
   ggtitle("Day 14") +
@@ -2553,10 +2470,14 @@ PTA_BW_CRRT80_DAY14 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 14 & PTA_BW_CRRT$R
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
   labs(color = "Regimen") +
-  scale_color_manual(values = dosing_colors_day714, 
+  scale_color_manual(values = dosing_colors_day14, 
                      name = "Dosing regimen",
-                     labels = dosing_labels_day714) 
-PTA_BW_CRRT80_DAY14
+                     labels = dosing_labels_day14) +
+  geom_hline(yintercept = 90, 
+             linetype = "dashed", 
+             color = "gray50", 
+             size = 0.6)
+PTA_CKDEPI_Opt80_DAY14
 
 #### Combining these 4 plots into 1 -------------------------------------------
 
