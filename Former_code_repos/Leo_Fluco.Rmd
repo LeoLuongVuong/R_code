@@ -1,0 +1,2785 @@
+---
+title: "Leo_Fluco"
+author: "Leo"
+date: "2023-11-02"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("/data/leuven/357/vsc35700/R_library/")
+
+```
+
+### Call iibraries
+
+```{r call libraries,warning=FALSE,message=FALSE}
+
+library(tzdb)
+library(readr)
+library(vroom)
+library(tidyr)
+library(readr) #for using read_csv function
+#library(tidyverse) #package conflict
+library(withr)
+library(ggplot2)
+library(xpose) #perhaps this is not needed for dev tools anymore
+library(xpose4)
+library(vpc)
+library(remotes)
+library(PsNR)
+library(dplyr)
+library(cowplot)
+library(viridis)
+library(pROC)
+#library(devtools)
+
+```
+
+### Pop_dosing analysis
+
+#### For standard dosing
+
+```{r pop_sim_std dataset, warning=FALSE}
+
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/pop_sim_std.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+pop_std_dos <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+pop_std_dos$ID<-as.integer(pop_std_dos$ID)
+
+# Create a new variable AUC24 for each ID
+pop_std_dos <- pop_std_dos %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+pop_std_dos<- pop_std_dos %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+pop_std_dos$fAUC<- pop_std_dos$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_pop_std <- subset(pop_std_dos, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_pop_std$PTA_Cmin_75 <- 100 * ave(PTA_pop_std$DV >= 7.5, PTA_pop_std$DAY, PTA_pop_std$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_pop_std$PTA_Cmin_80 <- 100 * ave(PTA_pop_std$DV >= 80, PTA_pop_std$DAY, PTA_pop_std$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_pop_std$PTA_fAUC_200 <- 100 * ave(PTA_pop_std$fAUC >= 200, PTA_pop_std$DAY, PTA_pop_std$BW, FUN = mean)
+
+# Create PTA_pop_std_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_pop_std_overall <- unique(PTA_pop_std[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200", "DAY", "BW")])
+
+# Export PTA_pop_std_overall dataset
+#setwd("/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/")
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/ROCcurves_131123/")
+#write.csv("pop_std_dos.csv",quote=F,row.names = FALSE) #export this dataset to make ROC curves
+pop_std_dos<-read.csv("pop_std_dos.csv") #import this dataset to make ROC curves
+write.csv(PTA_pop_std_overall, "PTA_pop_std_overall.csv",quote=F,row.names = FALSE)
+
+```
+
+#### For optimised dosing
+
+```{r pop_sim_opt dataset, warning=FALSE}
+
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/pop_sim_opt.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+pop_opt_dos <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+pop_opt_dos$ID<-as.integer(pop_opt_dos$ID)
+
+# Create a new variable AUC24 for each ID
+pop_opt_dos <- pop_opt_dos %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+pop_opt_dos<- pop_opt_dos %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+pop_opt_dos$fAUC<- pop_opt_dos$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_pop_opt <- subset(pop_opt_dos, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_pop_opt$PTA_Cmin_75 <- 100 * ave(PTA_pop_opt$DV >= 7.5, PTA_pop_opt$DAY, PTA_pop_opt$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_pop_opt$PTA_Cmin_80 <- 100 * ave(PTA_pop_opt$DV >= 80, PTA_pop_opt$DAY, PTA_pop_opt$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_pop_opt$PTA_fAUC_200 <- 100 * ave(PTA_pop_opt$fAUC >= 200, PTA_pop_opt$DAY, PTA_pop_opt$BW, FUN = mean)
+
+# Create PTA_pop_opt_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_pop_opt_overall <- unique(PTA_pop_opt[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200", "DAY", "BW")])
+
+# Export PTA_pop_opt_overall dataset
+#setwd("/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/")
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/ROCcurves_131123/")
+#write.csv(pop_opt_dos, "pop_opt_dos.csv",quote=F,row.names = FALSE) #export this dataset to make ROC curves
+pop_opt_dos<-read.csv("pop_opt_dos.csv") #import this dataset to make ROC curves
+write.csv(PTA_pop_opt_overall, "PTA_pop_opt_overall.csv",quote=F,row.names = FALSE)
+
+```
+
+#### Making ROC curves
+
+##### BW's impact
+
+```{r combining 2 roc curves of day1}
+
+TA_std_day1 <- pop_std_dos %>% filter(DAY == 1) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_BW_std_day1 <- pROC::roc(TA_std_day1$TA,
+                        TA_std_day1$BW,
+                        auc.polygon = FALSE, 
+                        max.auc.polygon = FALSE, 
+                        grid = FALSE,
+                        ci = TRUE, 
+                        boot.n = 1000, 
+                        ci.alpha = 0.95, 
+                        stratified = TRUE,
+                        plot = FALSE, 
+                        print.auc = TRUE, 
+                        print.auc.x = 0.2, 
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI
+AUC_std_day1 <- pROC::auc(ROC_BW_std_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_std_day1 <- round(as.numeric(sub(".*(: *)", "//1", AUC_std_day1)), 3)
+
+CI_AUC_std_day1 <- pROC::ci.auc(ROC_BW_std_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_std_day1 <- sub(".*(: *)", "//1", CI_AUC_std_day1)
+
+AUC_secondpart_std_day1 <- as.numeric(substr(AUC_anotherpart_std_day1[1], 1, 5))
+
+AUC_thirdpart_std_day1 <- as.numeric(substr(AUC_anotherpart_std_day1[3], 1, 5))
+
+AUC_label_std_day1 <- paste0("AUC: ", AUC_firstpart_std_day1, " (", AUC_secondpart_std_day1, "-", AUC_thirdpart_std_day1, ")", sep = "") #needs to figure out how to save this object for next time
+
+# For recommended dosing
+TA_opt_day1 <- pop_opt_dos %>% filter(DAY == 1) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_BW_opt_day1 <- pROC::roc(TA_opt_day1$TA,
+                        TA_opt_day1$BW,
+                        auc.polygon = FALSE,
+                        max.auc.polygon = FALSE,
+                        grid = FALSE,
+                        ci = TRUE,
+                        boot.n = 1000,
+                        ci.alpha = 0.95,
+                        stratified = TRUE,
+                        plot = FALSE,
+                        print.auc = TRUE,
+                        print.auc.x = 0.2,
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI for the roc curves
+AUC_opt_day1 <- pROC::auc(ROC_BW_opt_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_opt_day1 <- round(as.numeric(sub(".*(: *)", "//1", AUC_opt_day1)), 3)
+
+CI_AUC_opt_day1 <- pROC::ci.auc(ROC_BW_opt_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_opt_day1 <- sub(".*(: *)", "//1", CI_AUC_opt_day1)
+
+AUC_secondpart_opt_day1 <- as.numeric(substr(AUC_anotherpart_opt_day1[1], 1, 5))
+
+AUC_thirdpart_opt_day1 <- as.numeric(substr(AUC_anotherpart_opt_day1[3], 1, 5))
+
+AUC_label_opt_day1 <- paste0("AUC: ", AUC_firstpart_opt_day1, " (", AUC_secondpart_opt_day1, "-", AUC_thirdpart_opt_day1, ")", sep = "")
+
+# Convert roc objects to data frames
+roc_std_day1 <- pROC::coords(ROC_BW_std_day1)
+roc_opt_day1 <- pROC::coords(ROC_BW_opt_day1)
+
+# Create the plot with DAY 1 title
+roc_curve_day1 <- ggplot() +
+  geom_line(data = roc_std_day1, aes(x = 1 - specificity, y = sensitivity, color = "Standard dosing regimen", linetype = "Standard dosing regimen"), size = 1) +
+  geom_line(data = roc_opt_day1, aes(x = 1 - specificity, y = sensitivity, color = "Optimised dosing regimen", linetype = "Optimised dosing regimen"), size = 1) +
+  scale_color_manual(values = c("Standard dosing regimen" = "#440154",
+    "Optimised dosing regimen" = "#21918c"),
+    breaks=c('Standard dosing regimen', 'Optimised dosing regimen')) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  theme_minimal() +
+  labs(y = "Sensitivity", x = "1 - Specificity") +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+    axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, size = 1),
+    axis.line = element_line(colour = "black")) +
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color = "#fde725", linetype = "solid") +
+  annotate(geom = "text", x = 0.60, y = 0.30, size = 11/.pt, label = AUC_label_std_day1, color = "#440154") +
+  annotate(geom = "text", x = 0.60, y = 0.20, size = 11/.pt, label = AUC_label_opt_day1, color = "#21918c") +
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed"))), linetype = "none") +
+  ggtitle("Day 1")
+roc_curve_day1
+
+```
+
+```{r combining two ROC curves of DAY2}
+
+# For standard dosing - DAY 2
+TA_std_day2 <- pop_std_dos %>% filter(DAY == 2) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_BW_std_day2 <- pROC::roc(TA_std_day2$TA,
+                        TA_std_day2$BW,
+                        auc.polygon = FALSE, 
+                        max.auc.polygon = FALSE, 
+                        grid = FALSE,
+                        ci = TRUE, 
+                        boot.n = 1000, 
+                        ci.alpha = 0.95, 
+                        stratified = TRUE,
+                        plot = FALSE, 
+                        print.auc = TRUE, 
+                        print.auc.x = 0.2, 
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI
+AUC_std_day2 <- pROC::auc(ROC_BW_std_day2, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_std_day2 <- round(as.numeric(sub(".*(: *)", "//1", AUC_std_day2)), 3)
+
+CI_AUC_std_day2 <- pROC::ci.auc(ROC_BW_std_day2, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_std_day2 <- sub(".*(: *)", "//1", CI_AUC_std_day2)
+
+AUC_secondpart_std_day2 <- as.numeric(substr(AUC_anotherpart_std_day2[1], 1, 5))
+
+AUC_thirdpart_std_day2 <- as.numeric(substr(AUC_anotherpart_std_day2[3], 1, 5))
+
+AUC_label_std_day2 <- paste0("AUC: ", AUC_firstpart_std_day2, " (", AUC_secondpart_std_day2, "-", AUC_thirdpart_std_day2, ")", sep = "") 
+
+# For recommended dosing
+TA_opt_day2 <- pop_opt_dos %>% filter(DAY == 2) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_BW_opt_day2 <- pROC::roc(TA_opt_day2$TA,
+                        TA_opt_day2$BW,
+                        auc.polygon = FALSE,
+                        max.auc.polygon = FALSE,
+                        grid = FALSE,
+                        ci = TRUE,
+                        boot.n = 1000,
+                        ci.alpha = 0.95,
+                        stratified = TRUE,
+                        plot = FALSE,
+                        print.auc = TRUE,
+                        print.auc.x = 0.2,
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI for the roc curves
+AUC_opt_day2 <- pROC::auc(ROC_BW_opt_day2, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_opt_day2 <- round(as.numeric(sub(".*(: *)", "//1", AUC_opt_day2)), 3)
+
+CI_AUC_opt_day2 <- pROC::ci.auc(ROC_BW_opt_day2, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_opt_day2 <- sub(".*(: *)", "//1", CI_AUC_opt_day2)
+
+AUC_secondpart_opt_day2 <- as.numeric(substr(AUC_anotherpart_opt_day2[1], 1, 5))
+
+AUC_thirdpart_opt_day2 <- as.numeric(substr(AUC_anotherpart_opt_day2[3], 1, 5))
+
+AUC_label_opt_day2 <- paste0("AUC: ", AUC_firstpart_opt_day2, " (", AUC_secondpart_opt_day2, "-", AUC_thirdpart_opt_day2, ")", sep = "")
+
+# Convert roc objects to data frames
+roc_std_day2 <- pROC::coords(ROC_BW_std_day2)
+roc_opt_day2 <- pROC::coords(ROC_BW_opt_day2)
+
+# Create the plot with DAY 1 title
+roc_curve_day2 <- ggplot() +
+  geom_line(data = roc_std_day2, aes(x = 1 - specificity, y = sensitivity, color = "Standard dosing regimen", linetype = "Standard dosing regimen"), size = 1) +
+  geom_line(data = roc_opt_day2, aes(x = 1 - specificity, y = sensitivity, color = "Optimised dosing regimen", linetype = "Optimised dosing regimen"), size = 1) +
+  scale_color_manual(values = c("Standard dosing regimen" = "#440154",
+    "Optimised dosing regimen" = "#21918c"),
+    breaks=c('Standard dosing regimen', 'Optimised dosing regimen')) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  theme_minimal() +
+  labs(y = "Sensitivity", x = "1 - Specificity") +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+    axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, size = 1),
+    axis.line = element_line(colour = "black")) +
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color = "#fde725", linetype = "solid") +
+  annotate(geom = "text", x = 0.60, y = 0.30, size = 11/.pt, label = AUC_label_std_day2, color = "#440154") +
+  annotate(geom = "text", x = 0.60, y = 0.20, size = 11/.pt, label = AUC_label_opt_day2, color = "#21918c") +
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed"))), linetype = "none") +
+  ggtitle("Day 2")
+roc_curve_day2
+
+```
+
+```{r combining two ROC curves of DAY7}
+
+# For standard dosing - DAY 7
+TA_std_day7 <- pop_std_dos %>% filter(DAY == 7) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_BW_std_day7 <- pROC::roc(TA_std_day7$TA,
+                        TA_std_day7$BW,
+                        auc.polygon = FALSE, 
+                        max.auc.polygon = FALSE, 
+                        grid = FALSE,
+                        ci = TRUE, 
+                        boot.n = 1000, 
+                        ci.alpha = 0.95, 
+                        stratified = TRUE,
+                        plot = FALSE, 
+                        print.auc = TRUE, 
+                        print.auc.x = 0.2, 
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI
+AUC_std_day7 <- pROC::auc(ROC_BW_std_day7, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_std_day7 <- round(as.numeric(sub(".*(: *)", "//1", AUC_std_day7)), 3)
+
+CI_AUC_std_day7 <- pROC::ci.auc(ROC_BW_std_day7, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_std_day7 <- sub(".*(: *)", "//1", CI_AUC_std_day7)
+
+AUC_secondpart_std_day7 <- as.numeric(substr(AUC_anotherpart_std_day7[1], 1, 5))
+
+AUC_thirdpart_std_day7 <- as.numeric(substr(AUC_anotherpart_std_day7[3], 1, 5))
+
+AUC_label_std_day7 <- paste0("AUC: ", AUC_firstpart_std_day7, " (", AUC_secondpart_std_day7, "-", AUC_thirdpart_std_day7, ")", sep = "") 
+
+# For recommended dosing
+TA_opt_day7 <- pop_opt_dos %>% filter(DAY == 7) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_BW_opt_day7 <- pROC::roc(TA_opt_day7$TA,
+                        TA_opt_day7$BW,
+                        auc.polygon = FALSE,
+                        max.auc.polygon = FALSE,
+                        grid = FALSE,
+                        ci = TRUE,
+                        boot.n = 1000,
+                        ci.alpha = 0.95,
+                        stratified = TRUE,
+                        plot = FALSE,
+                        print.auc = TRUE,
+                        print.auc.x = 0.2,
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI for the roc curves
+AUC_opt_day7 <- pROC::auc(ROC_BW_opt_day7, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_opt_day7 <- round(as.numeric(sub(".*(: *)", "//1", AUC_opt_day7)), 3)
+
+CI_AUC_opt_day7 <- pROC::ci.auc(ROC_BW_opt_day7, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_opt_day7 <- sub(".*(: *)", "//1", CI_AUC_opt_day7)
+
+AUC_secondpart_opt_day7 <- as.numeric(substr(AUC_anotherpart_opt_day7[1], 1, 5))
+
+AUC_thirdpart_opt_day7 <- as.numeric(substr(AUC_anotherpart_opt_day7[3], 1, 5))
+
+AUC_label_opt_day7 <- paste0("AUC: ", AUC_firstpart_opt_day7, " (", AUC_secondpart_opt_day7, "-", AUC_thirdpart_opt_day7, ")", sep = "")
+
+# Convert roc objects to data frames
+roc_std_day7 <- pROC::coords(ROC_BW_std_day7)
+roc_opt_day7 <- pROC::coords(ROC_BW_opt_day7)
+
+# Create the plot with DAY 1 title
+roc_curve_day7 <- ggplot() +
+  geom_line(data = roc_std_day7, aes(x = 1 - specificity, y = sensitivity, color = "Standard dosing regimen", linetype = "Standard dosing regimen"), size = 1) +
+  geom_line(data = roc_opt_day7, aes(x = 1 - specificity, y = sensitivity, color = "Optimised dosing regimen", linetype = "Optimised dosing regimen"), size = 1) +
+  scale_color_manual(values = c("Standard dosing regimen" = "#440154",
+    "Optimised dosing regimen" = "#21918c"),
+    breaks=c('Standard dosing regimen', 'Optimised dosing regimen')) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  theme_minimal() +
+  labs(y = "Sensitivity", x = "1 - Specificity") +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+    axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, size = 1),
+    axis.line = element_line(colour = "black")) +
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color = "#fde725", linetype = "solid") +
+  annotate(geom = "text", x = 0.60, y = 0.30, size = 11/.pt, label = AUC_label_std_day7, color = "#440154") +
+  annotate(geom = "text", x = 0.60, y = 0.20, size = 11/.pt, label = AUC_label_opt_day7, color = "#21918c") +
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed"))), linetype = "none") +
+  ggtitle("Day 7")
+roc_curve_day7
+
+```
+
+```{r combining two ROC curves of DAY14}
+
+# For standard dosing - DAY 14
+TA_std_day14 <- pop_std_dos %>% filter(DAY == 14) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_BW_std_day14 <- pROC::roc(TA_std_day14$TA,
+                        TA_std_day14$BW,
+                        auc.polygon = FALSE, 
+                        max.auc.polygon = FALSE, 
+                        grid = FALSE,
+                        ci = TRUE, 
+                        boot.n = 1000, 
+                        ci.alpha = 0.95, 
+                        stratified = TRUE,
+                        plot = FALSE, 
+                        print.auc = TRUE, 
+                        print.auc.x = 0.2, 
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI
+AUC_std_day14 <- pROC::auc(ROC_BW_std_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_std_day14 <- round(as.numeric(sub(".*(: *)", "//1", AUC_std_day14)), 3)
+
+CI_AUC_std_day14 <- pROC::ci.auc(ROC_BW_std_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_std_day14 <- sub(".*(: *)", "//1", CI_AUC_std_day14)
+
+AUC_secondpart_std_day14 <- as.numeric(substr(AUC_anotherpart_std_day14[1], 1, 5))
+
+AUC_thirdpart_std_day14 <- as.numeric(substr(AUC_anotherpart_std_day14[3], 1, 5))
+
+AUC_label_std_day14 <- paste0("AUC: ", AUC_firstpart_std_day14, " (", AUC_secondpart_std_day14, "-", AUC_thirdpart_std_day14, ")", sep = "") 
+
+# For recommended dosing
+TA_opt_day14 <- pop_opt_dos %>% filter(DAY == 14) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_BW_opt_day14 <- pROC::roc(TA_opt_day14$TA,
+                        TA_opt_day14$BW,
+                        auc.polygon = FALSE,
+                        max.auc.polygon = FALSE,
+                        grid = FALSE,
+                        ci = TRUE,
+                        boot.n = 1000,
+                        ci.alpha = 0.95,
+                        stratified = TRUE,
+                        plot = FALSE,
+                        print.auc = TRUE,
+                        print.auc.x = 0.2,
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI for the roc curves
+AUC_opt_day14 <- pROC::auc(ROC_BW_opt_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_opt_day14 <- round(as.numeric(sub(".*(: *)", "//1", AUC_opt_day14)), 3)
+
+CI_AUC_opt_day14 <- pROC::ci.auc(ROC_BW_opt_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_opt_day14 <- sub(".*(: *)", "//1", CI_AUC_opt_day14)
+
+AUC_secondpart_opt_day14 <- as.numeric(substr(AUC_anotherpart_opt_day14[1], 1, 5))
+
+AUC_thirdpart_opt_day14 <- as.numeric(substr(AUC_anotherpart_opt_day14[3], 1, 5))
+
+AUC_label_opt_day14 <- paste0("AUC: ", AUC_firstpart_opt_day14, " (", AUC_secondpart_opt_day14, "-", AUC_thirdpart_opt_day14, ")", sep = "")
+
+# Convert roc objects to data frames
+roc_std_day14 <- pROC::coords(ROC_BW_std_day14)
+roc_opt_day14 <- pROC::coords(ROC_BW_opt_day14)
+
+# Create the plot with DAY 1 title
+roc_curve_day14 <- ggplot() +
+  geom_line(data = roc_std_day14, aes(x = 1 - specificity, y = sensitivity, color = "Standard dosing regimen", linetype = "Standard dosing regimen"), size = 1) +
+  geom_line(data = roc_opt_day14, aes(x = 1 - specificity, y = sensitivity, color = "Optimised dosing regimen", linetype = "Optimised dosing regimen"), size = 1) +
+  scale_color_manual(values = c("Standard dosing regimen" = "#440154",
+    "Optimised dosing regimen" = "#21918c"),
+    breaks=c('Standard dosing regimen', 'Optimised dosing regimen')) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  theme_minimal() +
+  labs(y = "Sensitivity", x = "1 - Specificity") +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+    axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, size = 1),
+    axis.line = element_line(colour = "black")) +
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color = "#fde725", linetype = "solid") +
+  annotate(geom = "text", x = 0.60, y = 0.30, size = 11/.pt, label = AUC_label_std_day14, color = "#440154") +
+  annotate(geom = "text", x = 0.60, y = 0.20, size = 11/.pt, label = AUC_label_opt_day14, color = "#21918c") +
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed"))), linetype = "none") +
+  ggtitle("Day 14")
+roc_curve_day14
+
+```
+
+```{r exporting roc curves datasets for BW}
+
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/ROCcurves_131123/")
+write.csv(roc_std_day1, "roc_std_day1.csv",quote=F,row.names = FALSE)
+write.csv(roc_opt_day1, "roc_opt_day1.csv",quote=F,row.names = FALSE)
+write.csv(roc_std_day2, "roc_std_day2.csv",quote=F,row.names = FALSE)
+write.csv(roc_opt_day2, "roc_opt_day2.csv",quote=F,row.names = FALSE)
+write.csv(roc_std_day7, "roc_std_day7.csv",quote=F,row.names = FALSE)
+write.csv(roc_opt_day7, "roc_opt_day7.csv",quote=F,row.names = FALSE)
+write.csv(roc_std_day14, "roc_std_day14.csv",quote=F,row.names = FALSE)
+write.csv(roc_opt_day14, "roc_opt_day14.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r importing roc curves datasets for BW,warning=FALSE}
+
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/ROCcurves_131123/")
+roc_std_day1<-read.csv("roc_std_day1.csv")
+roc_opt_day1<-read.csv("roc_opt_day1.csv")
+roc_std_day2<-read.csv("roc_std_day2.csv")
+roc_opt_day2<-read.csv("roc_opt_day2.csv")
+roc_std_day7<-read.csv("roc_std_day7.csv")
+roc_opt_day7<-read.csv("roc_opt_day7.csv")
+roc_std_day14<-read.csv("roc_std_day14.csv")
+roc_opt_day14<-read.csv("roc_opt_day14.csv")
+
+```
+
+```{r combining ROC curves day 1 2 7 14,warning=FALSE}
+
+# First of all, get the common legend
+common_legend_BW <- get_legend(roc_curve_day1)
+
+# Remove legends from individual plots
+roc_curve_day1_nolegend <- roc_curve_day1 + theme(legend.position = "none")
+roc_curve_day2_nolegend <- roc_curve_day2 + theme(legend.position = "none")
+roc_curve_day7_nolegend <- roc_curve_day7 + theme(legend.position = "none")
+roc_curve_day14_nolegend <- roc_curve_day14 + theme(legend.position = "none")
+
+# Combine the plot
+
+combined_roc_BW <- plot_grid(roc_curve_day1_nolegend,roc_curve_day2_nolegend,roc_curve_day7_nolegend,roc_curve_day14_nolegend, ncol = 1,align="v")
+
+# Add the title
+BW_title <- ggdraw() + 
+  draw_label("Discriminative ability of body weight in fluconazole target attainment", fontface = "bold", size = 12)
+grid_BW_pop <- plot_grid(BW_title, combined_roc_BW, ncol = 1, rel_heights = c(0.02, 1))
+
+# Add the common legend
+ROC_BW <- plot_grid(grid_BW_pop, common_legend_BW, nrow = 1, rel_widths = c(1, 0.25))
+
+# Export ROC_BW plot
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/ROCcurves_131123/")
+ggsave("ROC_BW.png", ROC_BW, dpi = 300, width = 8.27, height = 10.3, units = "in", limitsize = FALSE)
+
+```
+
+##### CKDEPI impact
+
+```{r ROC curves day 1 CKDEPI}
+
+#TA_std_day1 dataset can be created as above
+
+set.seed(123)
+ROC_CKDEPI_std_day1 <- pROC::roc(TA_std_day1$TA,
+                        TA_std_day1$CKDEPI,
+                        auc.polygon = FALSE, 
+                        max.auc.polygon = FALSE, 
+                        grid = FALSE,
+                        ci = TRUE, 
+                        boot.n = 1000, 
+                        ci.alpha = 0.95, 
+                        stratified = TRUE,
+                        plot = FALSE, 
+                        print.auc = TRUE, 
+                        print.auc.x = 0.2, 
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI
+AUC_std_CKDEPI_day1 <- pROC::auc(ROC_CKDEPI_std_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_std_CKDEPI_day1 <- round(as.numeric(sub(".*(: *)", "//1", AUC_std_CKDEPI_day1)), 3)
+
+CI_AUC_std_CKDEPI_day1 <- pROC::ci.auc(ROC_CKDEPI_std_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_std_CKDEPI_day1 <- sub(".*(: *)", "//1", CI_AUC_std_CKDEPI_day1)
+
+AUC_secondpart_std_CKDEPI_day1 <- as.numeric(substr(AUC_anotherpart_std_CKDEPI_day1[1], 1, 5))
+
+AUC_thirdpart_std_CKDEPI_day1 <- as.numeric(substr(AUC_anotherpart_std_CKDEPI_day1[3], 1, 5))
+
+AUC_label_std_CKDEPI_day1 <- paste0("AUC: ", AUC_firstpart_std_CKDEPI_day1, " (", AUC_secondpart_std_CKDEPI_day1, "-", AUC_thirdpart_std_CKDEPI_day1, ")", sep = "") 
+
+# For recommended dosing
+# Similarly, TA_opt_day1 has already been created above for BW
+
+set.seed(123)
+ROC_CKDEPI_opt_day1 <- pROC::roc(TA_opt_day1$TA,
+                        TA_opt_day1$CKDEPI,
+                        auc.polygon = FALSE,
+                        max.auc.polygon = FALSE,
+                        grid = FALSE,
+                        ci = TRUE,
+                        boot.n = 1000,
+                        ci.alpha = 0.95,
+                        stratified = TRUE,
+                        plot = FALSE,
+                        print.auc = TRUE,
+                        print.auc.x = 0.2,
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI for the roc curves
+AUC_opt_CKDEPI_day1 <- pROC::auc(ROC_CKDEPI_opt_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_opt_CKDEPI_day1 <- round(as.numeric(sub(".*(: *)", "//1", AUC_opt_CKDEPI_day1)), 3)
+
+CI_AUC_opt_CKDEPI_day1 <- pROC::ci.auc(ROC_CKDEPI_opt_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_opt_CKDEPI_day1 <- sub(".*(: *)", "//1", CI_AUC_opt_CKDEPI_day1)
+
+AUC_secondpart_opt_CKDEPI_day1 <- as.numeric(substr(AUC_anotherpart_opt_CKDEPI_day1[1], 1, 5))
+
+AUC_thirdpart_opt_CKDEPI_day1 <- as.numeric(substr(AUC_anotherpart_opt_CKDEPI_day1[3], 1, 5))
+
+AUC_label_opt_CKDEPI_day1 <- paste0("AUC: ", AUC_firstpart_opt_CKDEPI_day1, " (", AUC_secondpart_opt_CKDEPI_day1, "-", AUC_thirdpart_opt_CKDEPI_day1, ")", sep = "")
+
+# Convert roc objects to data frames
+roc_CKDEPI_std_day1 <- pROC::coords(ROC_CKDEPI_std_day1)
+roc_CKDEPI_opt_day1 <- pROC::coords(ROC_CKDEPI_opt_day1)
+
+# Can add labels like this
+AUC_label_std_CKDEPI_day1<-c("AUC: 0.496 (0.494–0.497)")
+AUC_label_opt_CKDEPI_day1<-c("AUC: 0.502 (0.499–0.504)")
+
+# Create the plot with DAY 1 title
+roc_curve_CKDEPI_day1 <- ggplot() +
+  geom_line(data = roc_CKDEPI_std_day1, aes(x = 1 - specificity, y = sensitivity, color = "Standard dosing regimen", linetype = "Standard dosing regimen"), size = 1) +
+  geom_line(data = roc_CKDEPI_opt_day1, aes(x = 1 - specificity, y = sensitivity, color = "Optimised dosing regimen", linetype = "Optimised dosing regimen"), size = 1) +
+  scale_color_manual(values = c("Standard dosing regimen" = "#440154",
+    "Optimised dosing regimen" = "#21918c"),
+    breaks=c('Standard dosing regimen', 'Optimised dosing regimen')) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  theme_minimal() +
+  labs(y = "Sensitivity", x = "1 - Specificity") +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+    axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, size = 1),
+    axis.line = element_line(colour = "black")) +
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color = "#fde725", linetype = "solid") +
+  annotate(geom = "text", x = 0.60, y = 0.30, size = 11/.pt, label = AUC_label_std_CKDEPI_day1, color = "#440154") +
+  annotate(geom = "text", x = 0.60, y = 0.20, size = 11/.pt, label = AUC_label_opt_CKDEPI_day1, color = "#21918c") +
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed"))), linetype = "none") +
+  ggtitle("Day 1")
+roc_curve_CKDEPI_day1
+
+```
+
+```{r ROC curves day 2 CKDEPI}
+
+# For standard dosing - DAY 2
+#TA_std_day2 created above
+
+set.seed(123)
+ROC_CKDEPI_std_day2 <- pROC::roc(TA_std_day2$TA,
+                        TA_std_day2$CKDEPI,
+                        auc.polygon = FALSE, 
+                        max.auc.polygon = FALSE, 
+                        grid = FALSE,
+                        ci = TRUE, 
+                        boot.n = 1000, 
+                        ci.alpha = 0.95, 
+                        stratified = TRUE,
+                        plot = FALSE, 
+                        print.auc = TRUE, 
+                        print.auc.x = 0.2, 
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI
+AUC_std_CKDEPI_day2 <- pROC::auc(ROC_CKDEPI_std_day2, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_std_CKDEPI_day2 <- round(as.numeric(sub(".*(: *)", "//1", AUC_std_CKDEPI_day2)), 3)
+
+CI_AUC_std_CKDEPI_day2 <- pROC::ci.auc(ROC_CKDEPI_std_day2, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_std_CKDEPI_day2 <- sub(".*(: *)", "//1", CI_AUC_std_CKDEPI_day2)
+
+AUC_secondpart_std_CKDEPI_day2 <- as.numeric(substr(AUC_anotherpart_std_CKDEPI_day2[1], 1, 5))
+
+AUC_thirdpart_std_CKDEPI_day2 <- as.numeric(substr(AUC_anotherpart_std_CKDEPI_day2[3], 1, 5))
+
+AUC_label_std_CKDEPI_day2 <- paste0("AUC: ", AUC_firstpart_std_CKDEPI_day2, " (", AUC_secondpart_std_CKDEPI_day2, "-", AUC_thirdpart_std_CKDEPI_day2, ")", sep = "") 
+
+# For recommended dosing
+# TA_opt_day2 created above
+
+set.seed(123)
+ROC_CKDEPI_opt_day2 <- pROC::roc(TA_opt_day2$TA,
+                        TA_opt_day2$CKDEPI,
+                        auc.polygon = FALSE,
+                        max.auc.polygon = FALSE,
+                        grid = FALSE,
+                        ci = TRUE,
+                        boot.n = 1000,
+                        ci.alpha = 0.95,
+                        stratified = TRUE,
+                        plot = FALSE,
+                        print.auc = TRUE,
+                        print.auc.x = 0.2,
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI for the roc curves
+AUC_opt_CKDEPI_day2 <- pROC::auc(ROC_CKDEPI_opt_day2, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_opt_CKDEPI_day2 <- round(as.numeric(sub(".*(: *)", "//1", AUC_opt_CKDEPI_day2)), 3)
+
+CI_AUC_opt_CKDEPI_day2 <- pROC::ci.auc(ROC_CKDEPI_opt_day2, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_opt_CKDEPI_day2 <- sub(".*(: *)", "//1", CI_AUC_opt_CKDEPI_day2)
+
+AUC_secondpart_opt_CKDEPI_day2 <- as.numeric(substr(AUC_anotherpart_opt_CKDEPI_day2[1], 1, 5))
+
+AUC_thirdpart_opt_CKDEPI_day2 <- as.numeric(substr(AUC_anotherpart_opt_CKDEPI_day2[3], 1, 5))
+
+AUC_label_opt_CKDEPI_day2 <- paste0("AUC: ", AUC_firstpart_opt_CKDEPI_day2, " (", AUC_secondpart_opt_CKDEPI_day2, "-", AUC_thirdpart_opt_CKDEPI_day2, ")", sep = "")
+
+# Convert roc objects to data frames
+roc_CKDEPI_std_day2 <- pROC::coords(ROC_CKDEPI_std_day2)
+roc_CKDEPI_opt_day2 <- pROC::coords(ROC_CKDEPI_opt_day2)
+
+# Can add labels like this
+AUC_label_std_CKDEPI_day2<-c("AUC: 0.519 (0.517–0.520)")
+AUC_label_opt_CKDEPI_day2<-c("AUC: 0.502 (0.498–0.505)")
+
+# Create the plot with DAY 1 title
+roc_curve_CKDEPI_day2 <- ggplot() +
+  geom_line(data = roc_CKDEPI_std_day2, aes(x = 1 - specificity, y = sensitivity, color = "Standard dosing regimen", linetype = "Standard dosing regimen"), size = 1) +
+  geom_line(data = roc_CKDEPI_opt_day2, aes(x = 1 - specificity, y = sensitivity, color = "Optimised dosing regimen", linetype = "Optimised dosing regimen"), size = 1) +
+  scale_color_manual(values = c("Standard dosing regimen" = "#440154",
+    "Optimised dosing regimen" = "#21918c"),
+    breaks=c('Standard dosing regimen', 'Optimised dosing regimen')) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  theme_minimal() +
+  labs(y = "Sensitivity", x = "1 - Specificity") +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+    axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, size = 1),
+    axis.line = element_line(colour = "black")) +
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color = "#fde725", linetype = "solid") +
+  annotate(geom = "text", x = 0.60, y = 0.30, size = 11/.pt, label = AUC_label_std_CKDEPI_day2, color = "#440154") +
+  annotate(geom = "text", x = 0.60, y = 0.20, size = 11/.pt, label = AUC_label_opt_CKDEPI_day2, color = "#21918c") +
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed"))), linetype = "none") +
+  ggtitle("Day 2")
+roc_curve_CKDEPI_day2
+
+```
+
+```{r ROC curves day 7 CKDEPI}
+
+# For standard dosing - DAY 7
+#TA_std_day7 created above
+
+set.seed(123)
+ROC_CKDEPI_std_day7 <- pROC::roc(TA_std_day7$TA,
+                        TA_std_day7$CKDEPI,
+                        auc.polygon = FALSE, 
+                        max.auc.polygon = FALSE, 
+                        grid = FALSE,
+                        ci = TRUE, 
+                        boot.n = 1000, 
+                        ci.alpha = 0.95, 
+                        stratified = TRUE,
+                        plot = FALSE, 
+                        print.auc = TRUE, 
+                        print.auc.x = 0.2, 
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI
+AUC_std_CKDEPI_day7 <- pROC::auc(ROC_CKDEPI_std_day7, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_std_CKDEPI_day7 <- round(as.numeric(sub(".*(: *)", "//1", AUC_std_CKDEPI_day7)), 3)
+
+CI_AUC_std_CKDEPI_day7 <- pROC::ci.auc(ROC_CKDEPI_std_day7, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_std_CKDEPI_day7 <- sub(".*(: *)", "//1", CI_AUC_std_CKDEPI_day7)
+
+AUC_secondpart_std_CKDEPI_day7 <- as.numeric(substr(AUC_anotherpart_std_CKDEPI_day7[1], 1, 5))
+
+AUC_thirdpart_std_CKDEPI_day7 <- as.numeric(substr(AUC_anotherpart_std_CKDEPI_day7[3], 1, 5))
+
+AUC_label_std_CKDEPI_day7 <- paste0("AUC: ", AUC_firstpart_std_CKDEPI_day7, " (", AUC_secondpart_std_CKDEPI_day7, "-", AUC_thirdpart_std_CKDEPI_day7, ")", sep = "") 
+
+# For recommended dosing
+TA_opt_day7 <- pop_opt_dos %>% filter(DAY == 7) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_CKDEPI_opt_day7 <- pROC::roc(TA_opt_day7$TA,
+                        TA_opt_day7$CKDEPI,
+                        auc.polygon = FALSE,
+                        max.auc.polygon = FALSE,
+                        grid = FALSE,
+                        ci = TRUE,
+                        boot.n = 1000,
+                        ci.alpha = 0.95,
+                        stratified = TRUE,
+                        plot = FALSE,
+                        print.auc = TRUE,
+                        print.auc.x = 0.2,
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI for the roc curves
+AUC_opt_CKDEPI_day7 <- pROC::auc(ROC_CKDEPI_opt_day7, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_opt_CKDEPI_day7 <- round(as.numeric(sub(".*(: *)", "//1", AUC_opt_CKDEPI_day7)), 3)
+
+CI_AUC_opt_CKDEPI_day7 <- pROC::ci.auc(ROC_CKDEPI_opt_day7, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_opt_CKDEPI_day7 <- sub(".*(: *)", "//1", CI_AUC_opt_CKDEPI_day7)
+
+AUC_secondpart_opt_CKDEPI_day7 <- as.numeric(substr(AUC_anotherpart_opt_CKDEPI_day7[1], 1, 5))
+
+AUC_thirdpart_opt_CKDEPI_day7 <- as.numeric(substr(AUC_anotherpart_opt_CKDEPI_day7[3], 1, 5))
+
+AUC_label_opt_CKDEPI_day7 <- paste0("AUC: ", AUC_firstpart_opt_CKDEPI_day7, " (", AUC_secondpart_opt_CKDEPI_day7, "-", AUC_thirdpart_opt_CKDEPI_day7, ")", sep = "")
+
+# Convert roc objects to data frames
+roc_CKDEPI_std_day7 <- pROC::coords(ROC_CKDEPI_std_day7)
+roc_CKDEPI_opt_day7 <- pROC::coords(ROC_CKDEPI_opt_day7)
+
+# Can add labels like this
+AUC_label_std_CKDEPI_day7<-c("AUC: 0.546 (0.544–0.548)")
+AUC_label_opt_CKDEPI_day7<-c("AUC: 0.509 (0.505–0.513)")
+
+# Create the plot with DAY 1 title
+roc_curve_CKDEPI_day7 <- ggplot() +
+  geom_line(data = roc_CKDEPI_std_day7, aes(x = 1 - specificity, y = sensitivity, color = "Standard dosing regimen", linetype = "Standard dosing regimen"), size = 1) +
+  geom_line(data = roc_CKDEPI_opt_day7, aes(x = 1 - specificity, y = sensitivity, color = "Optimised dosing regimen", linetype = "Optimised dosing regimen"), size = 1) +
+  scale_color_manual(values = c("Standard dosing regimen" = "#440154",
+    "Optimised dosing regimen" = "#21918c"),
+    breaks=c('Standard dosing regimen', 'Optimised dosing regimen')) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  theme_minimal() +
+  labs(y = "Sensitivity", x = "1 - Specificity") +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+    axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, size = 1),
+    axis.line = element_line(colour = "black")) +
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color = "#fde725", linetype = "solid") +
+  annotate(geom = "text", x = 0.60, y = 0.30, size = 11/.pt, label = AUC_label_std_CKDEPI_day7, color = "#440154") +
+  annotate(geom = "text", x = 0.60, y = 0.20, size = 11/.pt, label = AUC_label_opt_CKDEPI_day7, color = "#21918c") +
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed"))), linetype = "none") +
+  ggtitle("Day 7")
+roc_curve_CKDEPI_day7
+
+```
+
+```{r ROC curves day 14 CKDEPI}
+
+# For standard dosing - DAY 14
+#TA_std_day14 created above
+
+set.seed(123)
+ROC_CKDEPI_std_day14 <- pROC::roc(TA_std_day14$TA,
+                        TA_std_day14$CKDEPI,
+                        auc.polygon = FALSE, 
+                        max.auc.polygon = FALSE, 
+                        grid = FALSE,
+                        ci = TRUE, 
+                        boot.n = 1000, 
+                        ci.alpha = 0.95, 
+                        stratified = TRUE,
+                        plot = FALSE, 
+                        print.auc = TRUE, 
+                        print.auc.x = 0.2, 
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI
+AUC_std_CKDEPI_day14 <- pROC::auc(ROC_CKDEPI_std_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_std_CKDEPI_day14 <- round(as.numeric(sub(".*(: *)", "//1", AUC_std_CKDEPI_day14)), 3)
+
+CI_AUC_std_CKDEPI_day14 <- pROC::ci.auc(ROC_CKDEPI_std_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_std_CKDEPI_day14 <- sub(".*(: *)", "//1", CI_AUC_std_CKDEPI_day14)
+
+AUC_secondpart_std_CKDEPI_day14 <- as.numeric(substr(AUC_anotherpart_std_CKDEPI_day14[1], 1, 5))
+
+AUC_thirdpart_std_CKDEPI_day14 <- as.numeric(substr(AUC_anotherpart_std_CKDEPI_day14[3], 1, 5))
+
+AUC_label_std_CKDEPI_day14 <- paste0("AUC: ", AUC_firstpart_std_CKDEPI_day14, " (", AUC_secondpart_std_CKDEPI_day14, "-", AUC_thirdpart_std_CKDEPI_day14, ")", sep = "") 
+
+# For recommended dosing
+#TA_opt_day14 created above
+
+set.seed(123)
+ROC_CKDEPI_opt_day14 <- pROC::roc(TA_opt_day14$TA,
+                        TA_opt_day14$CKDEPI,
+                        auc.polygon = FALSE,
+                        max.auc.polygon = FALSE,
+                        grid = FALSE,
+                        ci = TRUE,
+                        boot.n = 1000,
+                        ci.alpha = 0.95,
+                        stratified = TRUE,
+                        plot = FALSE,
+                        print.auc = TRUE,
+                        print.auc.x = 0.2,
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI for the roc curves
+AUC_opt_CKDEPI_day14 <- pROC::auc(ROC_CKDEPI_opt_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_opt_CKDEPI_day14 <- round(as.numeric(sub(".*(: *)", "//1", AUC_opt_CKDEPI_day14)), 3)
+
+CI_AUC_opt_CKDEPI_day14 <- pROC::ci.auc(ROC_CKDEPI_opt_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_opt_CKDEPI_day14 <- sub(".*(: *)", "//1", CI_AUC_opt_CKDEPI_day14)
+
+AUC_secondpart_opt_CKDEPI_day14 <- as.numeric(substr(AUC_anotherpart_opt_CKDEPI_day14[1], 1, 5))
+
+AUC_thirdpart_opt_CKDEPI_day14 <- as.numeric(substr(AUC_anotherpart_opt_CKDEPI_day14[3], 1, 5))
+
+AUC_label_opt_CKDEPI_day14 <- paste0("AUC: ", AUC_firstpart_opt_CKDEPI_day14, " (", AUC_secondpart_opt_CKDEPI_day14, "-", AUC_thirdpart_opt_CKDEPI_day14, ")", sep = "")
+
+# Convert roc objects to data frames
+roc_CKDEPI_std_day14 <- pROC::coords(ROC_CKDEPI_std_day14)
+roc_CKDEPI_opt_day14 <- pROC::coords(ROC_CKDEPI_opt_day14)
+
+# Can add labels like this
+AUC_label_std_CKDEPI_day14<-c("AUC: 0.553 (0.550–0.554)")
+AUC_label_opt_CKDEPI_day14<-c("AUC: 0.510 (0.505–0.514)")
+
+# Create the plot with DAY 1 title
+roc_curve_CKDEPI_day14 <- ggplot() +
+  geom_line(data = roc_CKDEPI_std_day14, aes(x = 1 - specificity, y = sensitivity, color = "Standard dosing regimen", linetype = "Standard dosing regimen"), size = 1) +
+  geom_line(data = roc_CKDEPI_opt_day14, aes(x = 1 - specificity, y = sensitivity, color = "Optimised dosing regimen", linetype = "Optimised dosing regimen"), size = 1) +
+  scale_color_manual(values = c("Standard dosing regimen" = "#440154",
+    "Optimised dosing regimen" = "#21918c"),
+    breaks=c('Standard dosing regimen', 'Optimised dosing regimen')) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  theme_minimal() +
+  labs(y = "Sensitivity", x = "1 - Specificity") +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+    axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, size = 1),
+    axis.line = element_line(colour = "black")) +
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color = "#fde725", linetype = "solid") +
+  annotate(geom = "text", x = 0.60, y = 0.30, size = 11/.pt, label = AUC_label_std_CKDEPI_day14, color = "#440154") +
+  annotate(geom = "text", x = 0.60, y = 0.20, size = 11/.pt, label = AUC_label_opt_CKDEPI_day14, color = "#21918c") +
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed"))), linetype = "none") +
+  ggtitle("Day 14")
+roc_curve_CKDEPI_day14
+
+```
+
+```{r exporting roc curves datasets for CKDEPI,warning=FALSE}
+
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/ROCcurves_131123/")
+write.csv(roc_CKDEPI_std_day1, "roc_CKDEPI_std_day1.csv",quote=F,row.names = FALSE)
+write.csv(roc_CKDEPI_opt_day1, "roc_CKDEPI_opt_day1.csv",quote=F,row.names = FALSE)
+write.csv(roc_CKDEPI_std_day2, "roc_CKDEPI_std_day2.csv",quote=F,row.names = FALSE)
+write.csv(roc_CKDEPI_opt_day2, "roc_CKDEPI_opt_day2.csv",quote=F,row.names = FALSE)
+write.csv(roc_CKDEPI_std_day7, "roc_CKDEPI_std_day7.csv",quote=F,row.names = FALSE)
+write.csv(roc_CKDEPI_opt_day7, "roc_CKDEPI_opt_day7.csv",quote=F,row.names = FALSE)
+write.csv(roc_CKDEPI_std_day14, "roc_CKDEPI_std_day14.csv",quote=F,row.names = FALSE)
+write.csv(roc_CKDEPI_opt_day14, "roc_CKDEPI_opt_day14.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r importing roc curves datasets for CKDEPI,warning=FALSE}
+
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/ROCcurves_131123/")
+roc_CKDEPI_std_day1<-read.csv("roc_CKDEPI_std_day1.csv")
+roc_CKDEPI_opt_day1<-read.csv("roc_CKDEPI_opt_day1.csv")
+roc_CKDEPI_std_day2<-read.csv("roc_CKDEPI_std_day2.csv")
+roc_CKDEPI_opt_day2<-read.csv("roc_CKDEPI_opt_day2.csv")
+roc_CKDEPI_std_day7<-read.csv("roc_CKDEPI_std_day7.csv")
+roc_CKDEPI_opt_day7<-read.csv("roc_CKDEPI_opt_day7.csv")
+roc_CKDEPI_std_day14<-read.csv("roc_CKDEPI_std_day14.csv")
+roc_CKDEPI_opt_day14<-read.csv("roc_CKDEPI_opt_day14.csv")
+
+```
+
+```{r combining ROC curves CKDEPI day 1 2 7 14,warning=FALSE}
+
+# First of all, get the common legend
+common_legend_CKDEPI <- get_legend(roc_curve_CKDEPI_day1)
+
+# Remove legends from individual plots
+roc_curve_CKDEPI_day1_nolegend <- roc_curve_CKDEPI_day1 + theme(legend.position = "none")
+roc_curve_CKDEPI_day2_nolegend <- roc_curve_CKDEPI_day2 + theme(legend.position = "none")
+roc_curve_CKDEPI_day7_nolegend <- roc_curve_CKDEPI_day7 + theme(legend.position = "none")
+roc_curve_CKDEPI_day14_nolegend <- roc_curve_CKDEPI_day14 + theme(legend.position = "none")
+
+# Combine the plot
+
+combined_roc_CKDEPI <- plot_grid(roc_curve_CKDEPI_day1_nolegend,roc_curve_CKDEPI_day2_nolegend,roc_curve_CKDEPI_day7_nolegend,roc_curve_CKDEPI_day14_nolegend, ncol = 1,align="v")
+
+# Add the title
+CKDEPI_title <- ggdraw() + 
+  draw_label("Discriminative ability of CKDEPI in fluconazole target attainment", fontface = "bold", size = 12)
+grid_CKDEPI_pop <- plot_grid(CKDEPI_title, combined_roc_CKDEPI, ncol = 1, rel_heights = c(0.02, 1))
+
+# Add the common legend
+ROC_CKDEPI <- plot_grid(grid_CKDEPI_pop, common_legend_CKDEPI, nrow = 1, rel_widths = c(1, 0.25))
+
+# Export ROC_CKDEPI plot
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/ROCcurves_131123/")
+ggsave("ROC_CKDEPI.png", ROC_CKDEPI, dpi = 300, width = 8.27, height = 10.3, units = "in", limitsize = FALSE)
+
+```
+
+##### CRRT's impact
+
+```{r combining 2 roc curves of day1}
+
+## pop_std_dos can be read from above
+
+## Then read pop_sim_std.csv dataset
+
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/")
+
+pop_sim_std<-read.csv("pop_sim_std.csv")
+
+# Exclude TROUGH == 0 before merging
+
+pop_sim_std<-pop_sim_std[pop_sim_std$TROUGH == 1, ]
+
+# Merge CRRT from pop_sim_std into pop_std_dos dataset.
+
+pop_sim_std <- merge(pop_std_dos, pop_sim_std[, c("ID", "TAD", "DAY", "CRRT")], by = c("ID","TAD", "DAY"), all.x = TRUE)
+
+pop_sim_std <- pop_sim_std[order(pop_sim_std$ID, pop_sim_std$replicate,pop_sim_std$DAY), ]
+
+View(pop_sim_std)
+
+
+
+## Similarly for pop_sim_opt 
+
+# Then read pop_sim_opt.csv dataset
+
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/")
+
+pop_sim_opt<-read.csv("pop_sim_opt.csv")
+
+# Exclude TROUGH == 0 before merging
+
+pop_sim_opt<-pop_sim_opt[pop_sim_opt$TROUGH == 1, ]
+
+# Merge CRRT from pop_sim_std into pop_std_dos dataset.
+
+pop_sim_opt <- merge(pop_opt_dos, pop_sim_opt[, c("ID", "TAD", "DAY", "CRRT")], by = c("ID","TAD", "DAY"), all.x = TRUE)
+
+pop_sim_opt <- pop_sim_opt[order(pop_sim_opt$ID, pop_sim_opt$replicate,pop_sim_opt$DAY), ]
+
+View(pop_sim_opt)
+
+
+
+## Then I can make ROC curves
+
+# For standard dosing
+
+TA_std_day1 <- pop_sim_std %>% filter(DAY == 1) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_CRRT_std_day1 <- pROC::roc(TA_std_day1$TA,
+                        TA_std_day1$CRRT,
+                        auc.polygon = FALSE, 
+                        max.auc.polygon = FALSE, 
+                        grid = FALSE,
+                        ci = TRUE, 
+                        boot.n = 1000, 
+                        ci.alpha = 0.95, 
+                        stratified = TRUE,
+                        plot = FALSE, 
+                        print.auc = TRUE, 
+                        print.auc.x = 0.2, 
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI
+AUC_std_day1 <- pROC::auc(ROC_CRRT_std_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_std_day1 <- round(as.numeric(sub(".*(: *)", "//1", AUC_std_day1)), 3)
+
+CI_AUC_std_day1 <- pROC::ci.auc(ROC_CRRT_std_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_std_day1 <- sub(".*(: *)", "//1", CI_AUC_std_day1)
+
+AUC_secondpart_std_day1 <- as.numeric(substr(AUC_anotherpart_std_day1[1], 1, 5))
+
+AUC_thirdpart_std_day1 <- as.numeric(substr(AUC_anotherpart_std_day1[3], 1, 5))
+
+AUC_label_std_day1 <- paste0("AUC: ", AUC_firstpart_std_day1, " (", AUC_secondpart_std_day1, "-", AUC_thirdpart_std_day1, ")", sep = "") 
+
+
+# For recommended dosing
+
+TA_opt_day1 <- pop_sim_opt %>% filter(DAY == 1) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_CRRT_opt_day1 <- pROC::roc(TA_opt_day1$TA,
+                        TA_opt_day1$CRRT,
+                        auc.polygon = FALSE,
+                        max.auc.polygon = FALSE,
+                        grid = FALSE,
+                        ci = TRUE,
+                        boot.n = 1000,
+                        ci.alpha = 0.95,
+                        stratified = TRUE,
+                        plot = FALSE,
+                        print.auc = TRUE,
+                        print.auc.x = 0.2,
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI for the roc curves
+AUC_opt_day1 <- pROC::auc(ROC_CRRT_opt_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_opt_day1 <- round(as.numeric(sub(".*(: *)", "//1", AUC_opt_day1)), 3)
+
+CI_AUC_opt_day1 <- pROC::ci.auc(ROC_CRRT_opt_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_opt_day1 <- sub(".*(: *)", "//1", CI_AUC_opt_day1)
+
+AUC_secondpart_opt_day1 <- as.numeric(substr(AUC_anotherpart_opt_day1[1], 1, 5))
+
+AUC_thirdpart_opt_day1 <- as.numeric(substr(AUC_anotherpart_opt_day1[3], 1, 5))
+
+AUC_label_opt_day1 <- paste0("AUC: ", AUC_firstpart_opt_day1, " (", AUC_secondpart_opt_day1, "-", AUC_thirdpart_opt_day1, ")", sep = "")
+
+# Convert roc objects to data frames
+roc_std_day1 <- pROC::coords(ROC_CRRT_std_day1)
+roc_opt_day1 <- pROC::coords(ROC_CRRT_opt_day1)
+
+# Create the plot with DAY 1 title
+roc_curve_day1 <- ggplot() +
+  geom_line(data = roc_std_day1, aes(x = 1 - specificity, y = sensitivity, color = "Standard dosing regimen", linetype = "Standard dosing regimen"), size = 1) +
+  geom_line(data = roc_opt_day1, aes(x = 1 - specificity, y = sensitivity, color = "Optimised dosing regimen", linetype = "Optimised dosing regimen"), size = 1) +
+  scale_color_manual(values = c("Standard dosing regimen" = "#440154",
+    "Optimised dosing regimen" = "#21918c"),
+    breaks=c('Standard dosing regimen', 'Optimised dosing regimen')) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  theme_minimal() +
+  labs(y = "Sensitivity", x = "1 - Specificity") +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+    axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, size = 1),
+    axis.line = element_line(colour = "black")) +
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color = "#fde725", linetype = "solid") +
+  annotate(geom = "text", x = 0.60, y = 0.30, size = 11/.pt, label = AUC_label_std_day1, color = "#440154") +
+  annotate(geom = "text", x = 0.60, y = 0.20, size = 11/.pt, label = AUC_label_opt_day1, color = "#21918c") +
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed"))), linetype = "none") +
+  ggtitle("Day 1")
+roc_curve_day1
+
+```
+
+```{r combining two ROC curves of DAY2}
+
+# For standard dosing - DAY 2
+TA_std_day2 <- pop_sim_std %>% filter(DAY == 2) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_CRRT_std_day2 <- pROC::roc(TA_std_day2$TA,
+                        TA_std_day2$CRRT,
+                        auc.polygon = FALSE, 
+                        max.auc.polygon = FALSE, 
+                        grid = FALSE,
+                        ci = TRUE, 
+                        boot.n = 1000, 
+                        ci.alpha = 0.95, 
+                        stratified = TRUE,
+                        plot = FALSE, 
+                        print.auc = TRUE, 
+                        print.auc.x = 0.2, 
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI
+AUC_std_day2 <- pROC::auc(ROC_CRRT_std_day2, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_std_day2 <- round(as.numeric(sub(".*(: *)", "//1", AUC_std_day2)), 3)
+
+CI_AUC_std_day2 <- pROC::ci.auc(ROC_CRRT_std_day2, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_std_day2 <- sub(".*(: *)", "//1", CI_AUC_std_day2)
+
+AUC_secondpart_std_day2 <- as.numeric(substr(AUC_anotherpart_std_day2[1], 1, 5))
+
+AUC_thirdpart_std_day2 <- as.numeric(substr(AUC_anotherpart_std_day2[3], 1, 5))
+
+AUC_label_std_day2 <- paste0("AUC: ", AUC_firstpart_std_day2, " (", AUC_secondpart_std_day2, "-", AUC_thirdpart_std_day2, ")", sep = "") 
+
+# For recommended dosing
+TA_opt_day2 <- pop_sim_opt %>% filter(DAY == 2) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_CRRT_opt_day2 <- pROC::roc(TA_opt_day2$TA,
+                        TA_opt_day2$CRRT,
+                        auc.polygon = FALSE,
+                        max.auc.polygon = FALSE,
+                        grid = FALSE,
+                        ci = TRUE,
+                        boot.n = 1000,
+                        ci.alpha = 0.95,
+                        stratified = TRUE,
+                        plot = FALSE,
+                        print.auc = TRUE,
+                        print.auc.x = 0.2,
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI for the roc curves
+AUC_opt_day2 <- pROC::auc(ROC_CRRT_opt_day2, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_opt_day2 <- round(as.numeric(sub(".*(: *)", "//1", AUC_opt_day2)), 3)
+
+CI_AUC_opt_day2 <- pROC::ci.auc(ROC_CRRT_opt_day2, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_opt_day2 <- sub(".*(: *)", "//1", CI_AUC_opt_day2)
+
+AUC_secondpart_opt_day2 <- as.numeric(substr(AUC_anotherpart_opt_day2[1], 1, 5))
+
+AUC_thirdpart_opt_day2 <- as.numeric(substr(AUC_anotherpart_opt_day2[3], 1, 5))
+
+AUC_label_opt_day2 <- paste0("AUC: ", AUC_firstpart_opt_day2, " (", AUC_secondpart_opt_day2, "-", AUC_thirdpart_opt_day2, ")", sep = "")
+
+# Convert roc objects to data frames
+roc_std_day2 <- pROC::coords(ROC_CRRT_std_day2)
+roc_opt_day2 <- pROC::coords(ROC_CRRT_opt_day2)
+
+# Create the plot with DAY 1 title
+roc_curve_day2 <- ggplot() +
+  geom_line(data = roc_std_day2, aes(x = 1 - specificity, y = sensitivity, color = "Standard dosing regimen", linetype = "Standard dosing regimen"), size = 1) +
+  geom_line(data = roc_opt_day2, aes(x = 1 - specificity, y = sensitivity, color = "Optimised dosing regimen", linetype = "Optimised dosing regimen"), size = 1) +
+  scale_color_manual(values = c("Standard dosing regimen" = "#440154",
+    "Optimised dosing regimen" = "#21918c"),
+    breaks=c('Standard dosing regimen', 'Optimised dosing regimen')) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  theme_minimal() +
+  labs(y = "Sensitivity", x = "1 - Specificity") +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+    axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, size = 1),
+    axis.line = element_line(colour = "black")) +
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color = "#fde725", linetype = "solid") +
+  annotate(geom = "text", x = 0.80, y = 0.30, size = 11/.pt, label = AUC_label_std_day2, color = "#440154") +
+  annotate(geom = "text", x = 0.80, y = 0.20, size = 11/.pt, label = AUC_label_opt_day2, color = "#21918c") +
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed"))), linetype = "none") +
+  ggtitle("Day 2")
+roc_curve_day2
+
+```
+
+```{r combining two ROC curves of DAY7}
+
+# For standard dosing - DAY 7
+TA_std_day7 <- pop_sim_std %>% filter(DAY == 7) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_CRRT_std_day7 <- pROC::roc(TA_std_day7$TA,
+                        TA_std_day7$CRRT,
+                        auc.polygon = FALSE, 
+                        max.auc.polygon = FALSE, 
+                        grid = FALSE,
+                        ci = TRUE, 
+                        boot.n = 1000, 
+                        ci.alpha = 0.95, 
+                        stratified = TRUE,
+                        plot = FALSE, 
+                        print.auc = TRUE, 
+                        print.auc.x = 0.2, 
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI
+AUC_std_day7 <- pROC::auc(ROC_CRRT_std_day7, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_std_day7 <- round(as.numeric(sub(".*(: *)", "//1", AUC_std_day7)), 3)
+
+CI_AUC_std_day7 <- pROC::ci.auc(ROC_CRRT_std_day7, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_std_day7 <- sub(".*(: *)", "//1", CI_AUC_std_day7)
+
+AUC_secondpart_std_day7 <- as.numeric(substr(AUC_anotherpart_std_day7[1], 1, 5))
+
+AUC_thirdpart_std_day7 <- as.numeric(substr(AUC_anotherpart_std_day7[3], 1, 5))
+
+AUC_label_std_day7 <- paste0("AUC: ", AUC_firstpart_std_day7, " (", AUC_secondpart_std_day7, "-", AUC_thirdpart_std_day7, ")", sep = "") 
+
+# For recommended dosing
+TA_opt_day7 <- pop_sim_opt %>% filter(DAY == 7) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_CRRT_opt_day7 <- pROC::roc(TA_opt_day7$TA,
+                        TA_opt_day7$CRRT,
+                        auc.polygon = FALSE,
+                        max.auc.polygon = FALSE,
+                        grid = FALSE,
+                        ci = TRUE,
+                        boot.n = 1000,
+                        ci.alpha = 0.95,
+                        stratified = TRUE,
+                        plot = FALSE,
+                        print.auc = TRUE,
+                        print.auc.x = 0.2,
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI for the roc curves
+AUC_opt_day7 <- pROC::auc(ROC_CRRT_opt_day7, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_opt_day7 <- round(as.numeric(sub(".*(: *)", "//1", AUC_opt_day7)), 3)
+
+CI_AUC_opt_day7 <- pROC::ci.auc(ROC_CRRT_opt_day7, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_opt_day7 <- sub(".*(: *)", "//1", CI_AUC_opt_day7)
+
+AUC_secondpart_opt_day7 <- as.numeric(substr(AUC_anotherpart_opt_day7[1], 1, 5))
+
+AUC_thirdpart_opt_day7 <- as.numeric(substr(AUC_anotherpart_opt_day7[3], 1, 5))
+
+AUC_label_opt_day7 <- paste0("AUC: ", AUC_firstpart_opt_day7, " (", AUC_secondpart_opt_day7, "-", AUC_thirdpart_opt_day7, ")", sep = "")
+
+# Convert roc objects to data frames
+roc_std_day7 <- pROC::coords(ROC_CRRT_std_day7)
+roc_opt_day7 <- pROC::coords(ROC_CRRT_opt_day7)
+
+# Create the plot with DAY 1 title
+roc_curve_day7 <- ggplot() +
+  geom_line(data = roc_std_day7, aes(x = 1 - specificity, y = sensitivity, color = "Standard dosing regimen", linetype = "Standard dosing regimen"), size = 1) +
+  geom_line(data = roc_opt_day7, aes(x = 1 - specificity, y = sensitivity, color = "Optimised dosing regimen", linetype = "Optimised dosing regimen"), size = 1) +
+  scale_color_manual(values = c("Standard dosing regimen" = "#440154",
+    "Optimised dosing regimen" = "#21918c"),
+    breaks=c('Standard dosing regimen', 'Optimised dosing regimen')) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  theme_minimal() +
+  labs(y = "Sensitivity", x = "1 - Specificity") +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+    axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, size = 1),
+    axis.line = element_line(colour = "black")) +
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color = "#fde725", linetype = "solid") +
+  annotate(geom = "text", x = 0.60, y = 0.30, size = 11/.pt, label = AUC_label_std_day7, color = "#440154") +
+  annotate(geom = "text", x = 0.60, y = 0.20, size = 11/.pt, label = AUC_label_opt_day7, color = "#21918c") +
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed"))), linetype = "none") +
+  ggtitle("Day 7")
+roc_curve_day7
+
+```
+
+```{r combining two ROC curves of DAY14}
+
+# For standard dosing - DAY 14
+TA_std_day14 <- pop_sim_std %>% filter(DAY == 14) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_CRRT_std_day14 <- pROC::roc(TA_std_day14$TA,
+                        TA_std_day14$CRRT,
+                        auc.polygon = FALSE, 
+                        max.auc.polygon = FALSE, 
+                        grid = FALSE,
+                        ci = TRUE, 
+                        boot.n = 1000, 
+                        ci.alpha = 0.95, 
+                        stratified = TRUE,
+                        plot = FALSE, 
+                        print.auc = TRUE, 
+                        print.auc.x = 0.2, 
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI
+AUC_std_day14 <- pROC::auc(ROC_CRRT_std_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_std_day14 <- round(as.numeric(sub(".*(: *)", "//1", AUC_std_day14)), 3)
+
+CI_AUC_std_day14 <- pROC::ci.auc(ROC_CRRT_std_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_std_day14 <- sub(".*(: *)", "//1", CI_AUC_std_day14)
+
+AUC_secondpart_std_day14 <- as.numeric(substr(AUC_anotherpart_std_day14[1], 1, 5))
+
+AUC_thirdpart_std_day14 <- as.numeric(substr(AUC_anotherpart_std_day14[3], 1, 5))
+
+AUC_label_std_day14 <- paste0("AUC: ", AUC_firstpart_std_day14, " (", AUC_secondpart_std_day14, "-", AUC_thirdpart_std_day14, ")", sep = "") 
+
+# For recommended dosing
+TA_opt_day14 <- pop_sim_opt %>% filter(DAY == 14) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_CRRT_opt_day14 <- pROC::roc(TA_opt_day14$TA,
+                        TA_opt_day14$CRRT,
+                        auc.polygon = FALSE,
+                        max.auc.polygon = FALSE,
+                        grid = FALSE,
+                        ci = TRUE,
+                        boot.n = 1000,
+                        ci.alpha = 0.95,
+                        stratified = TRUE,
+                        plot = FALSE,
+                        print.auc = TRUE,
+                        print.auc.x = 0.2,
+                        print.auc.y = 0.3,
+                        show.thres = TRUE)
+
+# Calculate 95% CI for the roc curves
+AUC_opt_day14 <- pROC::auc(ROC_CRRT_opt_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_opt_day14 <- round(as.numeric(sub(".*(: *)", "//1", AUC_opt_day14)), 3)
+
+CI_AUC_opt_day14 <- pROC::ci.auc(ROC_CRRT_opt_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_opt_day14 <- sub(".*(: *)", "//1", CI_AUC_opt_day14)
+
+AUC_secondpart_opt_day14 <- as.numeric(substr(AUC_anotherpart_opt_day14[1], 1, 5))
+
+AUC_thirdpart_opt_day14 <- as.numeric(substr(AUC_anotherpart_opt_day14[3], 1, 5))
+
+AUC_label_opt_day14 <- paste0("AUC: ", AUC_firstpart_opt_day14, " (", AUC_secondpart_opt_day14, "-", AUC_thirdpart_opt_day14, ")", sep = "")
+
+# Convert roc objects to data frames
+roc_std_day14 <- pROC::coords(ROC_CRRT_std_day14)
+roc_opt_day14 <- pROC::coords(ROC_CRRT_opt_day14)
+
+# Create the plot with DAY 1 title
+roc_curve_day14 <- ggplot() +
+  geom_line(data = roc_std_day14, aes(x = 1 - specificity, y = sensitivity, color = "Standard dosing regimen", linetype = "Standard dosing regimen"), size = 1) +
+  geom_line(data = roc_opt_day14, aes(x = 1 - specificity, y = sensitivity, color = "Optimised dosing regimen", linetype = "Optimised dosing regimen"), size = 1) +
+  scale_color_manual(values = c("Standard dosing regimen" = "#440154",
+    "Optimised dosing regimen" = "#21918c"),
+    breaks=c('Standard dosing regimen', 'Optimised dosing regimen')) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  theme_minimal() +
+  labs(y = "Sensitivity", x = "1 - Specificity") +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+    axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+    panel.border = element_rect(color = "black", fill = NA, size = 1),
+    axis.line = element_line(colour = "black")) +
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color = "#fde725", linetype = "solid") +
+  annotate(geom = "text", x = 0.60, y = 0.30, size = 11/.pt, label = AUC_label_std_day14, color = "#440154") +
+  annotate(geom = "text", x = 0.60, y = 0.20, size = 11/.pt, label = AUC_label_opt_day14, color = "#21918c") +
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed"))), linetype = "none") +
+  ggtitle("Day 14")
+roc_curve_day14
+
+```
+
+```{r exporting roc curves datasets for CRRT,warning=FALSE}
+
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/ROCcurves_131123/")
+write.csv(roc_std_day1, "roc_CRRT_std_day1.csv",quote=F,row.names = FALSE)
+write.csv(roc_opt_day1, "roc_CRRT_opt_day1.csv",quote=F,row.names = FALSE)
+write.csv(roc_std_day2, "roc_CRRT_std_day2.csv",quote=F,row.names = FALSE)
+write.csv(roc_opt_day2, "roc_CRRT_opt_day2.csv",quote=F,row.names = FALSE)
+write.csv(roc_std_day7, "roc_CRRT_std_day7.csv",quote=F,row.names = FALSE)
+write.csv(roc_opt_day7, "roc_CRRT_opt_day7.csv",quote=F,row.names = FALSE)
+write.csv(roc_std_day14, "roc_CRRT_std_day14.csv",quote=F,row.names = FALSE)
+write.csv(roc_opt_day14, "roc_CRRT_opt_day14.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r combining ROC curves day 1 2 7 14,warning=FALSE}
+
+# First of all, get the common legend
+common_legend_CRRT <- get_legend(roc_curve_day1)
+
+# Remove legends from individual plots
+roc_curve_day1_nolegend <- roc_curve_day1 + theme(legend.position = "none")
+roc_curve_day2_nolegend <- roc_curve_day2 + theme(legend.position = "none")
+roc_curve_day7_nolegend <- roc_curve_day7 + theme(legend.position = "none")
+roc_curve_day14_nolegend <- roc_curve_day14 + theme(legend.position = "none")
+
+# Combine the plot
+
+combined_roc_CRRT <- plot_grid(roc_curve_day1_nolegend,roc_curve_day2_nolegend,roc_curve_day7_nolegend,roc_curve_day14_nolegend, ncol = 1,align="v")
+
+# Add the title
+CRRT_title <- ggdraw() + 
+  draw_label("Discriminative ability of CRRT status in fluconazole target attainment", fontface = "bold", size = 12)
+grid_CRRT_pop <- plot_grid(CRRT_title, combined_roc_CRRT, ncol = 1, rel_heights = c(0.02, 1))
+
+# Add the common legend
+ROC_CRRT <- plot_grid(grid_CRRT_pop, common_legend_CRRT, nrow = 1, rel_widths = c(1, 0.25))
+
+# Export ROC_CRRT plot
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/ROCcurves_131123/")
+ggsave("ROC_CRRT.png", ROC_CRRT, dpi = 300, width = 8.27, height = 10.3, units = "in", limitsize = FALSE)
+
+```
+
+#### Plotting Population Simulation PTA
+
+```{r importing pop_std_dos and dataset,warning=FALSE}
+
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/ROCcurves_131123/")
+pop_std_dos<-read.csv("pop_std_dos.csv") 
+pop_opt_dos<-read.csv("pop_opt_dos.csv") 
+
+```
+
+```{r percentile of fAUC over time}
+
+#Calculate the percentile of fAUC of 1000 patients across 1000 simulations to make a boxplot
+
+percentiles_std <- pop_std_dos %>%
+group_by(DAY) %>%
+summarize(p10 = quantile(fAUC, 0.1),
+p25 = quantile(fAUC, 0.25),
+p50 = median(fAUC),
+p75 = quantile(fAUC, 0.75),
+p90 = quantile(fAUC, 0.9))
+
+# For optimise dosing
+
+percentiles_opt <- pop_opt_dos %>%
+group_by(DAY) %>%
+summarize(p10 = quantile(fAUC, 0.1),
+p25 = quantile(fAUC, 0.25),
+p50 = median(fAUC),
+p75 = quantile(fAUC, 0.75),
+p90 = quantile(fAUC, 0.9))
+
+```
+
+```{r boxplot of fAUC over time}
+
+# for standard dosing
+box_pop_auc_std <- ggplot(percentiles_std, aes(x = factor(DAY))) +
+  geom_boxplot(aes(ymin = p10, lower = p25, middle = p50, upper = p75, ymax = p90),
+               stat= "identity",lwd=1.1,fatten=1.1,fill = "#fde725", color = "#fde725",alpha = 0.6) +
+  geom_hline(yintercept = 200, linetype = "dashed", color = "gray50", size = 0.8) +
+  ylab(expression(atop("Fluconazole area under the", "unbound concentration time curve (mgxh/L)"))) +
+  xlab("Day") +
+  ggtitle("Standard dosing regimen") +
+  scale_y_continuous(limits=c(0,1000),breaks = seq(0, 1000, by = 100)) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line.x = element_line(color = "grey", size = 0.5),
+        axis.line.y = element_line(color = "grey", size = 0.5))
+
+# for optimised dosing
+box_pop_auc_opt <- ggplot(percentiles_opt, aes(x = factor(DAY))) +
+  geom_boxplot(aes(ymin = p10, lower = p25, middle = p50, upper = p75, ymax = p90),
+               stat= "identity", lwd=1.1, fatten=1.1, fill = "#fde725", 
+               color = "#fde725",alpha = 0.6) +
+  geom_hline(yintercept = 200, linetype = "dashed", color = "gray50", size = 0.8) +
+  ylab(expression(atop("Fluconazole area under the", "unbound concentration time curve (mgxh/L)"))) +
+  xlab("Day") +
+  ggtitle("Optimised dosing regimen") +
+  scale_y_continuous(limits=c(0,1000),breaks = seq(0, 1000, by = 100)) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line.x = element_line(color = "grey", size = 0.5),
+        axis.line.y = element_line(color = "grey", size = 0.5))
+
+# combine these two box plots
+box_pop_auc <- plot_grid(box_pop_auc_std, box_pop_auc_opt, ncol=1)
+
+# export the combined box plot
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/pop_sim_plots/")
+ggsave("box_pop_auc.png", box_pop_auc, dpi = 300, width = 16, height = 8.27)
+
+
+```
+
+```{r make CKDEPI over percentage ribbon}
+
+# Calculating 95% CI of target attainment per DAY
+CKDEPI_DAY1<- pop_std_dos %>%
+    group_by(ID) %>% filter(DAY==1) %>% 
+     summarize(Percentage = mean(fAUC > 200) * 100,
+               Lower_CI = 100*mean(fAUC > 200) - qnorm(0.975) * sqrt(mean(fAUC > 200) * (1 - mean(fAUC > 200))) / sqrt(n()),
+               Upper_CI = 100*mean(fAUC > 200) + qnorm(0.975) * sqrt(mean(fAUC > 200) * (1 - mean(fAUC > 200))) / sqrt(n())) %>%
+     ungroup()
+
+# For Day 2
+CKDEPI_DAY2<- pop_std_dos %>%
+    group_by(ID) %>% filter(DAY==2) %>% 
+     summarize(Percentage = mean(fAUC > 200) * 100,
+               Lower_CI = 100*mean(fAUC > 200) - qnorm(0.975) * sqrt(mean(fAUC > 200) * (1 - mean(fAUC > 200))) / sqrt(n()),
+               Upper_CI = 100*mean(fAUC > 200) + qnorm(0.975) * sqrt(mean(fAUC > 200) * (1 - mean(fAUC > 200))) / sqrt(n())) %>%
+     ungroup()
+
+# For Day 7
+CKDEPI_DAY7<- pop_std_dos %>%
+    group_by(ID) %>% filter(DAY==7) %>% 
+     summarize(Percentage = mean(fAUC > 200) * 100,
+               Lower_CI = 100*mean(fAUC > 200) - qnorm(0.975) * sqrt(mean(fAUC > 200) * (1 - mean(fAUC > 200))) / sqrt(n()),
+               Upper_CI = 100*mean(fAUC > 200) + qnorm(0.975) * sqrt(mean(fAUC > 200) * (1 - mean(fAUC > 200))) / sqrt(n())) %>%
+     ungroup()
+
+# For Day 14
+CKDEPI_DAY14<- pop_std_dos %>%
+    group_by(ID) %>% filter(DAY==14) %>% 
+     summarize(Percentage = mean(fAUC > 200) * 100,
+               Lower_CI = 100*mean(fAUC > 200) - qnorm(0.975) * sqrt(mean(fAUC > 200) * (1 - mean(fAUC > 200))) / sqrt(n()),
+               Upper_CI = 100*mean(fAUC > 200) + qnorm(0.975) * sqrt(mean(fAUC > 200) * (1 - mean(fAUC > 200))) / sqrt(n())) %>%
+     ungroup()
+
+# Adding CKDEPI
+CKDEPI_DAY1 <- left_join(CKDEPI_DAY1, unique(pop_opt_dos%>%select(ID,CKDEPI)), by = "ID")
+
+CKDEPI_DAY2 <- left_join(CKDEPI_DAY2, unique(pop_opt_dos%>%select(ID,CKDEPI)), by = "ID")
+
+CKDEPI_DAY7 <- left_join(CKDEPI_DAY7, unique(pop_opt_dos%>%select(ID,CKDEPI)), by = "ID")
+
+CKDEPI_DAY14 <- left_join(CKDEPI_DAY14, unique(pop_opt_dos%>%select(ID,CKDEPI)), by = "ID")
+
+# Making a ribbon plot
+CKDEPI_DAY1_ribbon <- ggplot(CKDEPI_DAY1, aes(x = CKDEPI,y=Percentage)) +
+  geom_ribbon(aes(ymin = Lower_CI, ymax = Upper_CI), fill = "#440154", alpha = 1) + 
+  geom_line(color = "#fde725", size = 1) +
+  ylab(expression(atop("Probability (%)"))) +
+  ggtitle("Day 1") +
+  scale_y_continuous(limits=c(0,100),breaks = seq(0, 100, by = 10),expand = c(0,0)) +
+  scale_x_continuous(limits = c(0, 220), breaks = seq(0, 220, by = 10), name = "CKDEPI (ml/min/1.73m2)" ,expand = c(0,0)) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line.x = element_line(color = "grey", size = 0.5),
+        axis.line.y = element_line(color = "grey", size = 0.5))
+
+# Day 2
+CKDEPI_DAY2_ribbon <- ggplot(CKDEPI_DAY2, aes(x = CKDEPI,y=Percentage)) +
+  geom_ribbon(aes(ymin = Lower_CI, ymax = Upper_CI), fill = "#440154", alpha = 1) + 
+  geom_line(color = "#fde725", size = 1) +
+  ylab(expression(atop("Probability (%)"))) +
+  ggtitle("Day 2") +
+  scale_y_continuous(limits=c(0,100),breaks = seq(0, 100, by = 10),expand = c(0,0)) +
+  scale_x_continuous(limits = c(0, 220), breaks = seq(0, 220, by = 10), name = "CKDEPI (ml/min/1.73m2)" ,expand = c(0,0)) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line.x = element_line(color = "grey", size = 0.5),
+        axis.line.y = element_line(color = "grey", size = 0.5))
+
+# Day 7
+CKDEPI_DAY7_ribbon <- ggplot(CKDEPI_DAY7, aes(x = CKDEPI,y=Percentage)) +
+  geom_ribbon(aes(ymin = Lower_CI, ymax = Upper_CI), fill = "#440154", alpha = 1) + 
+  geom_line(color = "#fde725", size = 1) +
+  ylab(expression(atop("Probability (%)"))) +
+  ggtitle("Day 7") +
+  scale_y_continuous(limits=c(0,100),breaks = seq(0, 100, by = 10),expand = c(0,0)) +
+  scale_x_continuous(limits = c(0, 220), breaks = seq(0, 220, by = 10), name = "CKDEPI (ml/min/1.73m2)" ,expand = c(0,0)) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line.x = element_line(color = "grey", size = 0.5),
+        axis.line.y = element_line(color = "grey", size = 0.5))
+
+# Day 14
+CKDEPI_DAY14_ribbon <- ggplot(CKDEPI_DAY14, aes(x = CKDEPI,y=Percentage)) +
+  geom_ribbon(aes(ymin = Lower_CI, ymax = Upper_CI), fill = "#440154", alpha = 1) + 
+  geom_line(color = "#fde725", size = 1) +
+  ylab(expression(atop("Probability (%)"))) +
+  ggtitle("Day 14") +
+  scale_y_continuous(limits=c(0,100),breaks = seq(0, 100, by = 10),expand = c(0,0)) +
+  scale_x_continuous(limits = c(0, 220), breaks = seq(0, 220, by = 10), name = "CKDEPI (ml/min/1.73m2)" ,expand = c(0,0)) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 11,face="bold"),
+        axis.title = element_text(size = 10),
+        axis.text = element_text(size = 9),
+        legend.position = "none",
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line.x = element_line(color = "grey", size = 0.5),
+        axis.line.y = element_line(color = "grey", size = 0.5))
+
+# Combine 4 plots
+## Combining these 4 plots into 1
+
+grid_CKDEPI_pop <- plot_grid(CKDEPI_DAY1_ribbon, CKDEPI_DAY2_ribbon, CKDEPI_DAY7_ribbon, CKDEPI_DAY14_ribbon, nrow = 2, align = "v")
+
+title <- ggdraw() + 
+  draw_label("Probability of fAUC 200 mgxh/L target attainment", fontface = "bold", size = 12)
+
+# Arrange the title and grid using plot_grid()
+grid_CKDEPI_pop <- plot_grid(title, grid_CKDEPI_pop, ncol = 1, rel_heights = c(0.02, 1))
+
+# Export the combined plots
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/pop_sim_plots/")
+ggsave("grid_CKDEPI_pop.png", grid_CKDEPI_pop, dpi = 300, width = 16, height = 8.27)
+
+```
+
+#### Concentration over Time plot
+
+##### Standard dosing
+
+```{r import standard dataset,warning=FALSE}
+
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/pop_std_conc.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Export only TIME and DV column of dataset
+DV_TIME_std <-dataframe_simulations %>% select(DV,TIME)
+
+setwd('/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/')
+write.csv(DV_TIME_std, "DV_TIME_std.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r import standard  DV vs TIME dataset,warning=FALSE}
+
+setwd('/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/')
+DV_TIME_std<-read_csv("DV_TIME_std.csv")
+
+```
+
+```{r data_summary_std dataset quantile, warning=FALSE}
+
+DV_TIME_std <- DV_TIME_std[DV_TIME_std$DV != 0 | DV_TIME_std$TIME == 0, ]
+
+data_summary_std <- DV_TIME_std %>%
+  group_by(TIME) %>%
+  summarize(median= median(DV),
+            min= quantile(DV, 0.05),
+            max= quantile(DV, 0.95),
+            .groups = 'drop')
+
+# Round the values to 2 decimal places
+data_summary_std <- data_summary_std %>%
+  mutate(across(everything(), ~ round(., 2)))
+
+```
+
+```{r ribbon plot std dosing}
+
+pop_sim_std<-ggplot(data = data_summary_std, aes(x = TIME/24, y = median)) +
+  geom_ribbon(aes(ymin = min, ymax = max), fill = "#fde725", alpha = 0.5) +
+  geom_line(color = "#440154", size = 1.2) +
+  geom_hline(yintercept = 80, linetype = "dashed", color = "gray50",size=0.8) +
+  xlab("Day") +
+  ylab("Fluconazole total concentration (mg/L)") +
+  scale_x_continuous(limits = c(0, 14), breaks = seq(0, 14, by = 1),expand = c(0,0.01)) +
+  scale_y_continuous(limits = c(0, 80), breaks = seq(0, 80, by = 10),expand = c(0,0.01)) +
+  ggtitle("Standard dosing regimen") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16,face="bold"),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        panel.grid.major = element_line(colour = "gray85"),
+        panel.grid.minor = element_blank()
+  )
+pop_sim_std
+
+```
+
+##### Optimised dosing
+
+```{r import standard dataset,warning=FALSE}
+
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/pop_opt_conc.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Export only TIME and DV column of dataset
+DV_TIME_opt <-dataframe_simulations %>% select(DV,TIME)
+
+setwd('/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/')
+write.csv(DV_TIME_opt, "DV_TIME_opt.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r import standard  DV vs TIME dataset,warning=FALSE}
+
+setwd('/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/')
+DV_TIME_opt<-read_csv("DV_TIME_opt.csv")
+
+```
+
+```{r data_summary_std dataset quantile, warning=FALSE}
+
+DV_TIME_opt <- DV_TIME_opt[DV_TIME_opt$DV != 0 | DV_TIME_opt$TIME == 0, ]
+
+data_summary_opt <- DV_TIME_opt %>%
+  group_by(TIME) %>%
+  summarize(median= median(DV),
+            min= quantile(DV, 0.05),
+            max= quantile(DV, 0.95),
+            .groups = 'drop')
+
+# Round the values to 2 decimal places
+data_summary_opt <- data_summary_opt %>%
+  mutate(across(everything(), ~ round(., 2)))
+
+```
+
+```{r ribbon plot opt dosing}
+
+pop_sim_opt<-ggplot(data = data_summary_opt, aes(x = TIME/24, y = median)) +
+  geom_ribbon(aes(ymin = min, ymax = max), fill = "#fde725", alpha = 0.5) +
+  geom_line(color = "#440154", size = 1.2) +
+  geom_hline(yintercept = 80, linetype = "dashed", color = "gray50",size=0.8) +
+  xlab("Day") +
+  ylab("Fluconazole total concentration (mg/L)") +
+  scale_x_continuous(limits = c(0, 14), breaks = seq(0, 14, by = 1),expand = c(0,0.01)) +
+  scale_y_continuous(limits = c(0, 80), breaks = seq(0, 80, by = 10),expand = c(0,0.01)) +
+  ggtitle("Optimised dosing regimen") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16,face="bold"),
+        axis.title = element_text(size = 14),
+        axis.text = element_text(size = 12),
+        panel.grid.major = element_line(colour = "gray85"),
+        panel.grid.minor = element_blank()
+  )
+pop_sim_opt
+
+```
+
+##### Exporting std vs opt conc vs time plot
+
+```{r conc_time_std_opt plot,warning=FALSE}
+
+conc_time_std_opt <- plot_grid(pop_sim_std, pop_sim_opt, nrow = 1, align = "h")
+
+# save the plot
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/pop_sim_plots/")
+ggsave("conc_time_std_opt.png",conc_time_std_opt, dpi = 300, width = 12, height = 7)
+
+```
+
+#### Comparing PTA over Time std vs opt
+
+```{r PTA of day 1 to 14}
+
+# Calculating 95% CI of target attainment per DAY 1 2 7 14 std 051223
+PTA_day_1to14_std <- pop_std_dos %>% #pop_std_dos created above
+    group_by(DAY) %>% filter(DAY%in%c(1,2,7,14)) %>% 
+     summarize(Percentage = mean(fAUC > 200) * 100,
+               Lower_CI = 100*mean(fAUC > 200) - qnorm(0.975) * sqrt(mean(fAUC > 200) * (1 - mean(fAUC > 200))) / sqrt(n()),
+               Upper_CI = 100*mean(fAUC > 200) + qnorm(0.975) * sqrt(mean(fAUC > 200) * (1 - mean(fAUC > 200))) / sqrt(n())) %>%
+     ungroup()
+
+# Calculating 95% CI of target attainment per DAY 1 2 7 14 opt 051223
+PTA_day_1to14_opt <- pop_opt_dos %>% #pop_opt_dos created above
+    group_by(DAY) %>% filter(DAY%in%c(1,2,7,14)) %>% 
+     summarize(Percentage = mean(fAUC > 200) * 100,
+               Lower_CI = 100*mean(fAUC > 200) - qnorm(0.975) * sqrt(mean(fAUC > 200) * (1 - mean(fAUC > 200))) / sqrt(n()),
+               Upper_CI = 100*mean(fAUC > 200) + qnorm(0.975) * sqrt(mean(fAUC > 200) * (1 - mean(fAUC > 200))) / sqrt(n())) %>%
+     ungroup()
+
+```
+
+#### Comparing fAUC over Time std vs opt
+
+```{r fAUC of day 1 to 14}
+
+# Calculating 95% CI of fAUC per DAY 1 2 7 14 std 051223
+fAUC_day_1to14_std <- pop_std_dos %>% #pop_std_dos created above
+    group_by(DAY) %>% filter(DAY%in%c(1,2,7,14)) %>% 
+     summarize(Percentage = mean(fAUC),
+               Lower_CI = mean(fAUC) - qnorm(0.975) * sqrt(var(fAUC)/n()),
+               Upper_CI = mean(fAUC) + qnorm(0.975) * sqrt(var(fAUC)/n())) %>%
+     ungroup()
+
+# Calculating 95% CI of target attainment per DAY 1 2 7 14 opt 051223
+PTA_day_1to14_opt <- pop_opt_dos %>% #pop_opt_dos created above
+    group_by(DAY) %>% filter(DAY%in%c(1,2,7,14)) %>% 
+     summarize(Percentage = mean(fAUC > 200) * 100,
+               Lower_CI = 100*mean(fAUC > 200) - qnorm(0.975) * sqrt(mean(fAUC > 200) * (1 - mean(fAUC > 200))) / sqrt(n()),
+               Upper_CI = 100*mean(fAUC > 200) + qnorm(0.975) * sqrt(mean(fAUC > 200) * (1 - mean(fAUC > 200))) / sqrt(n())) %>%
+     ungroup()
+
+```
+
+#### Comparing drug consumption
+
+```{r opt dataset with dos only,warning=FALSE}
+
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/pop_sim_opt.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the dosing events
+consume_opt_dos <- dataframe_simulations[dataframe_simulations$TROUGH == 0,]
+consume_opt_dos <- consume_opt_dos%>%select(ID, DAY, AMT, BW,CKDEPI)
+
+# Export this dosing dataset to calculate drug consumption
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/ROCcurves_131123/")
+write.csv(consume_opt_dos, "consume_opt_dos.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r compare drug consumption std vs opt}
+
+#total consumption 1000 patients with 1000 simulations over 14 days with optimised dosing 
+consume_opt_total<-sum(consume_opt_dos$AMT)
+
+#total consumption 1000 patients with 1000 simulations over 14 days with standard dosing
+consume_std_total<-10^3*(1000*800+13*1000*400) #there are 1000 LD of 800mg, and 13*1000 MD of 400mg
+
+#difference in drug consumption per 1000 patient days - using WHO DDD equation ( https://asap.nebraskamed.com/wp-content/uploads/sites/3/2018/06/Antibiotic-Stewardship-Metrics-How-Do-you-Measure-Up_Kuper.pdf)
+(consume_opt_total-consume_std_total)/(10^6*14)*10^3
+### With DDD of Fluconazole equals 200mg, this can be translated to
+74828.57/200 374
+
+```
+
+
+### Dose-finding analysis - MIC of 4 mg/L
+
+#### For non-CRRT patients
+
+```{r for the 1200 LD & 800 MD, warning=FALSE}
+
+# Use read_nonmem_table function to import data
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/sim_BW_noCRRT_01.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+BW_noCRRT_dos_01 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+BW_noCRRT_dos_01$ID<-as.integer(BW_noCRRT_dos_01$ID)
+
+# Create a new variable AUC24 for each ID
+BW_noCRRT_dos_01 <- BW_noCRRT_dos_01 %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+BW_noCRRT_dos_01<- BW_noCRRT_dos_01 %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+BW_noCRRT_dos_01$fAUC<- BW_noCRRT_dos_01$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_noCRRT_01 <- subset(BW_noCRRT_dos_01, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_noCRRT_01$PTA_Cmin_75 <- 100 * ave(PTA_noCRRT_01$DV >= 7.5, PTA_noCRRT_01$DAY, PTA_noCRRT_01$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_noCRRT_01$PTA_Cmin_80 <- 100 * ave(PTA_noCRRT_01$DV >= 80, PTA_noCRRT_01$DAY, PTA_noCRRT_01$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_noCRRT_01$PTA_fAUC_200 <- 100 * ave(PTA_noCRRT_01$fAUC >= 200, PTA_noCRRT_01$DAY, PTA_noCRRT_01$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 400 per DAY per BW (PTA_fAUC_400) #Isabel'comment on simulating for MIC of 4 mg/L
+PTA_noCRRT_01$PTA_fAUC_400 <- 100 * ave(PTA_noCRRT_01$fAUC >= 400, PTA_noCRRT_01$DAY, PTA_noCRRT_01$BW, FUN = mean)
+
+# Create PTA_noCRRT_01_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_noCRRT_01_overall <- unique(PTA_noCRRT_01[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200","PTA_fAUC_400", "DAY", "BW")])
+
+# Export PTA_noCRRT_dos_01 dataset
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(PTA_noCRRT_01_overall, "PTA_noCRRT_dos_01.csv",quote=F,row.names = FALSE)
+
+# Export BW_noCRRT_dos_01.csv for future use
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(BW_noCRRT_dos_01, "BW_noCRRT_dos_01.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r for the 1200 LD & 400 MD, warning=FALSE}
+
+# Use read_nonmem_table function to import data
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/sim_BW_noCRRT_02.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+BW_noCRRT_dos_02 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+BW_noCRRT_dos_02$ID<-as.integer(BW_noCRRT_dos_02$ID)
+
+# Create a new variable AUC24 for each ID
+BW_noCRRT_dos_02 <- BW_noCRRT_dos_02 %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+BW_noCRRT_dos_02<- BW_noCRRT_dos_02 %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+BW_noCRRT_dos_02$fAUC<- BW_noCRRT_dos_02$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_noCRRT_02 <- subset(BW_noCRRT_dos_02, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_noCRRT_02$PTA_Cmin_75 <- 100 * ave(PTA_noCRRT_02$DV >= 7.5, PTA_noCRRT_02$DAY, PTA_noCRRT_02$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_noCRRT_02$PTA_Cmin_80 <- 100 * ave(PTA_noCRRT_02$DV >= 80, PTA_noCRRT_02$DAY, PTA_noCRRT_02$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_noCRRT_02$PTA_fAUC_200 <- 100 * ave(PTA_noCRRT_02$fAUC >= 200, PTA_noCRRT_02$DAY, PTA_noCRRT_02$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 400 per DAY per BW (PTA_fAUC_400) #Isabel'comment on simulating for MIC of 4 mg/L
+PTA_noCRRT_02$PTA_fAUC_400 <- 100 * ave(PTA_noCRRT_02$fAUC >= 400, PTA_noCRRT_02$DAY, PTA_noCRRT_02$BW, FUN = mean)
+
+# Create PTA_noCRRT_02_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_noCRRT_02_overall <- unique(PTA_noCRRT_02[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200","PTA_fAUC_400", "DAY", "BW")])
+
+# Export PTA_noCRRT_dos_02 dataset
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(PTA_noCRRT_02_overall, "PTA_noCRRT_dos_02.csv",quote=F,row.names = FALSE)
+
+# Export BW_noCRRT_dos_02.csv for future use
+#setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+#write.csv(BW_noCRRT_dos_02, "BW_noCRRT_dos_02.csv",quote=F,row.names = FALSE) #temporarility comment this out
+
+```
+
+```{r for the 1000 LD & 400 MD, warning=FALSE}
+
+# Use read_nonmem_table function to import data
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/sim_BW_noCRRT_03.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+BW_noCRRT_dos_03 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+BW_noCRRT_dos_03$ID<-as.integer(BW_noCRRT_dos_03$ID)
+
+# Create a new variable AUC24 for each ID
+BW_noCRRT_dos_03 <- BW_noCRRT_dos_03 %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+BW_noCRRT_dos_03<- BW_noCRRT_dos_03 %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+BW_noCRRT_dos_03$fAUC<- BW_noCRRT_dos_03$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_noCRRT_03 <- subset(BW_noCRRT_dos_03, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_noCRRT_03$PTA_Cmin_75 <- 100 * ave(PTA_noCRRT_03$DV >= 7.5, PTA_noCRRT_03$DAY, PTA_noCRRT_03$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_noCRRT_03$PTA_Cmin_80 <- 100 * ave(PTA_noCRRT_03$DV >= 80, PTA_noCRRT_03$DAY, PTA_noCRRT_03$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_noCRRT_03$PTA_fAUC_200 <- 100 * ave(PTA_noCRRT_03$fAUC >= 200, PTA_noCRRT_03$DAY, PTA_noCRRT_03$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 400 per DAY per BW (PTA_fAUC_400) #Isabel'comment on simulating for MIC of 4 mg/L
+PTA_noCRRT_03$PTA_fAUC_400 <- 100 * ave(PTA_noCRRT_03$fAUC >= 400, PTA_noCRRT_03$DAY, PTA_noCRRT_03$BW, FUN = mean)
+
+# Create PTA_noCRRT_03_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_noCRRT_03_overall <- unique(PTA_noCRRT_03[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200","PTA_fAUC_400", "DAY", "BW")])
+
+# Export PTA_noCRRT_dos_03 dataset
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(PTA_noCRRT_03_overall, "PTA_noCRRT_dos_03.csv",quote=F,row.names = FALSE)
+
+# Export BW_noCRRT_dos_03.csv for future use
+#setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+#write.csv(BW_noCRRT_dos_03, "BW_noCRRT_dos_03.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r for the 800 LD & 400 MD, warning=FALSE}
+
+# Use read_nonmem_table function to import data
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/sim_BW_noCRRT_04.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+BW_noCRRT_dos_04 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+BW_noCRRT_dos_04$ID<-as.integer(BW_noCRRT_dos_04$ID)
+
+# Create a new variable AUC24 for each ID
+BW_noCRRT_dos_04 <- BW_noCRRT_dos_04 %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+BW_noCRRT_dos_04<- BW_noCRRT_dos_04 %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+BW_noCRRT_dos_04$fAUC<- BW_noCRRT_dos_04$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_noCRRT_04 <- subset(BW_noCRRT_dos_04, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_noCRRT_04$PTA_Cmin_75 <- 100 * ave(PTA_noCRRT_04$DV >= 7.5, PTA_noCRRT_04$DAY, PTA_noCRRT_04$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_noCRRT_04$PTA_Cmin_80 <- 100 * ave(PTA_noCRRT_04$DV >= 80, PTA_noCRRT_04$DAY, PTA_noCRRT_04$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_noCRRT_04$PTA_fAUC_200 <- 100 * ave(PTA_noCRRT_04$fAUC >= 200, PTA_noCRRT_04$DAY, PTA_noCRRT_04$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 400 per DAY per BW (PTA_fAUC_400) #Isabel'comment on simulating for MIC of 4 mg/L
+PTA_noCRRT_04$PTA_fAUC_400 <- 100 * ave(PTA_noCRRT_04$fAUC >= 400, PTA_noCRRT_04$DAY, PTA_noCRRT_04$BW, FUN = mean)
+
+# Create PTA_noCRRT_04_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_noCRRT_04_overall <- unique(PTA_noCRRT_04[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200","PTA_fAUC_400", "DAY", "BW")])
+
+# Export PTA_noCRRT_dos_04 dataset
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(PTA_noCRRT_04_overall, "PTA_noCRRT_dos_04.csv",quote=F,row.names = FALSE)
+
+# Export BW_noCRRT_dos_04.csv for future use
+#setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+#write.csv(BW_noCRRT_dos_04, "BW_noCRRT_dos_04.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r for the 1400 LD & 400 MD, warning=FALSE}
+
+# Use read_nonmem_table function to import data
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/sim_BW_noCRRT_05.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+BW_noCRRT_dos_05 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+BW_noCRRT_dos_05$ID<-as.integer(BW_noCRRT_dos_05$ID)
+
+# Create a new variable AUC24 for each ID
+BW_noCRRT_dos_05 <- BW_noCRRT_dos_05 %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+BW_noCRRT_dos_05<- BW_noCRRT_dos_05 %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+BW_noCRRT_dos_05$fAUC<- BW_noCRRT_dos_05$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_noCRRT_05 <- subset(BW_noCRRT_dos_05, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_noCRRT_05$PTA_Cmin_75 <- 100 * ave(PTA_noCRRT_05$DV >= 7.5, PTA_noCRRT_05$DAY, PTA_noCRRT_05$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_noCRRT_05$PTA_Cmin_80 <- 100 * ave(PTA_noCRRT_05$DV >= 80, PTA_noCRRT_05$DAY, PTA_noCRRT_05$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_noCRRT_05$PTA_fAUC_200 <- 100 * ave(PTA_noCRRT_05$fAUC >= 200, PTA_noCRRT_05$DAY, PTA_noCRRT_05$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 400 per DAY per BW (PTA_fAUC_400) #Isabel'comment on simulating for MIC of 4 mg/L
+PTA_noCRRT_05$PTA_fAUC_400 <- 100 * ave(PTA_noCRRT_05$fAUC >= 400, PTA_noCRRT_05$DAY, PTA_noCRRT_05$BW, FUN = mean)
+
+# Create PTA_noCRRT_05_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_noCRRT_05_overall <- unique(PTA_noCRRT_05[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200","PTA_fAUC_400", "DAY", "BW")])
+
+# Export PTA_noCRRT_dos_05 dataset
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(PTA_noCRRT_05_overall, "PTA_noCRRT_dos_05.csv",quote=F,row.names = FALSE)
+
+# Export BW_noCRRT_dos_05.csv for future use
+#setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+#write.csv(BW_noCRRT_dos_05, "BW_noCRRT_dos_05.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r for the 1600 LD & 400 MD, warning=FALSE}
+
+# Use read_nonmem_table function to import data
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/sim_BW_noCRRT_06.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+BW_noCRRT_dos_06 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+BW_noCRRT_dos_06$ID<-as.integer(BW_noCRRT_dos_06$ID)
+
+# Create a new variable AUC24 for each ID
+BW_noCRRT_dos_06 <- BW_noCRRT_dos_06 %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+BW_noCRRT_dos_06<- BW_noCRRT_dos_06 %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+BW_noCRRT_dos_06$fAUC<- BW_noCRRT_dos_06$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_noCRRT_06 <- subset(BW_noCRRT_dos_06, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_noCRRT_06$PTA_Cmin_75 <- 100 * ave(PTA_noCRRT_06$DV >= 7.5, PTA_noCRRT_06$DAY, PTA_noCRRT_06$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_noCRRT_06$PTA_Cmin_80 <- 100 * ave(PTA_noCRRT_06$DV >= 80, PTA_noCRRT_06$DAY, PTA_noCRRT_06$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_noCRRT_06$PTA_fAUC_200 <- 100 * ave(PTA_noCRRT_06$fAUC >= 200, PTA_noCRRT_06$DAY, PTA_noCRRT_06$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 400 per DAY per BW (PTA_fAUC_400) #Isabel'comment on simulating for MIC of 4 mg/L
+PTA_noCRRT_06$PTA_fAUC_400 <- 100 * ave(PTA_noCRRT_06$fAUC >= 400, PTA_noCRRT_06$DAY, PTA_noCRRT_06$BW, FUN = mean)
+
+# Create PTA_noCRRT_06_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_noCRRT_06_overall <- unique(PTA_noCRRT_06[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200","PTA_fAUC_400", "DAY", "BW")])
+
+# Export PTA_noCRRT_dos_06 dataset
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(PTA_noCRRT_06_overall, "PTA_noCRRT_dos_06.csv",quote=F,row.names = FALSE)
+
+# Export BW_noCRRT_dos_06.csv for future use
+#setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+#write.csv(BW_noCRRT_dos_06, "BW_noCRRT_dos_06.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r for the 1800 LD & 400 MD, warning=FALSE}
+
+# Use read_nonmem_table function to import data
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/sim_BW_noCRRT_07.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+BW_noCRRT_dos_07 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+BW_noCRRT_dos_07$ID<-as.integer(BW_noCRRT_dos_07$ID)
+
+# Create a new variable AUC24 for each ID
+BW_noCRRT_dos_07 <- BW_noCRRT_dos_07 %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+BW_noCRRT_dos_07<- BW_noCRRT_dos_07 %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+BW_noCRRT_dos_07$fAUC<- BW_noCRRT_dos_07$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_noCRRT_07 <- subset(BW_noCRRT_dos_07, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_noCRRT_07$PTA_Cmin_75 <- 100 * ave(PTA_noCRRT_07$DV >= 7.5, PTA_noCRRT_07$DAY, PTA_noCRRT_07$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_noCRRT_07$PTA_Cmin_80 <- 100 * ave(PTA_noCRRT_07$DV >= 80, PTA_noCRRT_07$DAY, PTA_noCRRT_07$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_noCRRT_07$PTA_fAUC_200 <- 100 * ave(PTA_noCRRT_07$fAUC >= 200, PTA_noCRRT_07$DAY, PTA_noCRRT_07$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 400 per DAY per BW (PTA_fAUC_400) #Isabel'comment on simulating for MIC of 4 mg/L
+PTA_noCRRT_07$PTA_fAUC_400 <- 100 * ave(PTA_noCRRT_07$fAUC >= 400, PTA_noCRRT_07$DAY, PTA_noCRRT_07$BW, FUN = mean)
+
+# Create PTA_noCRRT_07_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_noCRRT_07_overall <- unique(PTA_noCRRT_07[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200","PTA_fAUC_400", "DAY", "BW")])
+
+# Export PTA_noCRRT_dos_07 dataset
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(PTA_noCRRT_07_overall, "PTA_noCRRT_dos_07.csv",quote=F,row.names = FALSE)
+
+# Export BW_noCRRT_dos_07.csv for future use
+#setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+#write.csv(BW_noCRRT_dos_07, "BW_noCRRT_dos_07.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r for the 800 LD & 200 MD, warning=FALSE}
+
+# Use read_nonmem_table function to import data
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/sim_BW_noCRRT_08.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+BW_noCRRT_dos_08 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+BW_noCRRT_dos_08$ID<-as.integer(BW_noCRRT_dos_08$ID)
+
+# Create a new variable AUC24 for each ID
+BW_noCRRT_dos_08 <- BW_noCRRT_dos_08 %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+BW_noCRRT_dos_08<- BW_noCRRT_dos_08 %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+BW_noCRRT_dos_08$fAUC<- BW_noCRRT_dos_08$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_noCRRT_08 <- subset(BW_noCRRT_dos_08, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_noCRRT_08$PTA_Cmin_75 <- 100 * ave(PTA_noCRRT_08$DV >= 7.5, PTA_noCRRT_08$DAY, PTA_noCRRT_08$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_noCRRT_08$PTA_Cmin_80 <- 100 * ave(PTA_noCRRT_08$DV >= 80, PTA_noCRRT_08$DAY, PTA_noCRRT_08$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_noCRRT_08$PTA_fAUC_200 <- 100 * ave(PTA_noCRRT_08$fAUC >= 200, PTA_noCRRT_08$DAY, PTA_noCRRT_08$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 400 per DAY per BW (PTA_fAUC_400) #Isabel'comment on simulating for MIC of 4 mg/L
+PTA_noCRRT_08$PTA_fAUC_400 <- 100 * ave(PTA_noCRRT_08$fAUC >= 400, PTA_noCRRT_08$DAY, PTA_noCRRT_08$BW, FUN = mean)
+
+# Create PTA_noCRRT_08_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_noCRRT_08_overall <- unique(PTA_noCRRT_08[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200","PTA_fAUC_400", "DAY", "BW")])
+
+# Export PTA_noCRRT_dos_08 dataset
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(PTA_noCRRT_08_overall, "PTA_noCRRT_dos_08.csv",quote=F,row.names = FALSE)
+
+# Export BW_noCRRT_dos_08.csv for future use
+#setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+#write.csv(BW_noCRRT_dos_08, "BW_noCRRT_dos_08.csv",quote=F,row.names = FALSE)
+
+```
+
+#### For CRRT patients
+
+```{r for the 1200 LD & 800 MD, warning=FALSE}
+
+# Use read_nonmem_table function to import data
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/sim_BW_CRRT_01.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+BW_CRRT_dos_01 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+BW_CRRT_dos_01$ID<-as.integer(BW_CRRT_dos_01$ID)
+
+# Create a new variable AUC24 for each ID
+BW_CRRT_dos_01 <- BW_CRRT_dos_01 %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+BW_CRRT_dos_01<- BW_CRRT_dos_01 %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+BW_CRRT_dos_01$fAUC<- BW_CRRT_dos_01$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_CRRT_01 <- subset(BW_CRRT_dos_01, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_CRRT_01$PTA_Cmin_75 <- 100 * ave(PTA_CRRT_01$DV >= 7.5, PTA_CRRT_01$DAY, PTA_CRRT_01$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_CRRT_01$PTA_Cmin_80 <- 100 * ave(PTA_CRRT_01$DV >= 80, PTA_CRRT_01$DAY, PTA_CRRT_01$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_CRRT_01$PTA_fAUC_200 <- 100 * ave(PTA_CRRT_01$fAUC >= 200, PTA_CRRT_01$DAY, PTA_CRRT_01$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 400 per DAY per BW (PTA_fAUC_400) #Isabel'comment on simulating for MIC of 4 mg/L
+PTA_CRRT_01$PTA_fAUC_400 <- 100 * ave(PTA_CRRT_01$fAUC >= 400, PTA_CRRT_01$DAY, PTA_CRRT_01$BW, FUN = mean)
+
+# Create PTA_CRRT_01_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_CRRT_01_overall <- unique(PTA_CRRT_01[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200","PTA_fAUC_400", "DAY", "BW")])
+
+# Export PTA_CRRT_dos_01 dataset
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(PTA_CRRT_01_overall, "PTA_CRRT_dos_01.csv",quote=F,row.names = FALSE)
+
+# Export BW_CRRT_dos_01.csv for future use
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(BW_CRRT_dos_01, "BW_CRRT_dos_01.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r for the 800 LD & 400 MD, warning=FALSE}
+
+# Use read_nonmem_table function to import data
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/sim_BW_CRRT_02.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+BW_CRRT_dos_02 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+BW_CRRT_dos_02$ID<-as.integer(BW_CRRT_dos_02$ID)
+
+# Create a new variable AUC24 for each ID
+BW_CRRT_dos_02 <- BW_CRRT_dos_02 %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+BW_CRRT_dos_02<- BW_CRRT_dos_02 %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+BW_CRRT_dos_02$fAUC<- BW_CRRT_dos_02$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_CRRT_02 <- subset(BW_CRRT_dos_02, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_CRRT_02$PTA_Cmin_75 <- 100 * ave(PTA_CRRT_02$DV >= 7.5, PTA_CRRT_02$DAY, PTA_CRRT_02$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_CRRT_02$PTA_Cmin_80 <- 100 * ave(PTA_CRRT_02$DV >= 80, PTA_CRRT_02$DAY, PTA_CRRT_02$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_CRRT_02$PTA_fAUC_200 <- 100 * ave(PTA_CRRT_02$fAUC >= 200, PTA_CRRT_02$DAY, PTA_CRRT_02$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 400 per DAY per BW (PTA_fAUC_400) #Isabel'comment on simulating for MIC of 4 mg/L
+PTA_CRRT_02$PTA_fAUC_400 <- 100 * ave(PTA_CRRT_02$fAUC >= 400, PTA_CRRT_02$DAY, PTA_CRRT_02$BW, FUN = mean)
+
+# Create PTA_CRRT_02_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_CRRT_02_overall <- unique(PTA_CRRT_02[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200","PTA_fAUC_400", "DAY", "BW")])
+
+# Export PTA_CRRT_dos_02 dataset
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(PTA_CRRT_02_overall, "PTA_CRRT_dos_02.csv",quote=F,row.names = FALSE)
+
+# Export BW_CRRT_dos_02.csv for future use
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(BW_CRRT_dos_02, "BW_CRRT_dos_02.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r for the 1000 LD & 600 MD, warning=FALSE}
+
+# Use read_nonmem_table function to import data
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/sim_BW_CRRT_03.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+BW_CRRT_dos_03 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+BW_CRRT_dos_03$ID<-as.integer(BW_CRRT_dos_03$ID)
+
+# Create a new variable AUC24 for each ID
+BW_CRRT_dos_03 <- BW_CRRT_dos_03 %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+BW_CRRT_dos_03<- BW_CRRT_dos_03 %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+BW_CRRT_dos_03$fAUC<- BW_CRRT_dos_03$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_CRRT_03 <- subset(BW_CRRT_dos_03, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_CRRT_03$PTA_Cmin_75 <- 100 * ave(PTA_CRRT_03$DV >= 7.5, PTA_CRRT_03$DAY, PTA_CRRT_03$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_CRRT_03$PTA_Cmin_80 <- 100 * ave(PTA_CRRT_03$DV >= 80, PTA_CRRT_03$DAY, PTA_CRRT_03$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_CRRT_03$PTA_fAUC_200 <- 100 * ave(PTA_CRRT_03$fAUC >= 200, PTA_CRRT_03$DAY, PTA_CRRT_03$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 400 per DAY per BW (PTA_fAUC_400) #Isabel'comment on simulating for MIC of 4 mg/L
+PTA_CRRT_03$PTA_fAUC_400 <- 100 * ave(PTA_CRRT_03$fAUC >= 400, PTA_CRRT_03$DAY, PTA_CRRT_03$BW, FUN = mean)
+
+# Create PTA_CRRT_03_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_CRRT_03_overall <- unique(PTA_CRRT_03[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200","PTA_fAUC_400", "DAY", "BW")])
+
+# Export PTA_CRRT_dos_03 dataset
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(PTA_CRRT_03_overall, "PTA_CRRT_dos_03.csv",quote=F,row.names = FALSE)
+
+# Export BW_CRRT_dos_03.csv for future use
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(BW_CRRT_dos_03, "BW_CRRT_dos_03.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r for the 1000 LD & 800 MD, warning=FALSE}
+
+# Use read_nonmem_table function to import data
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/sim_BW_CRRT_04.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+BW_CRRT_dos_04 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+BW_CRRT_dos_04$ID<-as.integer(BW_CRRT_dos_04$ID)
+
+# Create a new variable AUC24 for each ID
+BW_CRRT_dos_04 <- BW_CRRT_dos_04 %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+BW_CRRT_dos_04<- BW_CRRT_dos_04 %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+BW_CRRT_dos_04$fAUC<- BW_CRRT_dos_04$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_CRRT_04 <- subset(BW_CRRT_dos_04, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_CRRT_04$PTA_Cmin_75 <- 100 * ave(PTA_CRRT_04$DV >= 7.5, PTA_CRRT_04$DAY, PTA_CRRT_04$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_CRRT_04$PTA_Cmin_80 <- 100 * ave(PTA_CRRT_04$DV >= 80, PTA_CRRT_04$DAY, PTA_CRRT_04$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_CRRT_04$PTA_fAUC_200 <- 100 * ave(PTA_CRRT_04$fAUC >= 200, PTA_CRRT_04$DAY, PTA_CRRT_04$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 400 per DAY per BW (PTA_fAUC_400) #Isabel'comment on simulating for MIC of 4 mg/L
+PTA_CRRT_04$PTA_fAUC_400 <- 100 * ave(PTA_CRRT_04$fAUC >= 400, PTA_CRRT_04$DAY, PTA_CRRT_04$BW, FUN = mean)
+
+# Create PTA_CRRT_04_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_CRRT_04_overall <- unique(PTA_CRRT_04[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200","PTA_fAUC_400", "DAY", "BW")])
+
+# Export PTA_CRRT_dos_04 dataset
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(PTA_CRRT_04_overall, "PTA_CRRT_dos_04.csv",quote=F,row.names = FALSE)
+
+# Export BW_CRRT_dos_04.csv for future use
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(BW_CRRT_dos_04, "BW_CRRT_dos_04.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r for the 1400 LD & 800 MD, warning=FALSE}
+
+# Use read_nonmem_table function to import data
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/sim_BW_CRRT_05.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+BW_CRRT_dos_05 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+BW_CRRT_dos_05$ID<-as.integer(BW_CRRT_dos_05$ID)
+
+# Create a new variable AUC24 for each ID
+BW_CRRT_dos_05 <- BW_CRRT_dos_05 %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+BW_CRRT_dos_05<- BW_CRRT_dos_05 %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+BW_CRRT_dos_05$fAUC<- BW_CRRT_dos_05$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_CRRT_05 <- subset(BW_CRRT_dos_05, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_CRRT_05$PTA_Cmin_75 <- 100 * ave(PTA_CRRT_05$DV >= 7.5, PTA_CRRT_05$DAY, PTA_CRRT_05$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_CRRT_05$PTA_Cmin_80 <- 100 * ave(PTA_CRRT_05$DV >= 80, PTA_CRRT_05$DAY, PTA_CRRT_05$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_CRRT_05$PTA_fAUC_200 <- 100 * ave(PTA_CRRT_05$fAUC >= 200, PTA_CRRT_05$DAY, PTA_CRRT_05$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 400 per DAY per BW (PTA_fAUC_400) #Isabel'comment on simulating for MIC of 4 mg/L
+PTA_CRRT_05$PTA_fAUC_400 <- 100 * ave(PTA_CRRT_05$fAUC >= 400, PTA_CRRT_05$DAY, PTA_CRRT_05$BW, FUN = mean)
+
+# Create PTA_CRRT_05_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_CRRT_05_overall <- unique(PTA_CRRT_05[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200","PTA_fAUC_400", "DAY", "BW")])
+
+# Export PTA_CRRT_dos_05 dataset
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(PTA_CRRT_05_overall, "PTA_CRRT_dos_05.csv",quote=F,row.names = FALSE)
+
+# Export BW_CRRT_dos_05.csv for future use
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(BW_CRRT_dos_05, "BW_CRRT_dos_05.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r for the 1600 LD & 800 MD, warning=FALSE}
+
+# Use read_nonmem_table function to import data
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/sim_BW_CRRT_06.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+BW_CRRT_dos_06 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+BW_CRRT_dos_06$ID<-as.integer(BW_CRRT_dos_06$ID)
+
+# Create a new variable AUC24 for each ID
+BW_CRRT_dos_06 <- BW_CRRT_dos_06 %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+BW_CRRT_dos_06<- BW_CRRT_dos_06 %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+BW_CRRT_dos_06$fAUC<- BW_CRRT_dos_06$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_CRRT_06 <- subset(BW_CRRT_dos_06, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_CRRT_06$PTA_Cmin_75 <- 100 * ave(PTA_CRRT_06$DV >= 7.5, PTA_CRRT_06$DAY, PTA_CRRT_06$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_CRRT_06$PTA_Cmin_80 <- 100 * ave(PTA_CRRT_06$DV >= 80, PTA_CRRT_06$DAY, PTA_CRRT_06$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_CRRT_06$PTA_fAUC_200 <- 100 * ave(PTA_CRRT_06$fAUC >= 200, PTA_CRRT_06$DAY, PTA_CRRT_06$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 400 per DAY per BW (PTA_fAUC_400) #Isabel'comment on simulating for MIC of 4 mg/L
+PTA_CRRT_06$PTA_fAUC_400 <- 100 * ave(PTA_CRRT_06$fAUC >= 400, PTA_CRRT_06$DAY, PTA_CRRT_06$BW, FUN = mean)
+
+# Create PTA_CRRT_06_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_CRRT_06_overall <- unique(PTA_CRRT_06[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200","PTA_fAUC_400", "DAY", "BW")])
+
+# Export PTA_CRRT_dos_06 dataset
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(PTA_CRRT_06_overall, "PTA_CRRT_dos_06.csv",quote=F,row.names = FALSE)
+
+# Export BW_CRRT_dos_06.csv for future use
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(BW_CRRT_dos_06, "BW_CRRT_dos_06.csv",quote=F,row.names = FALSE)
+
+```
+
+```{r for the 1800 LD & 800 MD, warning=FALSE}
+
+# Use read_nonmem_table function to import data
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/sim_BW_CRRT_07.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+BW_CRRT_dos_07 <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+BW_CRRT_dos_07$ID<-as.integer(BW_CRRT_dos_07$ID)
+
+# Create a new variable AUC24 for each ID
+BW_CRRT_dos_07 <- BW_CRRT_dos_07 %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+BW_CRRT_dos_07<- BW_CRRT_dos_07 %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+BW_CRRT_dos_07$fAUC<- BW_CRRT_dos_07$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_CRRT_07 <- subset(BW_CRRT_dos_07, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_CRRT_07$PTA_Cmin_75 <- 100 * ave(PTA_CRRT_07$DV >= 7.5, PTA_CRRT_07$DAY, PTA_CRRT_07$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_CRRT_07$PTA_Cmin_80 <- 100 * ave(PTA_CRRT_07$DV >= 80, PTA_CRRT_07$DAY, PTA_CRRT_07$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_CRRT_07$PTA_fAUC_200 <- 100 * ave(PTA_CRRT_07$fAUC >= 200, PTA_CRRT_07$DAY, PTA_CRRT_07$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 400 per DAY per BW (PTA_fAUC_400) #Isabel'comment on simulating for MIC of 4 mg/L
+PTA_CRRT_07$PTA_fAUC_400 <- 100 * ave(PTA_CRRT_07$fAUC >= 400, PTA_CRRT_07$DAY, PTA_CRRT_07$BW, FUN = mean)
+
+# Create PTA_CRRT_07_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_CRRT_07_overall <- unique(PTA_CRRT_07[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200","PTA_fAUC_400", "DAY", "BW")])
+
+# Export PTA_CRRT_dos_07 dataset
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(PTA_CRRT_07_overall, "PTA_CRRT_dos_07.csv",quote=F,row.names = FALSE)
+
+# Export BW_CRRT_dos_07.csv for future use
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Fluc_Sim_171023/Dose_finding_datasets/")
+write.csv(BW_CRRT_dos_07, "BW_CRRT_dos_07.csv",quote=F,row.names = FALSE)
+
+```
+
+#### Changing IHD into CRRT 290124
+
+##### For base model
+
+```{r IHD to CRRT BW01,warning=FALSE}
+
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/Imputation_2l_method_011023/2l.pan/")
+FlucTotIV_clean <- read.csv("FlucTotIV_clean.csv", na.strings = "NA")
+Fluc_NONMEM_mul_impute_BW01 <- read.csv("Fluc_NONMEM_mul_impute_BW01.csv", na.strings = "NA")
+
+# Change IHD into CRRT
+
+FlucTotIV_clean$CRRT<-ifelse(FlucTotIV_clean$IHD==1,1,FlucTotIV_clean$CRRT)
+
+Fluc_NONMEM_mul_impute_BW01$CRRT<-FlucTotIV_clean$CRRT
+
+# Export into FlucTotIV_IHD dataset
+
+write.csv(Fluc_NONMEM_mul_impute_BW01, "FlucTotIV_IHD.csv",quote=F,row.names = FALSE)
+
+
+```
+
+
+

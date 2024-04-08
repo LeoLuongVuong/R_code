@@ -2199,3 +2199,7 @@ Fluco_revised_imputed_overall_refined$TAD[is.na(Fluco_revised_imputed_overall_re
 # Export into refined dataset
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/VPC")
 write.csv(Fluco_revised_imputed_overall_refined, "Fluco_revised_imputed_overall_refined.csv",quote = F,row.names = FALSE)
+
+# Population simulation ------------------------------------------
+
+
