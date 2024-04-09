@@ -2531,8 +2531,8 @@ pop_dosing_std <- read_nonmem_table(std_tablefile)
 
 # Extract only TIME and DV columns
 DV_TIME_std <- pop_dosing_std %>% select(DV, TIME)
-setwd('/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/')
-write.csv(DV_TIME_std, "DV_TIME_std.csv",quote = F,row.names = FALSE)
+setwd('/lustre1/scratch/357/vsc35700/Fluco_revised/Pop_sim/')
+# write.csv(DV_TIME_std, "DV_TIME_std.csv",quote = F,row.names = FALSE)
 
 # Remove the rows where DV is 0 and TIME is not 0
 DV_TIME_std <- DV_TIME_std[DV_TIME_std$DV != 0 | DV_TIME_std$TIME == 0, ]
@@ -2580,8 +2580,8 @@ pop_dosing_opt <- read_nonmem_table(opt_tablefile)
 
 # Extract only TIME and DV columns
 DV_TIME_opt <- pop_dosing_opt %>% select(DV, TIME)
-setwd('/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/Pop_sim/')
-write.csv(DV_TIME_opt, "DV_TIME_opt.csv",quote = F,row.names = FALSE)
+setwd('/lustre1/scratch/357/vsc35700/Fluco_revised/Pop_sim/')
+# write.csv(DV_TIME_opt, "DV_TIME_opt.csv",quote = F,row.names = FALSE)
 
 # Remove the rows where DV is 0 and TIME is not 0
 DV_TIME_opt <- DV_TIME_opt[DV_TIME_opt$DV != 0 | DV_TIME_opt$TIME == 0, ]
