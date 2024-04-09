@@ -137,7 +137,7 @@ CRRT_one |>
 # 340 total days
 
 ## Conclude about data for population simulation: I have 18 (10.2%) patients 
-## that have CRRT == 1 all the time, and 16 patients that have CRRT == 1 only 
+## that have CRRT == 1 all the time, and 16 patients (9%) that have CRRT == 1 only 
 ## for 199 days out of 340 days (58.5% of days). The rest of the patients 
 ## have CRRT == 0.
 
@@ -2200,6 +2200,172 @@ Fluco_revised_imputed_overall_refined$TAD[is.na(Fluco_revised_imputed_overall_re
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/VPC")
 write.csv(Fluco_revised_imputed_overall_refined, "Fluco_revised_imputed_overall_refined.csv",quote = F,row.names = FALSE)
 
-# Population simulation ------------------------------------------
+# Population level simulation ------------------------------------------
+
+## Create dataset for conc-time plot -----------------------------------
+
+### Generate BW, CKDEPI, and CRRT -------------------------------
+
+# load the dataset
+setwd(dirname(getwd())) # set wd to the parent folder
+dosing_CRRT <- read.csv("Pop_sim/dosing_03.csv")
+
+## create a dataset of 1000 patients from dosing_CRRT dataset
+
+# Create a new dataset with only patient 13
+dosing_CRRT_13 <- dosing_CRRT[dosing_CRRT$ID == 13, ]
+
+# Create 987 copies of the patient 13 dataset and assign IDs 14-1000
+new_patients <- lapply(14:1000, function(id){
+  new_df <- dosing_CRRT_13
+  new_df$ID <- id
+  return(new_df)
+})
+
+# Combine the new dataset with the original dataset
+dosing_CRRT <- rbind(dosing_CRRT, do.call(rbind, new_patients))
+
+# Rename FFM to BW
+names(dosing_CRRT)[names(dosing_CRRT) == "FFM"] <- "BW"
+
+## Assign BW to the new dataset
+
+# for reproducibility
+set.seed(123)
+
+# Create the empirical cumulative distribution function (ECDF)
+pop_BW <- Fluco_clean_revised  |>
+  group_by(ID) |>
+  distinct(BW2, .keep_all = TRUE) |>
+  dplyr::filter(!is.na(BW2)) |>
+  ungroup() |>
+  select(BW2)
+ecdf_BW <- ecdf(pop_BW$BW2)
+
+# Generate random values from the ECDF
+random_values <- runif(1000)
+
+# Map the random values to the empirical distribution using the inverse transform sampling method
+sampled_BW <- round(quantile(pop_BW$BW2, random_values), 1)
+
+# Assign the sampled BW values to dosing_CRRT dataset
+dosing_CRRT$BW <- sampled_BW[match(dosing_CRRT$ID, 1:1000)]
+
+## Assign CKDEPI to the new dataset
+
+# for reproducibility
+set.seed(123)
+
+# Create the empirical cumulative distribution function (ECDF)
+pop_CKDEPI <- Fluco_clean_revised  |>  
+  dplyr::filter(!is.na(CKDEPI)) |>
+  select(CKDEPI)
+ecdf_CKDEPI <- ecdf(pop_CKDEPI$CKDEPI)
+
+# Generate random values from the ECDF
+random_values <- runif(1000)
+
+# Map the random values to the empirical distribution using the inverse transform sampling method
+sampled_CKDEPI <- round(quantile(pop_CKDEPI$CKDEPI, random_values), 1)
+
+# Assign the sampled BW values to dosing_CRRT dataset
+dosing_CRRT$CKDEPI <- sampled_CKDEPI[match(dosing_CRRT$ID, 1:1000)]
+
+## Create the dosing_CRRT dataset with 10.2% full-time CRRT, and 9% part time 
+## CRRT (in which 58.5% DAYS on CRRT)
+
+# Create a dummy dataset with 1000 patient IDs and 14 days:
+
+dummy_data <- data.frame(
+  ID = rep(1:1000, each = 14),
+  DAY = rep(1:14, times = 1000)
+)
+
+# Add the CRRT variable to the dummy dataset and assign it temporarily to 0:
+dummy_data$CRRT <- 0
+
+# Randomly select 10.2% of the patient IDs and assign their CRRT to 1:
+set.seed(123)  
+selected_ids <- sample(unique(dummy_data$ID), size = round(0.102 * 1000))
+dummy_data$CRRT[dummy_data$ID %in% selected_ids] <- 1
+
+# Randomly select another 9% of patient IDs that are not in selected_ids:
+available_ids <- setdiff(unique(dummy_data$ID), selected_ids)
+selected_ids_2 <- sample(available_ids, size = round(0.09 * 1000))
+
+# Assign 58.5% of the selected days to CRRT == 1, and the remaining to CRRT == 0
+selected_days <- sample(unique(dummy_data$DAY), size = round(0.585 * 14))
+dummy_data$CRRT[dummy_data$ID %in% selected_ids_2 & dummy_data$DAY %in% selected_days] <- 1
+
+# Assign the CRRT information from the dummy dataset to the dosing_CRRT dataset based on ID and DAY:
+dosing_CRRT <- merge(dosing_CRRT, dummy_data[, c("ID", "DAY", "CRRT")], by = c("ID", "DAY"), all.x = TRUE)
+dosing_CRRT$CRRT.x <- NULL
+colnames(dosing_CRRT)[colnames(dosing_CRRT) == "CRRT.y"] <- "CRRT"
+
+### Updating TIME and TAD -------------------------------
+
+## Create a dataset for conc time curve opt dosing
+
+# Repeat the 2nd row of each ID per DAY 14 times
+rows = seq(2, 41999, by = 3)
+times = 14
+dosing_CRRT_repeated <- dosing_CRRT[rep(rows, times),]
+
+# Update the TAD values in dosing_CRRT 
+dosing_CRRT_combined <- rbind(dosing_CRRT,dosing_CRRT_repeated)
+dosing_CRRT_combined <- arrange(dosing_CRRT_combined, ID, DAY, TAD, TIME)
+desired_tad <- c(0, 0.1, 0.25, 0.5, 0.6, 1, 1.5, 2, 3, 4, 6, 8, 12, 18, 21, 22.5, 23.9)
+dosing_CRRT_combined$TAD <- rep(desired_tad, 14000)
+
+# Reset row names
+rownames(dosing_CRRT_combined) <- 1:238000
+
+# Remove the PEAK and TROUGH columns
+dosing_CRRT_combined$PEAK <- NULL
+dosing_CRRT_combined$TROUGH <- NULL
+
+# Update TIME
+dosing_CRRT_combined$TIME <- (dosing_CRRT_combined$DAY - 1) * 24 + 
+  dosing_CRRT_combined$TAD
+
+### Update dosing information -------------------------------
+
+#### Optimised -------------------------------
+
+dosing_CRRT_combined <- dosing_CRRT_combined %>%
+  mutate(
+    AMT = ifelse(TIME == 0 & BW > 120 & CRRT == 1, 1800,
+                 ifelse(TIME == 0 & BW <= 120 & BW > 100 & CRRT == 1, 1600,
+                        ifelse(TIME == 0 & BW <= 100 & BW > 80 & CRRT == 1, 1400,
+                               ifelse(TIME == 0 & BW <= 80 & BW > 60 & CRRT == 1, 1200, 
+                                      ifelse(TIME == 0 & BW <= 60 & CRRT == 1, 1000,
+                                             ifelse(TIME == 0 & BW > 120 & CRRT == 0, 1600,
+                                                    ifelse(TIME == 0 & BW <= 120 & BW > 100 & CRRT == 0, 1400,
+                                                           ifelse(TIME == 0 & BW <= 100 & BW > 80 & CRRT == 0, 1200,
+                                                                  ifelse(TIME == 0 & BW <= 80 & BW > 60 & CRRT == 0, 1000,
+                                                                         ifelse(TIME == 0 & BW <= 60 & CRRT == 0, 800,
+                                                                                ifelse(TIME > 0 & MDV == 1 & CRRT == 1, 800,
+                                                                                       ifelse(TIME > 0 & MDV == 1 & CRRT == 0, 400,0                                                                                    ))))
+                                                                  )))
+                                             )))))
+  )
+
+#### Standard -------------------------------
+
+dosing_CRRT_std <- dosing_CRRT_combined %>%
+  mutate(
+    AMT = ifelse(TIME == 0, 800,
+                 ifelse(TIME > 0 & TAD == 0, 400, 0
+                 )
+    )
+  )
+
+# Export pop_opt_conc & pop_std_conc datasets
+setwd("./Pop_sim")
+write.csv(dosing_CRRT_combined,"pop_opt_conc.csv",quote = F,row.names = FALSE)
+write.csv(dosing_CRRT_std,"pop_std_conc.csv",quote = F,row.names = FALSE)
+
+## Create datasets for boxplot & ROC --------------------------------
+
 
 
