@@ -1805,15 +1805,15 @@ ggsave("grid_CKDEPI_pop.png", grid_CKDEPI_pop, dpi = 300, width = 16, height = 8
 
 ```{r import standard dataset,warning=FALSE}
 
-working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
 simulations_tablefile <- paste0(working.directory, '/pop_std_conc.1.npctab.dta') 
 dataframe_simulations <- read_nonmem_table(simulations_tablefile)
 
 # Export only TIME and DV column of dataset
-DV_TIME_std <-dataframe_simulations %>% select(DV,TIME)
+DV_TIME_std <- dataframe_simulations %>% select(DV,TIME)
 
 setwd('/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/')
-write.csv(DV_TIME_std, "DV_TIME_std.csv",quote=F,row.names = FALSE)
+write.csv(DV_TIME_std, "DV_TIME_std.csv",quote = F,row.names = FALSE)
 
 ```
 
