@@ -2367,11 +2367,11 @@ write.csv(dosing_CRRT_std,"pop_std_conc.csv", quote = F, row.names = F)
 
 ## Create datasets for boxplot & ROC --------------------------------
 
-# Only retain observations with 0 & 23.9 hours
+# Only retain observations with 0 & 23.9 hours TAD
 dosing_CRRT_combined <- read.csv("Pop_sim/pop_opt_conc.csv")
 dosing_CRRT_std <- read.csv("Pop_sim/pop_std_conc.csv")
-pop_box_std <- dosing_CRRT_std[dosing_CRRT_std$TIME %in% c(0, 23.9),]
-pop_box_opt <- dosing_CRRT_combined[dosing_CRRT_combined$TIME %in% c(0, 23.9),]
+pop_box_std <- dosing_CRRT_std[dosing_CRRT_std$TAD %in% c(0, 23.9), ]
+pop_box_opt <- dosing_CRRT_combined[dosing_CRRT_combined$TAD %in% c(0, 23.9), ]
 
 # Export pop_box_std & pop_box_opt datasets
 setwd("./Pop_sim")
