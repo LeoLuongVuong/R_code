@@ -6730,11 +6730,11 @@ selected_days <- sample(unique(dummy_data$DAY), size = round(0.515 * 14))
 
 # Assign 51.5% of the selected days to CRRT == 1, and the remaining to CRRT == 0
 dummy_data$CRRT[dummy_data$ID %in% selected_ids_2 & dummy_data$DAY %in% selected_days] <- 1
-dummy_data$CRRT[dummy_data$ID %in% selected_ids_2 & !dummy_data$DAY %in% selected_days] <- 0
+# dummy_data$CRRT[dummy_data$ID %in% selected_ids_2 & !dummy_data$DAY %in% selected_days] <- 0
 
 # Assign CRRT == 0 to the remaining 82% of patient IDs:
 
-dummy_data$CRRT[!(dummy_data$ID %in% c(selected_ids, selected_ids_2))] <- 0
+# dummy_data$CRRT[!(dummy_data$ID %in% c(selected_ids, selected_ids_2))] <- 0 This code and the one above are redundant, as CRRT is already set to 0
 
 # Assign the CRRT information from the dummy dataset to the dosing_CRRT dataset based on ID and DAY:
 
