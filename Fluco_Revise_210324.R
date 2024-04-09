@@ -53,7 +53,7 @@ FlucTotIV_clean$RATE[FlucTotIV_clean$RATE == 0] <- NA
 
 # Export into Fluco_clean_revised
 
-write.csv(FlucTotIV_clean, "Fluco_clean_revised.csv",quote = F,row.names = FALSE)
+write.csv(FlucTotIV_clean, "Fluco_clean_revised.csv", quote = F, row.names = F)
 
 ## Check the CRRT pattern -------------------------
 
@@ -234,7 +234,7 @@ maxit <- 20
 nimp <- 70
 imputed_CREAT_DOS_INT_crrt <- mice::mice(data = impute_CREAT_DOS_INT_crrt,
                                          method = meth, predictorMatrix = predmat,
-                                         maxit = maxit, m = nimp, printFlag = FALSE,
+                                         maxit = maxit, m = nimp, printFlag = F,
                                          seed = 123)
 for (i in 1:70) {
   FlucTotIV_clean_crrt[[paste0("CREAT", sprintf("%02d", i))]] <- (complete(imputed_CREAT_DOS_INT_crrt, action = i))$CREAT_DOS_INT
@@ -251,7 +251,7 @@ maxit <- 20
 nimp <- 70
 imputed_CREAT_DOS_INT_nocrrt <- mice::mice(data = impute_CREAT_DOS_INT_nocrrt,
                                            method = meth,predictorMatrix = predmat,
-                                           maxit = maxit, m = nimp, printFlag = FALSE,
+                                           maxit = maxit, m = nimp, printFlag = F,
                                            seed = 123)
 for (i in 1:70) {
   FlucTotIV_clean_nocrrt[[paste0("CREAT", sprintf("%02d", i))]] <- (complete(imputed_CREAT_DOS_INT_nocrrt, action = i))$CREAT_DOS_INT
@@ -563,10 +563,10 @@ Fluco_revised_imputed_04 <- FlucTotIV_clean_imputed[, !names(FlucTotIV_clean_imp
 # Export the datasets
 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Imputed")
-write.csv(Fluco_revised_imputed_01, "Fluco_revised_imputed_01.csv", quote = F, row.names = FALSE)
-write.csv(Fluco_revised_imputed_02, "Fluco_revised_imputed_02.csv", quote = F, row.names = FALSE)
-write.csv(Fluco_revised_imputed_03, "Fluco_revised_imputed_03.csv", quote = F, row.names = FALSE)
-write.csv(Fluco_revised_imputed_04, "Fluco_revised_imputed_04.csv", quote = F, row.names = FALSE)
+write.csv(Fluco_revised_imputed_01, "Fluco_revised_imputed_01.csv", quote = F, row.names = F)
+write.csv(Fluco_revised_imputed_02, "Fluco_revised_imputed_02.csv", quote = F, row.names = F)
+write.csv(Fluco_revised_imputed_03, "Fluco_revised_imputed_03.csv", quote = F, row.names = F)
+write.csv(Fluco_revised_imputed_04, "Fluco_revised_imputed_04.csv", quote = F, row.names = F)
 
 ### Generate the overall dataset for making GOF plots and VPC -----------------
 
@@ -601,7 +601,7 @@ Fluco_revised_imputed_overall <- Fluc_NONMEM_mul_impute[, !names(Fluc_NONMEM_mul
 # Export the dataset
 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Imputed")
-write.csv(Fluco_revised_imputed_overall, "Fluco_revised_imputed_overall.csv", quote = F, row.names = FALSE)
+write.csv(Fluco_revised_imputed_overall, "Fluco_revised_imputed_overall.csv", quote = F, row.names = F)
 
 
 ## Pooling model parameters ----------------------------------------------
@@ -1418,7 +1418,7 @@ sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME == 0,800,ifelse(sim_CKDEP
 
 # Then export into sim_CKDEPI_01.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Sim")
-write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_01.csv",quote = F,row.names = FALSE)
+write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_01.csv", quote = F, row.names = F)
 
 ### 1000 mg LD & 400 mg MD ------------------------------------------
 
@@ -1427,7 +1427,7 @@ sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME == 0, 1000, ifelse(sim_CK
 
 # Then export into sim_CKDEPI_02.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Sim")
-write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_02.csv", quote = F, row.names = FALSE)
+write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_02.csv", quote = F, row.names = F)
 
 ### 1200 mg LD & 400 mg MD ------------------------------------------
 
@@ -1436,7 +1436,7 @@ sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME == 0, 1200, ifelse(sim_CK
 
 # Then export into sim_CKDEPI_03.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Sim")
-write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_03.csv", quote = F, row.names = FALSE)
+write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_03.csv", quote = F, row.names = F)
 
 ### 12 mg/kg LD & 6 mg/kg MD ------------------------------------------
 
@@ -1445,7 +1445,7 @@ sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME == 0, 12 * sim_CKDEPI_01_
 
 # Then export into sim_CKDEPI_04.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Sim")
-write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_04.csv", quote = F, row.names = FALSE)
+write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_04.csv", quote = F, row.names = F)
 
 ### 1200 mg LD & 600 mg MD ------------------------------------------
 
@@ -1454,7 +1454,7 @@ sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME == 0, 1200, ifelse(sim_CK
 
 # Then export into sim_CKDEPI_05.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Sim")
-write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_05.csv", quote = F, row.names = FALSE)
+write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_05.csv", quote = F, row.names = F)
 
 ### 800 mg LD & 200 mg MD ------------------------------------------
 
@@ -1463,7 +1463,7 @@ sim_CKDEPI_01_min$AMT <- ifelse(sim_CKDEPI_01_min$TIME == 0, 800, ifelse(sim_CKD
 
 # Then export into sim_CKDEPI_06.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Sim")
-write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_06.csv", quote = F, row.names = FALSE)
+write.csv(sim_CKDEPI_01_min, "sim_CKDEPI_06.csv", quote = F, row.names = F)
 
 ## Secondly, the effect of BW on non-CRRT events --------------------------
 
@@ -1560,7 +1560,7 @@ sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0,800,ifelse(sim_BW_01_min$TAD
 
 # Then export into sim_BW_noCRRT_01.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_01.csv",quote = F,row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_01.csv", quote = F, row.names = F)
 
 ### 1000 mg LD & 400 mg MD ------------------------------------------
 
@@ -1569,7 +1569,7 @@ sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0, 1000, ifelse(sim_BW_01_min$
 
 # Then export into sim_BW_noCRRT_02.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_02.csv", quote = F, row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_02.csv", quote = F, row.names = F)
 
 ### 1200 mg LD & 400 mg MD ------------------------------------------
 
@@ -1578,7 +1578,7 @@ sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0, 1200, ifelse(sim_BW_01_min$
 
 # Then export into sim_BW_noCRRT_03.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_03.csv", quote = F, row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_03.csv", quote = F, row.names = F)
 
 ### 1400 mg LD & 400 mg MD ------------------------------------------
 
@@ -1587,7 +1587,7 @@ sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0, 1400, ifelse(sim_BW_01_min$
 
 # Then export into sim_BW_noCRRT_04.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_04.csv", quote = F, row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_04.csv", quote = F, row.names = F)
 
 ### 1600 mg LD & 400 mg MD ------------------------------------------
 
@@ -1596,7 +1596,7 @@ sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0, 1600, ifelse(sim_BW_01_min$
 
 # Then export into sim_BW_noCRRT_05.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_05.csv", quote = F, row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_05.csv", quote = F, row.names = F)
 
 ### 1800 mg LD & 400 mg MD ------------------------------------------
 
@@ -1605,7 +1605,7 @@ sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0, 1800, ifelse(sim_BW_01_min$
 
 # Then export into sim_BW_noCRRT_06.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_06.csv", quote = F, row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_06.csv", quote = F, row.names = F)
 
 ### 12 mg/kg LD & 6 mg/kg MD ------------------------------------------
 
@@ -1614,7 +1614,7 @@ sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0, 12 * sim_BW_01_min$BW, ifel
 
 # Then export into sim_BW_noCRRT_07.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_07.csv", quote = F, row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_07.csv", quote = F, row.names = F)
 
 ### 800 mg LD & 200 mg MD ------------------------------------------
 
@@ -1623,7 +1623,7 @@ sim_BW_01_min$AMT <- ifelse(sim_BW_01_min$TIME == 0, 800, ifelse(sim_BW_01_min$T
 
 # Then export into sim_BW_noCRRT_08.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_noCRRT")
-write.csv(sim_BW_01_min, "sim_BW_noCRRT_08.csv", quote = F, row.names = FALSE)
+write.csv(sim_BW_01_min, "sim_BW_noCRRT_08.csv", quote = F, row.names = F)
 
 ## Third, the effect of BW on CRRT events --------------------------
 
@@ -1652,7 +1652,7 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 800, ifelse(sim_BW_CRRT_0
 
 # Then export into sim_BW_CRRT_01.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_01.csv", quote = F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_01.csv", quote = F, row.names = F)
 
 ### 1000 mg LD & 800 mg MD ------------------------------------------
 
@@ -1661,7 +1661,7 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 1000, ifelse(sim_BW_CRRT_
 
 # Then export into sim_BW_CRRT_02.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_02.csv", quote = F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_02.csv", quote = F, row.names = F)
 
 ### 1200 mg LD & 800 mg MD ------------------------------------------
 
@@ -1670,7 +1670,7 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 1200, ifelse(sim_BW_CRRT_
 
 # Then export into sim_BW_CRRT_03.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_03.csv", quote = F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_03.csv", quote = F, row.names = F)
 
 ### 1400 mg LD & 800 mg MD ------------------------------------------
 
@@ -1679,7 +1679,7 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 1400, ifelse(sim_BW_CRRT_
 
 # Then export into sim_BW_CRRT_04.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_04.csv", quote = F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_04.csv", quote = F, row.names = F)
 
 ### 1600 mg LD & 800 mg MD ------------------------------------------
 
@@ -1688,7 +1688,7 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 1600, ifelse(sim_BW_CRRT_
 
 # Then export into sim_BW_CRRT_03.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_05.csv", quote = F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_05.csv", quote = F, row.names = F)
 
 ### 1800 mg LD & 800 mg MD ------------------------------------------
 
@@ -1697,7 +1697,7 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 1800, ifelse(sim_BW_CRRT_
 
 # Then export into sim_BW_CRRT_03.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_06.csv", quote = F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_06.csv", quote = F, row.names = F)
 
 ### 12 mg/kg LD & 6 mg/kg MD ------------------------------------------
 
@@ -1706,7 +1706,7 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 12 * sim_BW_CRRT_01$BW, i
 
 # Then export into sim_BW_CRRT_04.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_07.csv", quote = F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_07.csv", quote = F, row.names = F)
 
 ### 800 mg LD & 600 mg MD ------------------------------------------
 
@@ -1715,7 +1715,7 @@ sim_BW_CRRT_01$AMT <- ifelse(sim_BW_CRRT_01$TIME == 0, 800, ifelse(sim_BW_CRRT_0
 
 # Then export into sim_BW_CRRT_03.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/BW_CRRT")
-write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_08.csv", quote = F, row.names = FALSE)
+write.csv(sim_BW_CRRT_01, "sim_BW_CRRT_08.csv", quote = F, row.names = F)
 
 ## Fourth, verify the BW-based dosing on CKDEPI range --------------------------
 
@@ -2169,7 +2169,7 @@ BW_stra_LD_CKDEPI <- rbind(LD_800_CKDEPI, LD_1000_CKDEPI, LD_1200_CKDEPI,
 
 # Then export into BW_stra_LD_CKDEPI.csv dataset 
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Dosing_simulations/Dose_finding/CKDEPI_Opt_dose")
-write.csv(BW_stra_LD_CKDEPI, "BW_stra_LD_CKDEPI.csv", quote = F, row.names = FALSE)
+write.csv(BW_stra_LD_CKDEPI, "BW_stra_LD_CKDEPI.csv", quote = F, row.names = F)
 
 # VPC ------------------------------------------
 
@@ -2198,7 +2198,7 @@ Fluco_revised_imputed_overall_refined$TAD[is.na(Fluco_revised_imputed_overall_re
 
 # Export into refined dataset
 setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/VPC")
-write.csv(Fluco_revised_imputed_overall_refined, "Fluco_revised_imputed_overall_refined.csv",quote = F,row.names = FALSE)
+write.csv(Fluco_revised_imputed_overall_refined, "Fluco_revised_imputed_overall_refined.csv", quote = F, row.names = F)
 
 # Population level simulation ------------------------------------------
 
@@ -2362,10 +2362,19 @@ dosing_CRRT_std <- dosing_CRRT_combined %>%
 
 # Export pop_opt_conc & pop_std_conc datasets
 setwd("./Pop_sim")
-write.csv(dosing_CRRT_combined,"pop_opt_conc.csv",quote = F,row.names = FALSE)
-write.csv(dosing_CRRT_std,"pop_std_conc.csv",quote = F,row.names = FALSE)
+write.csv(dosing_CRRT_combined,"pop_opt_conc.csv", quote = F, row.names = F)
+write.csv(dosing_CRRT_std,"pop_std_conc.csv", quote = F, row.names = F)
 
 ## Create datasets for boxplot & ROC --------------------------------
 
+# Only retain observations with 0 & 23.9 hours
+dosing_CRRT_combined <- read.csv("Pop_sim/pop_opt_conc.csv")
+dosing_CRRT_std <- read.csv("Pop_sim/pop_std_conc.csv")
+pop_box_std <- dosing_CRRT_std[dosing_CRRT_std$TIME %in% c(0, 23.9),]
+pop_box_opt <- dosing_CRRT_combined[dosing_CRRT_combined$TIME %in% c(0, 23.9),]
 
+# Export pop_box_std & pop_box_opt datasets
+setwd("./Pop_sim")
+write.csv(pop_box_std,"pop_box_std.csv", quote = F, row.names = F)
+write.csv(pop_box_opt,"pop_box_opt.csv", quote = F, row.names = F)
 
