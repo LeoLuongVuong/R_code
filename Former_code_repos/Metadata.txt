@@ -1,3 +1,5 @@
-Fluconazole_NewPC_280923.Rmd: my most recent code version before the revision of 21st Mar. Stored in my PC under "Fluconazole PoPPK\Fluconazol_project\Fluconazole_Rcodes"
+# Fluconazole_NewPC_280923.Rmd: 
+My most recent code version before the revision of 21st Mar. Stored in my PC under "Fluconazole PoPPK\Fluconazol_project\Fluconazole_Rcodes"
 
-Leo_Fluco.Rmd: My most recent code on the cluster before the revision. Stored under SCRATCH/Fluconazole_Project/R_code/.
+# Leo_Fluco.Rmd: 
+My most recent code on the cluster before the revision. Stored under SCRATCH/Fluconazole_Project/R_code/.
