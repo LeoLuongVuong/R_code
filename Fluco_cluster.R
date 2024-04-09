@@ -2526,11 +2526,11 @@ ggsave("PTA_BW_CRRT80_DAY114.EPS",
 
 # Load the dataset
 working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Pop_sim/'
-simulations_tablefile <- paste0(working.directory, '/pop_std_conc.1.npctab.dta') 
-dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+std_tablefile <- paste0(working.directory, '/pop_std_conc.1.npctab.dta') 
+pop_dosing_std <- read_nonmem_table(std_tablefile)
 
 # Extract only TIME and DV columns
-DV_TIME_std <- dataframe_simulations %>% select(DV, TIME)
+DV_TIME_std <- pop_dosing_std %>% select(DV, TIME)
 setwd('/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/')
 write.csv(DV_TIME_std, "DV_TIME_std.csv",quote = F,row.names = FALSE)
 
@@ -2575,11 +2575,11 @@ pop_sim_std
 
 # Load the dataset
 working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Pop_sim/'
-simulations_tablefile <- paste0(working.directory, '/pop_opt_conc.1.npctab.dta') 
-dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+opt_tablefile <- paste0(working.directory, '/pop_opt_conc.1.npctab.dta') 
+pop_dosing_opt <- read_nonmem_table(opt_tablefile)
 
 # Extract only TIME and DV columns
-DV_TIME_opt <- dataframe_simulations %>% select(DV, TIME)
+DV_TIME_opt <- pop_dosing_opt %>% select(DV, TIME)
 setwd('/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/Pop_sim/')
 write.csv(DV_TIME_opt, "DV_TIME_opt.csv",quote = F,row.names = FALSE)
 
