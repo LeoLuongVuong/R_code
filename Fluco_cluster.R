@@ -2658,7 +2658,47 @@ ggsave("conc_time_std_opt.EPS",
 
 ## Box plot & ROC -----------------------------------------
 
+### Standard dosing -------------------------------------------
 
+working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
+simulations_tablefile <- paste0(working.directory, '/pop_sim_std.1.npctab.dta') 
+dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+
+# Extract only the trough events
+pop_std_dos <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+
+# Convert ID into numeric
+pop_std_dos$ID<-as.integer(pop_std_dos$ID)
+
+# Create a new variable AUC24 for each ID
+pop_std_dos <- pop_std_dos %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+
+pop_std_dos<- pop_std_dos %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+pop_std_dos$fAUC<- pop_std_dos$AUC24*0.89
+
+# Extract ID, DV, fAUC, DAY, and BW columns
+PTA_pop_std <- subset(pop_std_dos, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+
+# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
+PTA_pop_std$PTA_Cmin_75 <- 100 * ave(PTA_pop_std$DV >= 7.5, PTA_pop_std$DAY, PTA_pop_std$BW, FUN = mean)
+
+# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
+PTA_pop_std$PTA_Cmin_80 <- 100 * ave(PTA_pop_std$DV >= 80, PTA_pop_std$DAY, PTA_pop_std$BW, FUN = mean)
+
+# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
+PTA_pop_std$PTA_fAUC_200 <- 100 * ave(PTA_pop_std$fAUC >= 200, PTA_pop_std$DAY, PTA_pop_std$BW, FUN = mean)
+
+# Create PTA_pop_std_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
+PTA_pop_std_overall <- unique(PTA_pop_std[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200", "DAY", "BW")])
+
+# Export PTA_pop_std_overall dataset
+#setwd("/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/")
+setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/ROCcurves_131123/")
+#write.csv("pop_std_dos.csv",quote=F,row.names = FALSE) #export this dataset to make ROC curves
+pop_std_dos<-read.csv("pop_std_dos.csv") #import this dataset to make ROC curves
+write.csv(PTA_pop_std_overall, "PTA_pop_std_overall.csv",quote=F,row.names = FALSE)
 
 
 
