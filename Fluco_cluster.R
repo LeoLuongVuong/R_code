@@ -2658,47 +2658,161 @@ ggsave("conc_time_std_opt.EPS",
 
 ## Box plot & ROC -----------------------------------------
 
-### Standard dosing -------------------------------------------
+### ROC cuvrve -------------------------------------------
 
-working.directory<-'/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/'
-simulations_tablefile <- paste0(working.directory, '/pop_sim_std.1.npctab.dta') 
-dataframe_simulations <- read_nonmem_table(simulations_tablefile)
+#### Generate datasets --------------------------------------
+
+## Standard dosing
+
+working.directory <- '/lustre1/scratch/357/vsc35700/Fluco_revised/Pop_sim/'
+pop_box_std_dir <- paste0(working.directory, '/pop_sim_std.1.npctab.dta') 
+pop_box_std <- read_nonmem_table(pop_box_std_dir)
 
 # Extract only the trough events
-pop_std_dos <- dataframe_simulations[dataframe_simulations$TROUGH == 1,]
+pop_std_dos <- pop_box_std[pop_box_std$TROUGH == 1,]
 
 # Convert ID into numeric
-pop_std_dos$ID<-as.integer(pop_std_dos$ID)
+pop_std_dos$ID <- as.integer(pop_std_dos$ID)
 
 # Create a new variable AUC24 for each ID
-pop_std_dos <- pop_std_dos %>% group_by(ID) %>% mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1]))%>%ungroup()
+pop_std_dos <- pop_std_dos %>%
+  group_by(ID) %>%
+  mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1])) %>%
+  ungroup()
 
-pop_std_dos<- pop_std_dos %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+pop_std_dos <- pop_std_dos %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
-pop_std_dos$fAUC<- pop_std_dos$AUC24*0.89
+pop_std_dos$fAUC <- pop_std_dos$AUC24*0.89
 
-# Extract ID, DV, fAUC, DAY, and BW columns
-PTA_pop_std <- subset(pop_std_dos, select = c("ID", "DV", "fAUC", "DAY", "BW"))
+## Optimised dosing
 
-# Calculate percentage of DV >= 7.5 per DAY per BW (PTA_Cmin_75)
-PTA_pop_std$PTA_Cmin_75 <- 100 * ave(PTA_pop_std$DV >= 7.5, PTA_pop_std$DAY, PTA_pop_std$BW, FUN = mean)
+pop_box_opt_dir <- paste0(working.directory, '/pop_sim_opt.1.npctab.dta') 
+pop_box_opt <- read_nonmem_table(pop_box_opt_dir)
 
-# Calculate percentage of DV >= 80 per DAY per BW (PTA_Cmin_80)
-PTA_pop_std$PTA_Cmin_80 <- 100 * ave(PTA_pop_std$DV >= 80, PTA_pop_std$DAY, PTA_pop_std$BW, FUN = mean)
+# Extract only the trough events
+pop_opt_dos <- pop_box_opt[pop_box_opt$TROUGH == 1,]
 
-# Calculate percentage of fAUC >= 200 per DAY per BW (PTA_fAUC_200)
-PTA_pop_std$PTA_fAUC_200 <- 100 * ave(PTA_pop_std$fAUC >= 200, PTA_pop_std$DAY, PTA_pop_std$BW, FUN = mean)
+# Convert ID into numeric
+pop_opt_dos$ID <- as.integer(pop_opt_dos$ID)
 
-# Create PTA_pop_std_overall dataset with unique values of PTA_Cmin, PTA_fAUC, DAY, and BW
-PTA_pop_std_overall <- unique(PTA_pop_std[c("PTA_Cmin_75","PTA_Cmin_80", "PTA_fAUC_200", "DAY", "BW")])
+# Create a new variable AUC24 for each ID
+pop_opt_dos <- pop_opt_dos %>%
+  group_by(ID) %>%
+  mutate(AUC24 = AUC2 - lag(AUC2, default = AUC2[1])) %>%
+  ungroup()
 
-# Export PTA_pop_std_overall dataset
-#setwd("/lustre1/scratch/357/vsc35700/Fluconazole_project/Fluc_Sim_201023/")
-setwd("/data/leuven/357/vsc35700/VSC20838_VSC_DATA/Fluconazole_Project/ROCcurves_131123/")
-#write.csv("pop_std_dos.csv",quote=F,row.names = FALSE) #export this dataset to make ROC curves
-pop_std_dos<-read.csv("pop_std_dos.csv") #import this dataset to make ROC curves
-write.csv(PTA_pop_std_overall, "PTA_pop_std_overall.csv",quote=F,row.names = FALSE)
+pop_opt_dos <- pop_opt_dos %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+
+# Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
+pop_opt_dos$fAUC <- pop_opt_dos$AUC24*0.89
+
+#### BW's impact --------------------------------------------
+
+TA_std_day1 <- pop_std_dos %>%
+  filter(DAY == 1) %>%
+  mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_BW_std_day1 <- pROC::roc(TA_std_day1$TA,
+                             TA_std_day1$BW,
+                             auc.polygon = FALSE, 
+                             max.auc.polygon = FALSE, 
+                             grid = FALSE,
+                             ci = TRUE, 
+                             boot.n = 1000, 
+                             ci.alpha = 0.95, 
+                             stratified = TRUE,
+                             plot = FALSE, 
+                             print.auc = TRUE, 
+                             print.auc.x = 0.2, 
+                             print.auc.y = 0.3,
+                             show.thres = TRUE)
+
+# Calculate 95% CI
+AUC_std_day1 <- pROC::auc(ROC_BW_std_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_std_day1 <- round(as.numeric(sub(".*(: *)", "//1", AUC_std_day1)), 3)
+
+CI_AUC_std_day1 <- pROC::ci.auc(ROC_BW_std_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_std_day1 <- sub(".*(: *)", "//1", CI_AUC_std_day1)
+
+AUC_secondpart_std_day1 <- as.numeric(substr(AUC_anotherpart_std_day1[1], 1, 5))
+
+AUC_thirdpart_std_day1 <- as.numeric(substr(AUC_anotherpart_std_day1[3], 1, 5))
+
+AUC_label_std_day1 <- paste0("AUC: ", AUC_firstpart_std_day1, " (", AUC_secondpart_std_day1, "-", AUC_thirdpart_std_day1, ")", sep = "") #needs to figure out how to save this object for next time
+
+# For recommended dosing
+TA_opt_day1 <- pop_opt_dos %>%
+  filter(DAY == 1) %>% mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_BW_opt_day1 <- pROC::roc(TA_opt_day1$TA,
+                             TA_opt_day1$BW,
+                             auc.polygon = FALSE,
+                             max.auc.polygon = FALSE,
+                             grid = FALSE,
+                             ci = TRUE,
+                             boot.n = 1000,
+                             ci.alpha = 0.95,
+                             stratified = TRUE,
+                             plot = FALSE,
+                             print.auc = TRUE,
+                             print.auc.x = 0.2,
+                             print.auc.y = 0.3,
+                             show.thres = TRUE)
+
+# Calculate 95% CI for the roc curves
+AUC_opt_day1 <- pROC::auc(ROC_BW_opt_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_opt_day1 <- round(as.numeric(sub(".*(: *)", "//1", AUC_opt_day1)), 3)
+
+CI_AUC_opt_day1 <- pROC::ci.auc(ROC_BW_opt_day1, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_opt_day1 <- sub(".*(: *)", "//1", CI_AUC_opt_day1)
+
+AUC_secondpart_opt_day1 <- as.numeric(substr(AUC_anotherpart_opt_day1[1], 1, 5))
+
+AUC_thirdpart_opt_day1 <- as.numeric(substr(AUC_anotherpart_opt_day1[3], 1, 5))
+
+AUC_label_opt_day1 <- paste0("AUC: ", AUC_firstpart_opt_day1, " (", AUC_secondpart_opt_day1, "-", AUC_thirdpart_opt_day1, ")", sep = "")
+
+# Convert roc objects to data frames
+roc_std_day1 <- pROC::coords(ROC_BW_std_day1)
+roc_opt_day1 <- pROC::coords(ROC_BW_opt_day1)
+
+# Create the plot with DAY 1 title
+roc_curve_day1 <- ggplot() +
+  geom_line(data = roc_std_day1, aes(x = 1 - specificity, y = sensitivity, color = "Standard dosing regimen", linetype = "Standard dosing regimen"), size = 0.8) +
+  geom_line(data = roc_opt_day1, aes(x = 1 - specificity, y = sensitivity, color = "Optimised dosing regimen", linetype = "Optimised dosing regimen"), size = 0.8) +
+  scale_color_manual(values = c("Standard dosing regimen" = "#440154",
+                                "Optimised dosing regimen" = "#31688e"),
+                     breaks = c('Standard dosing regimen', 'Optimised dosing regimen')) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  theme_minimal() +
+  ggtitle("Day 1") +
+  labs(y = "Sensitivity", x = "1 - Specificity") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), 
+        axis.title = element_text(size = 7, family = "Helvetica"),
+        axis.text = element_text(size = 7, family = "Helvetica"),
+        legend.title = element_text(size = 6, family = "Helvetica"),
+        legend.text = element_text(size = 6, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_rect(color = "gray50", fill = NA, size = 0.8),
+        axis.line = element_line(colour = "gray50")) +
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color = "#35b779", linetype = "solid") +
+  annotate(geom = "text", x = 0.60, y = 0.30, size = 7/.pt, 
+           label = AUC_label_std_day1, color = "#440154", 
+           family = theme_get()$text[["family"]]) +
+  annotate(geom = "text", x = 0.60, y = 0.20, size = 7/.pt, 
+           label = AUC_label_opt_day1, color = "#31688e",
+           family = theme_get()$text[["family"]]) +
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed"))), linetype = "none")
+
+roc_curve_day1
 
 
 
