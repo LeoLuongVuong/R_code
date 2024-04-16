@@ -2907,7 +2907,7 @@ pop_std_dos <- pop_std_dos %>%
   mutate(AUC24 = AUC2 - dplyr::lag(AUC2, default = AUC2[1])) %>%
   ungroup()
 
-pop_std_dos <- pop_std_dos %>% mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+pop_std_dos <- pop_std_dos %>% mutate(AUC24 = ifelse(DAY == "1", AUC2, AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
 pop_std_dos$fAUC <- pop_std_dos$AUC24*0.89
@@ -3365,7 +3365,7 @@ roc_curve_day14
 
 ##### Combining the plots ---------------------------------------------
 
-setwd("./Pop_sim")
+setwd("./Plots/ROC_curve")
 write.csv(roc_std_day1, "roc_std_day1.csv",quote = F,row.names = FALSE)
 write.csv(roc_opt_day1, "roc_opt_day1.csv",quote = F,row.names = FALSE)
 write.csv(roc_std_day2, "roc_std_day2.csv",quote = F,row.names = FALSE)
@@ -3410,8 +3410,104 @@ ggsave("ROC_BW.svg",
         width = 19, 
         height = 19,
         unit = "cm")
+# go back 2 levels to the original dr
+Path = getwd()
+setwd(dirname(dirname(Path)))
 # Stop here for now, will resume after asking Erwin about the justifiability
 # of making ROC curves
 # Removing ROC curves can save some characters as well - 160424
 
+### Box plot -------------------------------------------
+
+# pop_sdt_dos taken above, when working with ROC curves
+
+## calculate the percentile of fAUC of 1000 patients across 1000 simulations to make a boxplot
+
+# standard dosing
+percentiles_std <- pop_std_dos %>%
+  group_by(DAY) %>%
+  summarize(p10 = quantile(fAUC, 0.1),
+            p25 = quantile(fAUC, 0.25),
+            p50 = median(fAUC),
+            p75 = quantile(fAUC, 0.75),
+            p90 = quantile(fAUC, 0.9))
+
+# For optimise dosing
+percentiles_opt <- pop_opt_dos %>%
+  group_by(DAY) %>%
+  summarize(p10 = quantile(fAUC, 0.1),
+            p25 = quantile(fAUC, 0.25),
+            p50 = median(fAUC),
+            p75 = quantile(fAUC, 0.75),
+            p90 = quantile(fAUC, 0.9))
+
+# Export 2 datasets
+setwd("./Plots/Box_plots")
+write.csv(percentiles_std, "box_std.csv", quote = F, row.names = FALSE)
+write.csv(percentiles_opt, "box_opt.csv", quote = F, row.names = FALSE)
+
+# go back 2 levels to the original dr
+Path = getwd()
+setwd(dirname(dirname(Path)))
+
+# Making box plots
+box_pop_auc_std <- ggplot(percentiles_std, aes(x = factor(DAY))) +
+  geom_boxplot(aes(ymin = p10, lower = p25, middle = p50, upper = p75, ymax = p90),
+               stat = "identity", lwd = 1, outlier.size = 1, fatten = 1, 
+               fill = "#21918c", color = "#21918c", alpha = 0.6) +
+               # fatten controls a median line in a boxplot
+  geom_hline(yintercept = 200, linetype = "dashed", color = "gray50", size = 0.6) +
+  # ylab(expression(atop("Fluconazole area under the unbound concentration time curve (mgxh/L)"))) +
+  ylab("Fluconazole area under the unbound concentration time curve (mgxh/L)") +
+  xlab("Day") +
+  ggtitle("Standard dosing regimen") +
+  scale_y_continuous(limits = c(0, 1100), breaks = seq(0, 1100, by = 100)) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), 
+        axis.title = element_text(size = 7, family = "Helvetica"),
+        axis.text = element_text(size = 7, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "none")
+box_pop_auc_std
+
+# for optimised dosing
+box_pop_auc_opt <- ggplot(percentiles_opt, aes(x = factor(DAY))) +
+  geom_boxplot(aes(ymin = p10, lower = p25, middle = p50, upper = p75, ymax = p90),
+               stat = "identity", lwd = 1, outlier.size = 1, fatten = 1, 
+               fill = "#21918c", color = "#21918c", alpha = 0.6) +
+  # fatten controls a median line in a boxplot
+  geom_hline(yintercept = 200, linetype = "dashed", color = "gray50", size = 0.6) +
+  # ylab(expression(atop("Fluconazole area under the unbound concentration time curve (mgxh/L)"))) +
+  ylab("Fluconazole area under the unbound concentration time curve (mgxh/L)") +
+  xlab("Day") +
+  ggtitle("Optimised dosing regimen") +
+  scale_y_continuous(limits = c(0, 1110), breaks = seq(0, 1100, by = 100)) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), 
+        axis.title = element_text(size = 7, family = "Helvetica"),
+        axis.text = element_text(size = 7, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "none")
+box_pop_auc_opt
+
+# combine these two box plots
+box_pop_auc <- plot_grid(box_pop_auc_std, 
+                         box_pop_auc_opt,
+                         labels = c("a", "b"),
+                         ncol = 2,
+                         label_fontfamily = "Helvetica",
+                         label_fontface = "bold",
+                         label_size = 8)
+box_pop_auc
+
+# export the combined box plot
+setwd("./Plots/Box_plots")
+ggsave("box_pop_auc.svg", 
+       box_pop_auc, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
 
