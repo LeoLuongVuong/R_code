@@ -3254,5 +3254,164 @@ roc_curve_day7 <- ggplot() +
 
 roc_curve_day7
 
+##### Day 14 ---------------------------------------------
+
+# For standard dosing - DAY 14
+TA_std_day14 <- pop_std_dos %>%
+  dplyr::filter(DAY == 14) %>%
+  mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_BW_std_day14 <- pROC::roc(TA_std_day14$TA,
+                              TA_std_day14$BW,
+                              auc.polygon = FALSE, 
+                              max.auc.polygon = FALSE, 
+                              grid = FALSE,
+                              ci = TRUE, 
+                              boot.n = 1000, 
+                              ci.alpha = 0.95, 
+                              stratified = TRUE,
+                              plot = FALSE, 
+                              print.auc = TRUE, 
+                              print.auc.x = 0.2, 
+                              print.auc.y = 0.3,
+                              show.thres = TRUE)
+
+# Calculate 95% CI
+AUC_std_day14 <- pROC::auc(ROC_BW_std_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_std_day14 <- round(as.numeric(sub(".*(: *)", "//1", AUC_std_day14)), 3)
+
+CI_AUC_std_day14 <- pROC::ci.auc(ROC_BW_std_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_std_day14 <- sub(".*(: *)", "//1", CI_AUC_std_day14)
+
+AUC_secondpart_std_day14 <- as.numeric(substr(AUC_anotherpart_std_day14[1], 1, 5))
+
+AUC_thirdpart_std_day14 <- as.numeric(substr(AUC_anotherpart_std_day14[3], 1, 5))
+
+AUC_label_std_day14 <- paste0("AUC: ", AUC_firstpart_std_day14, " (", AUC_secondpart_std_day14, "-", AUC_thirdpart_std_day14, ")", sep = "") 
+
+# For recommended dosing
+TA_opt_day14 <- pop_opt_dos %>%
+  dplyr::filter(DAY == 14) %>%
+  mutate(TA = ifelse(fAUC >= 200, 1, 0))
+
+set.seed(123)
+ROC_BW_opt_day14 <- pROC::roc(TA_opt_day14$TA,
+                              TA_opt_day14$BW,
+                              auc.polygon = FALSE,
+                              max.auc.polygon = FALSE,
+                              grid = FALSE,
+                              ci = TRUE,
+                              boot.n = 1000,
+                              ci.alpha = 0.95,
+                              stratified = TRUE,
+                              plot = FALSE,
+                              print.auc = TRUE,
+                              print.auc.x = 0.2,
+                              print.auc.y = 0.3,
+                              show.thres = TRUE)
+
+# Calculate 95% CI for the roc curves
+AUC_opt_day14 <- pROC::auc(ROC_BW_opt_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_firstpart_opt_day14 <- round(as.numeric(sub(".*(: *)", "//1", AUC_opt_day14)), 3)
+
+CI_AUC_opt_day14 <- pROC::ci.auc(ROC_BW_opt_day14, conf.level = 0.95, ci.alpha = 0.95, method = "bootstrap", boot.n = 1000, stratified = TRUE)
+
+AUC_anotherpart_opt_day14 <- sub(".*(: *)", "//1", CI_AUC_opt_day14)
+
+AUC_secondpart_opt_day14 <- as.numeric(substr(AUC_anotherpart_opt_day14[1], 1, 5))
+
+AUC_thirdpart_opt_day14 <- as.numeric(substr(AUC_anotherpart_opt_day14[3], 1, 5))
+
+AUC_label_opt_day14 <- paste0("AUC: ", AUC_firstpart_opt_day14, " (", AUC_secondpart_opt_day14, "-", AUC_thirdpart_opt_day14, ")", sep = "")
+
+# Convert roc objects to data frames
+roc_std_day14 <- pROC::coords(ROC_BW_std_day14)
+roc_opt_day14 <- pROC::coords(ROC_BW_opt_day14)
+
+# Create the plot with DAY 1 title
+roc_curve_day14 <- ggplot() +
+  geom_line(data = roc_std_day14, aes(x = 1 - specificity, y = sensitivity, color = "Standard dosing regimen", linetype = "Standard dosing regimen"), size = 0.8) +
+  geom_line(data = roc_opt_day14, aes(x = 1 - specificity, y = sensitivity, color = "Optimised dosing regimen", linetype = "Optimised dosing regimen"), size = 0.8) +
+  scale_color_manual(values = c("Standard dosing regimen" = "#440154",
+                                "Optimised dosing regimen" = "#31688e"),
+                     breaks = c('Standard dosing regimen', 'Optimised dosing regimen')) +
+  scale_linetype_manual(values = c("dashed", "solid")) +
+  theme_minimal() +
+  ggtitle("Day 14") +
+  labs(y = "Sensitivity", x = "1 - Specificity") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "Helvetica"), 
+        axis.title = element_text(size = 7, family = "Helvetica"),
+        axis.text = element_text(size = 7, family = "Helvetica"),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 6, family = "Helvetica"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_rect(color = "gray50", fill = NA, size = 0.8),
+        axis.line = element_line(colour = "gray50")) +
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color = "#35b779", linetype = "solid") +
+  annotate(geom = "text", x = 0.60, y = 0.30, size = 7/.pt, 
+           label = AUC_label_std_day14, color = "#440154", 
+           family = theme_get()$text[["family"]]) +
+  annotate(geom = "text", x = 0.60, y = 0.20, size = 7/.pt, 
+           label = AUC_label_opt_day14, color = "#31688e",
+           family = theme_get()$text[["family"]]) +
+  guides(color = guide_legend(override.aes = list(linetype = c("solid", "dashed"))), linetype = "none")
+
+roc_curve_day14
+
+##### Combining the plots ---------------------------------------------
+
+setwd("./Pop_sim")
+write.csv(roc_std_day1, "roc_std_day1.csv",quote = F,row.names = FALSE)
+write.csv(roc_opt_day1, "roc_opt_day1.csv",quote = F,row.names = FALSE)
+write.csv(roc_std_day2, "roc_std_day2.csv",quote = F,row.names = FALSE)
+write.csv(roc_opt_day2, "roc_opt_day2.csv",quote = F,row.names = FALSE)
+write.csv(roc_std_day7, "roc_std_day7.csv",quote = F,row.names = FALSE)
+write.csv(roc_opt_day7, "roc_opt_day7.csv",quote = F,row.names = FALSE)
+write.csv(roc_std_day14, "roc_std_day14.csv",quote = F,row.names = FALSE)
+write.csv(roc_opt_day14, "roc_opt_day14.csv",quote = F,row.names = FALSE)
+setwd(dirname(getwd()))
+
+# First of all, get the common legend
+common_legend_BW <- cowplot::get_legend(roc_curve_day1)
+
+# Remove legends from individual plots
+roc_curve_day1_nolegend <- roc_curve_day1 + theme(legend.position = "none")
+roc_curve_day2_nolegend <- roc_curve_day2 + theme(legend.position = "none")
+roc_curve_day7_nolegend <- roc_curve_day7 + theme(legend.position = "none")
+roc_curve_day14_nolegend <- roc_curve_day14 + theme(legend.position = "none")
+
+# Combine the plot
+
+grid_BW_pop <-       plot_grid(roc_curve_day1_nolegend, 
+                               roc_curve_day2_nolegend,
+                               roc_curve_day7_nolegend,
+                               roc_curve_day14_nolegend,
+                               labels = c("a", "b", "c", "d"),
+                               ncol = 2,
+                               label_fontfamily = "Helvetica",
+                               label_fontface = "bold",
+                               label_size = 8)
+
+# Add the common legend
+ROC_BW <- plot_grid(grid_BW_pop, common_legend_BW, 
+                    nrow = 1, rel_widths = c(1, 0.1))
+
+# Export ROC_BW plot
+setwd('./Plots/ROC_curves/')
+# SVG
+ggsave("ROC_BW.svg", 
+        ROC_BW, 
+        dpi = 300, 
+        width = 19, 
+        height = 19,
+        unit = "cm")
+# Stop here for now, will resume after asking Erwin about the justifiability
+# of making ROC curves
+# Removing ROC curves can save some characters as well - 160424
 
 
