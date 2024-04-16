@@ -27,6 +27,8 @@ library(latex2exp) #to create latex label
 library(table1) # create descriptive statistic table1
 library(ggpubr) # for ggarrange function 
 library(extrafont)
+font_import()
+loadfonts(device = "win")
 
 
 # Analyzing simulation datasets -------------------------------------------
@@ -1126,30 +1128,29 @@ PTA_BW_noCRRT <- rbind(PTA_noCRRT_dos_01, PTA_noCRRT_dos_02, PTA_noCRRT_dos_03,
                     PTA_noCRRT_dos_07, PTA_noCRRT_dos_08)
 
 # Define the labels and colors
-dosing_labels_day12 <- c("800 mg q24h LD",
-                         "1000 mg q24h LD",
-                         "1200 mg q24h LD",
-                         "1400 mg q24h LD",
-                         "1600 mg q24h LD",
+dosing_labels_day127 <- c("800 mg q24h LD", # update object name, now all my 
+                         "1000 mg q24h LD", # dose finding plots will have the
+                         "1200 mg q24h LD", # same number of lines for day 127
+                         "1400 mg q24h LD", # and for day 14. Day 1 will have
+                         "1600 mg q24h LD", # 
                          "12 mg/kg q24h LD")
 # Regimens 8, 2, 3, 4, 5, 6, 7, respectively
 
-dosing_labels_day714 <- c("200 mg q24h MD", 
+dosing_labels_day14 <- c("200 mg q24h MD", 
                           "400 mg q24h MD", 
                           "6 mg/kg q24h MD")
 # Regimens 8, 2, 7, respectively
 
-dosing_colors_day12 <- c("#a0da39",
-                         "#4ac16d",
-                         "#1fa187",
-                         "#277f8e",
-                         "#365c8d",
-                         "#46327e",
-                         "#440154")
-
-dosing_colors_day714 <- c("#a0da39",
-                          "#4ac16d",
+dosing_colors_day127 <- c("#a0da39", # Here I decided to use the same color for 
+                          "#4ac16d", # The same loading doses & same maintenance 
+                          "#1fa187", # doses across my 3 dose_finding plots 
+                          "#277f8e", # 150424
+                          "#365c8d",
                           "#440154")
+
+dosing_colors_day14 <- c("#a0da39",
+                         "#4ac16d",
+                         "#365c8d")
 
 # Reorder the levels of the dosing regimens
 PTA_BW_noCRRT$Regimen <- factor(PTA_BW_noCRRT$Regimen,
@@ -1340,9 +1341,9 @@ PTA_BW_noCRRT200_DAY7 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 7 & PTA_BW_n
              size = 0.6) 
 PTA_BW_noCRRT200_DAY7
 
-#### Combining these 4 plots into 1 -------------------------------------------
+#### Combining these 4 plots -------------------------------------------
 
-## Combining DAY 1 & 14 into 1
+##### Combining DAY 1 & 14 - Manuscript -------------------------------------
 
 # Combine the two plots
 PTA_BW_noCRRT200_DAY114 <- ggarrange(PTA_BW_noCRRT200_DAY1, 
@@ -1377,6 +1378,123 @@ ggsave("PTA_BW_noCRRT200_DAY114.EPS",
        dpi = 300, 
        width = 19, 
        height = 19,
+       unit = "cm")
+
+##### Combining DAY 1 & 14 - ECCMID -------------------------------------
+
+# Day 1
+PTA_BW_noCRRT200_DAY1 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 1 & !PTA_BW_noCRRT$Regimen %in% c(1, 6), ], 
+                                 aes(x = BW, 
+                                     y = PTA_fAUC_200, 
+                                     group = factor(Regimen), 
+                                     color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 10), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10), expand = c(0,0)) +
+  ylab(TeX(r"(Probability of target attainment)")) +
+  theme_minimal() +
+  ggtitle("Day 1") +
+  #theme(legend.position = "right",
+        #legend.spacing.y = unit(0.02, 'cm')) +
+  guides(color = guide_legend(byrow = TRUE)) +
+  theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold", family = "sans"), 
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        legend.title = element_text(size = 6, family = "sans"),
+        legend.text = element_text(size = 6, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  # family = sans calls out Arial font - check out: https://stackoverflow.com/questions/34522732/changing-fonts-in-ggplot2
+  labs(color = "Regimen") +
+  #guides(color = guide_legend(byrow = TRUE)) +
+  guides(color = guide_legend( # this way works better than color = guide_legend(byrow = TRUE)
+    keywidth = 4,
+    keyheight = 4.5,
+    default.unit = "mm")
+  ) +
+  theme(legend.position = "right",
+        legend.margin = margin(0,0,0,0),
+        legend.box.margin = margin(-1,-1,-1,-1)) +#,
+  #legend.spacing.y = unit(0.1, 'mm')) +
+  scale_color_manual(values = dosing_colors_day127, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day127) +
+  geom_hline(yintercept = 90, 
+             linetype = "dashed", 
+             color = "gray50", 
+             size = 0.6) +
+  geom_segment(
+    data = BW_PTA_DaY1,
+    aes(
+      x = BW,
+      xend = BW,
+      y = 0,  # Starting from the x-axis
+      yend = PTA_fAUC_200  # Ending at the corresponding PTA_fAUC_200 value
+    ),
+    linetype = "dashed",
+    color = "gray50",
+    size = 0.6
+  )
+PTA_BW_noCRRT200_DAY1
+
+# Day 14
+PTA_BW_noCRRT200_DAY14 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 14 & PTA_BW_noCRRT$Regimen %in% c(8, 2, 7), ], 
+                                  aes(x = BW, 
+                                      y = PTA_fAUC_200, 
+                                      group = factor(Regimen), 
+                                      color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 10), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10), expand = c(0,0)) +
+  ylab(TeX(r"(Probability of target attainment)")) +
+  theme_minimal() +
+  ggtitle("Day 14") +
+  theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        legend.title = element_text(size = 6, family = "sans"),
+        legend.text = element_text(size = 6, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  #guides(color = guide_legend(byrow = TRUE)) +
+  guides(color = guide_legend( # this way works better than color = guide_legend(byrow = TRUE)
+    keywidth = 4,
+    keyheight = 4.5,
+    default.unit = "mm")
+  ) +
+  theme(legend.position = "right",
+        legend.margin = margin(0,0,0,0),
+        legend.box.margin = margin(-1,-1,-1,-1)) +#,
+        #legend.spacing.y = unit(0.1, 'mm')) +
+  scale_color_manual(values = dosing_colors_day14, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day14) +
+  geom_hline(yintercept = 90, 
+             linetype = "dashed", 
+             color = "gray50", 
+             size = 0.6) 
+PTA_BW_noCRRT200_DAY14
+
+# Combine the two plots
+PTA_BW_noCRRT200_DAY114 <- ggarrange(PTA_BW_noCRRT200_DAY1, 
+                                     PTA_BW_noCRRT200_DAY14,
+                                     labels = c("a", "b"),
+                                     ncol = 2, 
+                                     nrow = 1,
+                                     font.label = list(size = 7, face = "bold"))
+
+# Export the combined plots
+setwd("./Plots/ECCMID")
+
+# SVG
+ggsave("PTA_BW_noCRRT200_DAY114.svg", 
+       PTA_BW_noCRRT200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 4.4598,
        unit = "cm")
 
 ### Assessing toxicity PTA Cmin80 -------------------------------------------
@@ -1934,33 +2052,33 @@ PTA_BW_CRRT <- rbind(PTA_CRRT_dos_01, PTA_CRRT_dos_02, PTA_CRRT_dos_03,
                        PTA_CRRT_dos_07, PTA_CRRT_dos_08)
 
 # Define the labels and colors
-dosing_labels_day12 <- c("800  mg  q24h LD",
-                         "1000 mg  q24h LD",
-                         "1200 mg  q24h LD",
-                         "1400 mg  q24h LD",
-                         "1600 mg  q24h LD",
-                         "1800 mg  q24h LD",
-                         "12 mg/kg q24h LD")
+dosing_labels_day127 <- c("800  mg  q24h LD",
+                          "1000 mg  q24h LD",
+                          "1200 mg  q24h LD",
+                          "1400 mg  q24h LD",
+                          "1600 mg  q24h LD",
+                          "1800 mg  q24h LD",
+                          "12 mg/kg q24h LD")
 # Regimens 1, 2, 3, 4, 5, 6, 7, respectively
 
-dosing_labels_day714 <- c("400 mg q24h MD", 
-                          "600 mg q24h MD",
-                          "800 mg q24h MD",
-                          "6 mg/kg q24h MD")
+dosing_labels_day14 <- c("400 mg q24h MD",
+                         "600 mg q24h MD",
+                         "800 mg q24h MD",
+                         "6 mg/kg q24h MD")
 # Regimens 1, 8, 3, 7, respectively
 
-dosing_colors_day12 <- c("#addc30",
-                         "#5ec962",
-                         "#28ae80",
-                         "#21918c",
-                         "#2c728e",
-                         "#3b528b",
-                         "#472d7b")
+dosing_colors_day127 <- c("#a0da39", # Here I decided to use the same color for 
+                          "#4ac16d", # The same loading doses & same maintenance 
+                          "#1fa187", # doses across my 3 dose_finding plots 
+                          "#277f8e", # 150424
+                          "#365c8d",
+                          "#46327e",
+                          "#440154")
 
-dosing_colors_day714 <- c("#addc30",
-                          "#440154",
-                          "#28ae80",
-                          "#3b528b")
+dosing_colors_day14 <- c("#4ac16d",
+                         "#1fa187",
+                         "#277f8e",
+                         "#365c8d")
 
 # Reorder the levels of the dosing regimens
 PTA_BW_CRRT$Regimen <- factor(PTA_BW_CRRT$Regimen,
@@ -1971,12 +2089,12 @@ PTA_BW_CRRT$Regimen <- factor(PTA_BW_CRRT$Regimen,
 
 # Firstly, create dataset with BW, Regimen and PTA on day 1 
 BW_Reg <- data.frame( #BW and Regimen dataset
-  BW = c(60, 80, 100, 120, 140),
-  Regimen = c(2, 3, 4, 5, 6)
+  BW = c(60, 80, 100, 120), #remove 140kg 160424
+  Regimen = c(2, 3, 4, 5)
 )
 
 BW_Reg$Regimen <- factor(BW_Reg$Regimen,
-                         levels = c(2, 3, 4, 5, 6))
+                         levels = c(2, 3, 4, 5))
 
 # Then, make a dataset of PTA on Day 1 per BW per Regimen
 BW_PTA_DaY1 <- BW_Reg %>%
@@ -2072,9 +2190,9 @@ PTA_BW_CRRT200_DAY14 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 14 & PTA_BW_CRRT$
              size = 0.6) 
 PTA_BW_CRRT200_DAY14
 
-#### Combining these 4 plots into 1 -------------------------------------------
+#### Combining these 4 plots -------------------------------------------
 
-## Combining DAY 1 & 14 into 1
+##### Combining DAY 1 & 14 - Manuscript ---------------------------------------
 
 # Combine the two plots
 PTA_BW_CRRT200_DAY114 <- ggarrange(PTA_BW_CRRT200_DAY1, 
@@ -2109,6 +2227,115 @@ ggsave("PTA_BW_CRRT200_DAY114.EPS",
        dpi = 300, 
        width = 19, 
        height = 19,
+       unit = "cm")
+
+##### Combining DAY 1 & 14 - ECCMID -------------------------------------
+
+# Day 1
+PTA_BW_CRRT200_DAY1 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 1 & !PTA_BW_CRRT$Regimen == 8, ], 
+                               aes(x = BW, 
+                                   y = PTA_fAUC_200, 
+                                   group = factor(Regimen), 
+                                   color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 10), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10), expand = c(0,0)) +
+  ylab(TeX(r"(Probability of target attainment)")) +
+  theme_minimal() +
+  ggtitle("Day 1") +
+  theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        legend.title = element_text(size = 6, family = "sans"),
+        legend.text = element_text(size = 6, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  guides(color = guide_legend( # this way works better than color = guide_legend(byrow = TRUE)
+    keywidth = 4,
+    keyheight = 4.5,
+    default.unit = "mm")
+  ) +
+  theme(legend.position = "right",
+        legend.margin = margin(0,0,0,0),
+        legend.box.margin = margin(-1,-1,-1,-1)) +
+  scale_color_manual(values = dosing_colors_day127, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day127) +
+  geom_hline(yintercept = 90, 
+             linetype = "dashed", 
+             color = "gray50", 
+             size = 0.6) +
+  geom_segment(
+    data = BW_PTA_DaY1,
+    aes(
+      x = BW,
+      xend = BW,
+      y = 0,  # Starting from the x-axis
+      yend = PTA_fAUC_200  # Ending at the corresponding PTA_fAUC_200 value
+    ),
+    linetype = "dashed",
+    color = "gray50",
+    size = 0.6
+  )
+PTA_BW_CRRT200_DAY1
+
+# Day 14
+PTA_BW_CRRT200_DAY14 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 14 & PTA_BW_CRRT$Regimen %in% c(1, 8, 3, 7), ], 
+                                aes(x = BW, 
+                                    y = PTA_fAUC_200, 
+                                    group = factor(Regimen), 
+                                    color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 10), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10), expand = c(0,0)) +
+  ylab(TeX(r"(Probability of target attainment)")) +
+  theme_minimal() +
+  ggtitle("Day 14") +
+  theme(plot.title = element_text(hjust = 0.5, size = 7, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        legend.title = element_text(size = 6, family = "sans"),
+        legend.text = element_text(size = 6, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  guides(color = guide_legend( # this way works better than color = guide_legend(byrow = TRUE)
+    keywidth = 4,
+    keyheight = 4.5,
+    default.unit = "mm")
+  ) +
+  theme(legend.position = "right",
+        legend.margin = margin(0,0,0,0),
+        legend.box.margin = margin(-1,-1,-1,-1)) +
+  scale_color_manual(values = dosing_colors_day14, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day14) +
+  geom_hline(yintercept = 90, 
+             linetype = "dashed", 
+             color = "gray50", 
+             size = 0.6) 
+PTA_BW_CRRT200_DAY14
+
+# Combine the two plots
+PTA_BW_CRRT200_DAY114 <- ggarrange(PTA_BW_CRRT200_DAY1, 
+                                   PTA_BW_CRRT200_DAY14,
+                                   labels = c("a", "b"),
+                                   ncol = 2, 
+                                   nrow = 1,
+                                   font.label = list(size = 7, face = "bold"))
+
+# Export the combined plots
+setwd("./Plots/ECCMID")
+
+# SVG
+ggsave("PTA_BW_CRRT200_DAY114.svg", 
+       PTA_BW_CRRT200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 4.4598,
        unit = "cm")
 
 ### Assessing toxicity PTA Cmin80 -------------------------------------------
