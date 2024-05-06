@@ -1039,7 +1039,7 @@ write.csv(PTA_noCRRT_08_overall, "PTA_noCRRT_dos_08.csv", quote = F, row.names =
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_noCRRT/")
 write.csv(BW_noCRRT_dos_08, "BW_noCRRT_dos_08.csv", quote = F, row.names = FALSE)
 
-### Making PTA plots -------------------------------------------
+### PTA 200 plots -------------------------------------------
 
 #### Some preps -------------------------------------------
 
@@ -1507,6 +1507,121 @@ ggsave("PTA_BW_noCRRT200_DAY114.svg",
        height = 4.4598,
        unit = "cm")
 
+### PTA 400 plots -------------------------------------------
+
+# Prep step is the same as PTA 200 plots
+
+# Don't show PTA of day 2 and 7 here cause it doesn't add anything
+
+#### Day 1 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_BW_noCRRT400_DAY1 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 1 & !PTA_BW_noCRRT$Regimen %in% c(1, 6), ], 
+                                 aes(x = BW, 
+                                     y = PTA_fAUC_400, 
+                                     group = factor(Regimen), 
+                                     color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 400 \, \mg \times h/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 1") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        legend.title = element_text(size = 6, family = "sans"),
+        legend.text = element_text(size = 6, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day127, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day1) + # day 1 has an unique label
+  geom_hline(yintercept = 90, 
+             linetype = "dashed", 
+             color = "gray50", 
+             size = 0.6) 
+PTA_BW_noCRRT400_DAY1
+
+#### Day 14 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_BW_noCRRT400_DAY14 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 14 & PTA_BW_noCRRT$Regimen %in% c(8, 2, 7), ], 
+                                  aes(x = BW, 
+                                      y = PTA_fAUC_400, 
+                                      group = factor(Regimen), 
+                                      color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 400 \, \mg \times h/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 14") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        legend.title = element_text(size = 6, family = "sans"),
+        legend.text = element_text(size = 6, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_day14, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_day14) +
+  geom_hline(yintercept = 90, 
+             linetype = "dashed", 
+             color = "gray50", 
+             size = 0.6) 
+PTA_BW_noCRRT400_DAY14
+
+#### Combining these 4 plots -------------------------------------------
+
+##### Combining DAY 1 & 14 - Manuscript -------------------------------------
+
+# Combine the two plots
+PTA_BW_noCRRT400_DAY114 <- ggarrange(PTA_BW_noCRRT400_DAY1, 
+                                     PTA_BW_noCRRT400_DAY14,
+                                     labels = c("a", "b"),
+                                     ncol = 1, 
+                                     nrow = 2,
+                                     font.label = list(size = 8, face = "bold"))
+
+# Export the combined plots
+setwd("./Plots/Dose_finding_simulations/BW_noCRRT")
+
+# SVG
+ggsave("PTA_BW_noCRRT400_DAY114.svg", 
+       PTA_BW_noCRRT400_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# JPEG
+ggsave("PTA_BW_noCRRT400_DAY114.JPEG", 
+       PTA_BW_noCRRT400_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# EPS
+ggsave("PTA_BW_noCRRT400_DAY114.EPS", 
+       PTA_BW_noCRRT400_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# go back 3 levels to the original dr
+Path = getwd()
+setwd(dirname(dirname(dirname(Path))))
+
 ### Assessing toxicity PTA Cmin80 -------------------------------------------
 
 # PTA_CKDEPI dataset was created above
@@ -1619,6 +1734,8 @@ ggsave("PTA_BW_noCRRT80_DAY114.EPS",
        width = 19, 
        height = 19,
        unit = "cm")
+
+#### Day 1 -------------------------------------------
 
 ## Third, BW CRRT effect -------------------------------------------
 
@@ -2032,7 +2149,7 @@ write.csv(PTA_CRRT_08_overall, "PTA_CRRT_dos_08.csv", quote = F, row.names = FAL
 setwd("/lustre1/scratch/357/vsc35700/Fluco_revised/Dose_finding_simulations/BW_CRRT/")
 write.csv(BW_CRRT_dos_08, "BW_CRRT_dos_08.csv", quote = F, row.names = FALSE)
 
-### Making PTA plots -------------------------------------------
+### PTA 200 plots -------------------------------------------
 
 #### Some preps -------------------------------------------
 
@@ -2501,6 +2618,121 @@ ggsave("PTA_BW_CRRT200_DAY114.svg",
        height = 4.4598,
        unit = "cm")
 
+### PTA 400 plots -------------------------------------------
+
+# Prep step is the same as PTA 200 plots
+
+# Don't show PTA of day 2 and 7 here cause it doesn't add anything
+
+#### Day 1 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_BW_CRRT400_DAY1 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 1 & !PTA_BW_CRRT$Regimen == 8, ], 
+                               aes(x = BW, 
+                                   y = PTA_fAUC_400, 
+                                   group = factor(Regimen), 
+                                   color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 400 \, \mg \times h/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 1") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        legend.title = element_text(size = 6, family = "sans"),
+        legend.text = element_text(size = 6, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_CRRT_day1, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_CRRT_day1) +
+  geom_hline(yintercept = 90, 
+             linetype = "dashed", 
+             color = "gray50", 
+             size = 0.6) 
+PTA_BW_CRRT400_DAY1
+
+#### Day 14 -------------------------------------------
+
+# Here we use Colorblind-Friendly Palette Viridis
+PTA_BW_CRRT400_DAY14 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 14 & PTA_BW_CRRT$Regimen %in% c(1, 8, 3, 7), ], 
+                                aes(x = BW, 
+                                    y = PTA_fAUC_400, 
+                                    group = factor(Regimen), 
+                                    color = factor(Regimen))) +
+  geom_line(size = 1) +
+  scale_x_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5), expand = c(0,0)) +
+  xlab(TeX(r"(Total body weight (kg))")) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
+  ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 400 \, \mg \times h/L\ (\%)$)")) +
+  theme_minimal() +
+  ggtitle("Day 14") +
+  theme(legend.position = "right") +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        legend.title = element_text(size = 6, family = "sans"),
+        legend.text = element_text(size = 6, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  labs(color = "Regimen") +
+  scale_color_manual(values = dosing_colors_CRRT_day14, 
+                     name = "Dosing regimen",
+                     labels = dosing_labels_CRRT_day14) +
+  geom_hline(yintercept = 90, 
+             linetype = "dashed", 
+             color = "gray50", 
+             size = 0.6) 
+PTA_BW_CRRT400_DAY14
+
+#### Combining these 4 plots -------------------------------------------
+
+##### Combining DAY 1 & 14 - Manuscript ---------------------------------------
+
+# Combine the two plots
+PTA_BW_CRRT400_DAY114 <- ggarrange(PTA_BW_CRRT400_DAY1, 
+                                   PTA_BW_CRRT400_DAY14,
+                                   labels = c("a", "b"),
+                                   ncol = 1, 
+                                   nrow = 2,
+                                   font.label = list(size = 8, face = "bold"))
+
+# Export the combined plots
+setwd("./Plots/Dose_finding_simulations/BW_CRRT")
+
+# SVG
+ggsave("PTA_BW_CRRT400_DAY114.svg", 
+       PTA_BW_CRRT400_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# JPEG
+ggsave("PTA_BW_CRRT400_DAY114.JPEG", 
+       PTA_BW_CRRT400_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# EPS
+ggsave("PTA_BW_CRRT400_DAY114.EPS", 
+       PTA_BW_CRRT400_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# go back 3 levels to the original dr
+Path = getwd()
+setwd(dirname(dirname(dirname(Path))))
+
 ### Assessing toxicity PTA Cmin80 -------------------------------------------
 
 # PTA_CKDEPI dataset was created above
@@ -2912,6 +3144,33 @@ ggsave("PTA_BW_CRRT80_DAY114.EPS",
        width = 19, 
        height = 19,
        unit = "cm")
+
+# Bootstrap summary ----------------------------------------------------------
+
+# Import bootstrap summary dataset
+setwd("./Datasets/Bootstrap")
+Pooled_Bootstrap_2l.pan <- read.csv("Pooled_Bootstrap_Revised.csv")
+
+Boot_Median <- Pooled_Bootstrap_2l.pan %>% 
+  group_by(Parameters) %>% 
+  summarise(median_median = median(Median_Mean),
+            median_lower_bound = median(Lower_bound),
+            median_upper_bound = median(Upper_bound)) 
+View(Boot_Median)
+
+# Create 3 new columns for %CV of IIV/PropErr
+Pooled_Bootstrap_2l.pan$CV_mean <- sqrt(exp(abs(Pooled_Bootstrap_2l.pan$Median_Mean)) - 1)*100
+Pooled_Bootstrap_2l.pan$CV_lower <- sqrt(exp(abs(Pooled_Bootstrap_2l.pan$Lower_bound)) - 1)*100
+Pooled_Bootstrap_2l.pan$CV_upper <- sqrt(exp(abs(Pooled_Bootstrap_2l.pan$Upper_bound)) - 1)*100
+
+# Calculate the median of the %CV of the 10 bootstrap model
+Boot_CV <- Pooled_Bootstrap_2l.pan %>% 
+  dplyr::filter(Parameters %in% c("IIV_CLcrrt","IIV_CLr","IIV_V1","PropErr","Cov_CLr_V1")) %>%
+  group_by(Parameters) %>% 
+  summarise(median_CV_mean = median(CV_mean),
+            median_CV_lower = median(CV_lower),
+            median_CV_upper = median(CV_upper)) 
+View(Boot_CV)
 
 # Pop_dosing analysis ----------------------------------------------------------
 
