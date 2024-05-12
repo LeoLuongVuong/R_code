@@ -607,7 +607,7 @@ write.csv(Fluco_revised_imputed_overall, "Fluco_revised_imputed_overall.csv", qu
 ## Pooling model parameters ----------------------------------------------
 
 # Load the dataset
-setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Datasets/Pooled_MI")
+setwd("./Datasets/Pooled_MI")
 Pooling_Parameters_2l.pan <- read.csv("Pooling_Parameters_2l.pan_220324.csv",sep = ",")
 
 # Creating Var (Variance) column 

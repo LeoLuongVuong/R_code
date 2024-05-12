@@ -27,8 +27,11 @@ library(latex2exp) #to create latex label
 library(table1) # create descriptive statistic table1
 library(ggpubr) # for ggarrange function 
 library(extrafont)
+library(ggnewscale) # new legend # doesn't work
+library(ggbreak) #  set breakpoints for both x and y axes
 font_import()
 loadfonts(device = "win")
+library(patchwork) # combing plots when there's y-axis break
 
 
 # Analyzing simulation datasets -------------------------------------------
@@ -1105,6 +1108,19 @@ PTA_BW_noCRRT$Regimen <- factor(PTA_BW_noCRRT$Regimen,
                              levels = c(8, 1, 2, 3, 4, 5, 6, 7))
 
 # It's not necessary to have regimen 6 after I did some explorations
+
+# Create PTA_BW_noCRRT_tox dataset, which is PTA_BW_noCRRT without regimens
+# 6, 7, 8. Also, use ifelse statement for this: 
+# retain only BW from 30 to 60 if Regimen == 1, BW from 60.1 to 80
+# if Regimen == 2, BW from 80.1 to 100 if Regimen == 3, BW from 100.1 to 120
+# if Regimen == 4, BW from 120.1 to 150 if Regimen == 5
+
+PTA_BW_noCRRT_tox <- PTA_BW_noCRRT %>%
+  dplyr::filter(Regimen == 1 & 30 <= BW & BW <= 60 |
+                  Regimen == 2 & 60.1 <= BW & BW <= 80 |
+                  Regimen == 3 & 80.1 <= BW & BW <= 100 |
+                  Regimen == 4 & 100.1 <= BW & BW <= 120 |
+                  Regimen == 5 & 120.1 <= BW & BW <= 150)
 
 # I also enforce limits on vertical lines here
 
@@ -2846,7 +2862,7 @@ ggsave("PTA_BW_CRRT80_DAY114.EPS",
        height = 19,
        unit = "cm")
 
-## Fourth, CKDEPI optimal dose (ignored) -------------------------------------
+## Fourth, CKDEPI optimal dose  -------------------------------------
 # This is not included in the manuscript since it will raise confusion & questions
 
 ### Creating datasets for PTA plots -------------------------------------------
@@ -2907,6 +2923,20 @@ write.csv(CKDEPI_Opt_dos, "CKDEPI_Opt_dos.csv", quote = F, row.names = FALSE)
 # Import PTA_dos_ datasets
 PTA_CKDEPI_Opt <- read.csv("PTA_CKDEPI_Opt/PTA_CKDEPI_Opt_dos.csv")
 
+# Add BW range column
+PTA_CKDEPI_Opt$BW <- ifelse(PTA_CKDEPI_Opt$Regimen == "1", "30.0 kg - 60.0 kg",
+                            ifelse(PTA_CKDEPI_Opt$Regimen == "2", "60.1 kg - 80.0 kg",
+                                   ifelse(PTA_CKDEPI_Opt$Regimen == "3", "80.1 kg - 100.0 kg",
+                                          ifelse(PTA_CKDEPI_Opt$Regimen == "4", "100.1 kg - 120.0 kg", "120.1 kg - 150.0 kg"))))
+
+# Change level of BW
+PTA_CKDEPI_Opt$BW <- factor(PTA_CKDEPI_Opt$BW, 
+                                     levels = c("30.0 kg - 60.0 kg", 
+                                                "60.1 kg - 80.0 kg", 
+                                                "80.1 kg - 100.0 kg",
+                                                "100.1 kg - 120.0 kg",
+                                                "120.1 kg - 150.0 kg"))
+                                                 
 # Define the labels and colors
 dosing_labels_day1 <-  c("800  mg  q24h LD",
                          "1000 mg  q24h LD",
@@ -2922,26 +2952,27 @@ dosing_labels_day27 <- c("800  mg  q24h LD / 400 mg q24h MD",
 
 dosing_labels_day14 <- c("400 mg q24h MD")
 
-dosing_colors_day127 <- c("#7ad151",
-                          "#22a884",
-                          "#2a788e",
-                          "#414487",
-                          "#440154")
+dosing_colors_day127 <- c("#a0da39", 
+                          "#4ac16d",  
+                          "#1fa187", 
+                          "#277f8e", 
+                          "#365c8d")
 
-dosing_colors_day14  <- c("#440154")
+dosing_colors_day14  <- c("#4ac16d")
 
 #### Day 1 -------------------------------------------
 
 # Here we use Colorblind-Friendly Palette Viridis
+
 PTA_CKDEPI_Opt200_DAY1 <-  ggplot(PTA_CKDEPI_Opt[PTA_CKDEPI_Opt$DAY == 1, ], 
                                aes(x = CKDEPI, 
                                    y = PTA_fAUC_200, 
-                                   group = factor(Regimen), 
                                    color = factor(Regimen))) +
   geom_line(size = 1) +
   scale_x_continuous(limits = c(5, 215), breaks = seq(5, 215, by = 10), expand = c(0,0)) +
   xlab(TeX(r"($\eGFR_{CKD-EPI}\ (ml/min/1.73m^2)$)")) + 
-  scale_y_continuous(limits = c(80, 100), breaks = seq(80, 100, by = 5), expand = c(0,0)) + 
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10), expand = c(0,0)) + 
+  scale_y_break(c(10, 80)) +
   # The y-axis ranging from 80 to 100 to make the distinction clearer
   ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
   theme_minimal() +
@@ -2950,16 +2981,30 @@ PTA_CKDEPI_Opt200_DAY1 <-  ggplot(PTA_CKDEPI_Opt[PTA_CKDEPI_Opt$DAY == 1, ],
   theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
         axis.title = element_text(size = 7, family = "sans"), # update title and text size 240424
         axis.text = element_text(size = 7, family = "sans"),
-        legend.title = element_text(size = 7, family = "sans"),
-        legend.text = element_text(size = 7, family = "sans"),
+        legend.title = element_text(size = 6, family = "sans"),
+        legend.text = element_text(size = 6, family = "sans"),
         panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+        panel.grid.minor = element_blank(),
+        axis.ticks.y = element_line(),
+        axis.text.y.right = element_blank(),
+        axis.line.y.right = element_blank(),
+        axis.ticks.y.right = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
   labs(color = "Regimen") +
   scale_color_manual(values = dosing_colors_day127, 
                      name = "Dosing regimen",
                      labels = dosing_labels_day1) +
-  geom_hline(yintercept = 90, linetype = "dashed", color = "gray50", size = 0.6) 
-PTA_CKDEPI_Opt200_DAY1
+  geom_hline(yintercept = 90, linetype = "dashed", color = "gray50", size = 0.6) #+ 
+  
+  # Aparently it's not possible to do this in R, so I'll do it in Illustrator
+  #new_scale_color() +
+  #geom_line(data = PTA_CKDEPI_Opt[PTA_CKDEPI_Opt$DAY == 1, ], 
+            #aes(color = BW),
+            #size = 1, 
+            #show.legend = TRUE) +
+  #labs(color = "BW") +
+  #scale_color_manual(values = dosing_colors_day127,
+                     #name = "Total body weight") + 
+  PTA_CKDEPI_Opt200_DAY1
 
 #### Day 14 -------------------------------------------
 
@@ -2981,8 +3026,8 @@ PTA_CKDEPI_Opt200_DAY14 <-  ggplot(PTA_CKDEPI_Opt[PTA_CKDEPI_Opt$DAY == 14 & PTA
   theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
         axis.title = element_text(size = 7, family = "sans"),
         axis.text = element_text(size = 7, family = "sans"),
-        legend.title = element_text(size = 7, family = "sans"),
-        legend.text = element_text(size = 7, family = "sans"),
+        legend.title = element_text(size = 6, family = "sans"),
+        legend.text = element_text(size = 6, family = "sans"),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
   labs(color = "Regimen") +
@@ -2999,13 +3044,24 @@ PTA_CKDEPI_Opt200_DAY14
 
 ## Combining DAY 1 & 14 into 1
 
-# Combine the two plots
+# Combine the two plots - these two ways don't work with scale_y_break()
 PTA_CKDEPI_Opt200_DAY114 <- ggarrange(PTA_CKDEPI_Opt200_DAY1, 
                                    PTA_CKDEPI_Opt200_DAY14,
                                    labels = c("a", "b"),
                                    ncol = 1, 
                                    nrow = 2,
                                    font.label = list(size = 8, face = "bold"))
+
+PTA_CKDEPI_Opt200_DAY114 <- plot_grid(PTA_CKDEPI_Opt200_DAY1, 
+                                      PTA_CKDEPI_Opt200_DAY14,
+                                      labels = c("a", "b"),
+                                      align = "h",
+                                      label_fontfamily = "sans",
+                                      label_fontface = "bold",
+                                      label_size = 8)
+
+# Combine with patchwork - this is the only way that works
+PTA_CKDEPI_Opt200_DAY114 <- PTA_CKDEPI_Opt200_DAY1 / PTA_CKDEPI_Opt200_DAY14
 
 # Export the combined plots
 #setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Plots/Dose_finding_simulations/CKDEPI_Opt")

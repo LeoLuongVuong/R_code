@@ -1,289 +1,1226 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' class='svglite' width='538.58pt' height='538.58pt' viewBox='0 0 538.58 538.58'>
-<defs>
-  <style type='text/css'><![CDATA[
-    .svglite line, .svglite polyline, .svglite polygon, .svglite path, .svglite rect, .svglite circle {
-      fill: none;
-      stroke: #000000;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      stroke-miterlimit: 10.00;
-    }
-    .svglite text {
-      white-space: pre;
-    }
-  ]]></style>
-</defs>
-<rect width='100%' height='100%' style='stroke: none; fill: none;'/>
-<defs>
-  <clipPath id='cpMC4wMHw1MzguNTh8MC4wMHw1MzguNTg='>
-    <rect x='0.00' y='0.00' width='538.58' height='538.58' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpMC4wMHw1MzguNTh8MC4wMHw1MzguNTg=)'>
-</g>
-<defs>
-  <clipPath id='cpMC4wMHw1MzguNTh8MC4wMHwyNjkuMjk='>
-    <rect x='0.00000000000010' y='0.00' width='538.58' height='269.29' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpMC4wMHw1MzguNTh8MC4wMHwyNjkuMjk=)'>
-</g>
-<g clip-path='url(#cpMC4wMHw1MzguNTh8MC4wMHw1MzguNTg=)'>
-</g>
-<defs>
-  <clipPath id='cpMzAuMTd8NDUwLjI4fDE4LjQ1fDI0Mi4zOQ=='>
-    <rect x='30.17' y='18.45' width='420.11' height='223.94' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpMzAuMTd8NDUwLjI4fDE4LjQ1fDI0Mi4zOQ==)'>
-<polyline points='30.17,62.68 50.18,69.96 70.18,65.03 90.19,74.77 110.19,78.75 130.20,83.11 150.20,83.22 170.21,79.36 190.21,91.62 210.22,97.78 230.22,94.93 250.23,98.84 270.23,107.07 290.24,101.92 310.24,93.97 330.25,110.21 350.25,116.09 370.26,123.20 390.26,122.81 410.27,123.14 430.27,128.57 450.28,131.20 ' style='stroke-width: 2.13; stroke: #7AD151; stroke-linecap: butt;' />
-<polyline points='30.17,73.20 50.18,81.99 70.18,76.00 90.19,79.19 110.19,86.08 130.20,85.24 150.20,90.45 170.21,84.23 190.21,94.70 210.22,98.73 230.22,97.16 250.23,97.95 270.23,108.19 290.24,105.28 310.24,98.68 330.25,107.02 350.25,113.62 370.26,114.69 390.26,111.83 410.27,114.18 430.27,119.22 450.28,121.91 ' style='stroke-width: 2.13; stroke: #22A884; stroke-linecap: butt;' />
-<polyline points='30.17,69.96 50.18,78.47 70.18,73.43 90.19,81.60 110.19,80.37 130.20,87.37 150.20,87.98 170.21,80.98 190.21,86.25 210.22,94.09 230.22,88.99 250.23,92.46 270.23,95.43 290.24,95.88 310.24,92.57 330.25,99.29 350.25,101.64 370.26,100.08 390.26,103.71 410.27,104.61 430.27,102.37 450.28,106.51 ' style='stroke-width: 2.13; stroke: #2A788E; stroke-linecap: butt;' />
-<polyline points='30.17,75.16 50.18,76.34 70.18,75.89 90.19,77.40 110.19,80.26 130.20,87.76 150.20,87.48 170.21,77.91 190.21,89.89 210.22,88.82 230.22,84.62 250.23,88.99 270.23,92.91 290.24,95.54 310.24,92.85 330.25,96.10 350.25,97.28 370.26,95.04 390.26,99.46 410.27,101.53 430.27,97.56 450.28,101.20 ' style='stroke-width: 2.13; stroke: #414487; stroke-linecap: butt;' />
-<polyline points='30.17,86.19 50.18,92.01 70.18,92.63 90.19,98.28 110.19,95.26 130.20,96.60 150.20,103.04 170.21,102.20 190.21,111.44 210.22,102.32 230.22,109.43 250.23,112.73 270.23,111.55 290.24,106.96 310.24,107.75 330.25,107.91 350.25,111.05 370.26,114.24 390.26,117.77 410.27,115.36 430.27,118.72 450.28,118.94 ' style='stroke-width: 2.13; stroke: #440154; stroke-linecap: butt;' />
-<line x1='30.17' y1='130.42' x2='450.28' y2='130.42' style='stroke-width: 1.28; stroke: #7F7F7F; stroke-dasharray: 6.83,6.83; stroke-linecap: butt;' />
-</g>
-<g clip-path='url(#cpMC4wMHw1MzguNTh8MC4wMHw1MzguNTg=)'>
-<text x='25.24' y='244.36' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>80</text>
-<text x='25.24' y='188.37' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>85</text>
-<text x='25.24' y='132.39' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>90</text>
-<text x='25.24' y='76.40' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>95</text>
-<text x='25.24' y='20.42' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>100</text>
-<text x='30.17' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='3.06px' lengthAdjust='spacingAndGlyphs'>5</text>
-<text x='50.18' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>15</text>
-<text x='70.18' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>25</text>
-<text x='90.19' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>35</text>
-<text x='110.19' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>45</text>
-<text x='130.20' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>55</text>
-<text x='150.20' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>65</text>
-<text x='170.21' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>75</text>
-<text x='190.21' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>85</text>
-<text x='210.22' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>95</text>
-<text x='230.22' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>105</text>
-<text x='250.23' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='8.77px' lengthAdjust='spacingAndGlyphs'>115</text>
-<text x='270.23' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>125</text>
-<text x='290.24' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>135</text>
-<text x='310.24' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>145</text>
-<text x='330.25' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>155</text>
-<text x='350.25' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>165</text>
-<text x='370.26' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>175</text>
-<text x='390.26' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>185</text>
-<text x='410.27' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>195</text>
-<text x='430.27' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>205</text>
-<text x='450.28' y='251.26' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>215</text>
-<text x='198.48' y='261.30' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>e</text>
-<text x='201.82' y='261.30' style='font-size: 6.00px; font-family: "Arial";' textLength='4.67px' lengthAdjust='spacingAndGlyphs'>G</text>
-<text x='206.48' y='261.30' style='font-size: 6.00px; font-family: "Arial";' textLength='3.66px' lengthAdjust='spacingAndGlyphs'>F</text>
-<text x='210.15' y='261.30' style='font-size: 6.00px; font-family: "Arial";' textLength='4.33px' lengthAdjust='spacingAndGlyphs'>R</text>
-<text x='214.48' y='262.39' style='font-size: 4.20px; font-family: "Arial";' textLength='3.02px' lengthAdjust='spacingAndGlyphs'>C</text>
-<text x='217.51' y='262.39' style='font-size: 4.20px; font-family: "Arial";' textLength='2.79px' lengthAdjust='spacingAndGlyphs'>K</text>
-<text x='220.30' y='262.39' style='font-size: 4.20px; font-family: "Arial";' textLength='3.02px' lengthAdjust='spacingAndGlyphs'>D</text>
-<text x='223.32' y='262.39' style='font-size: 4.20px; font-family: "Arial";' textLength='2.87px' lengthAdjust='spacingAndGlyphs'>−</text>
-<text x='226.19' y='262.39' style='font-size: 4.20px; font-family: "Arial";' textLength='2.79px' lengthAdjust='spacingAndGlyphs'>E</text>
-<text x='228.98' y='262.39' style='font-size: 4.20px; font-family: "Arial";' textLength='2.79px' lengthAdjust='spacingAndGlyphs'>P</text>
-<text x='231.78' y='262.39' style='font-size: 4.20px; font-family: "Arial";' textLength='1.17px' lengthAdjust='spacingAndGlyphs'>I</text>
-<text x='232.94' y='261.30' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text x='234.59' y='261.30' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text x='236.23' y='261.30' style='font-size: 7.50px; font-family: "Arial";' textLength='2.26px' lengthAdjust='spacingAndGlyphs'>(</text>
-<text x='238.49' y='261.30' style='font-size: 6.00px; font-family: "Arial";' textLength='5.00px' lengthAdjust='spacingAndGlyphs'>m</text>
-<text x='243.48' y='261.30' style='font-size: 6.00px; font-family: "Arial";' textLength='1.33px' lengthAdjust='spacingAndGlyphs'>l</text>
-<polyline points='245.60,262.18 247.16,256.12 ' style='stroke-width: 0.75;' />
-<text x='247.93' y='261.30' style='font-size: 6.00px; font-family: "Arial";' textLength='5.00px' lengthAdjust='spacingAndGlyphs'>m</text>
-<text x='252.93' y='261.30' style='font-size: 6.00px; font-family: "Arial";' textLength='1.33px' lengthAdjust='spacingAndGlyphs'>i</text>
-<text x='254.26' y='261.30' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>n</text>
-<polyline points='258.38,262.18 259.94,256.12 ' style='stroke-width: 0.75;' />
-<text x='260.71' y='261.30' style='font-size: 6.00px; font-family: "Arial";' textLength='11.66px' lengthAdjust='spacingAndGlyphs'>1.73</text>
-<text x='272.38' y='261.30' style='font-size: 6.00px; font-family: "Arial";' textLength='5.00px' lengthAdjust='spacingAndGlyphs'>m</text>
-<text x='277.38' y='258.33' style='font-size: 4.20px; font-family: "Arial";' textLength='2.33px' lengthAdjust='spacingAndGlyphs'>2</text>
-<text x='279.71' y='261.30' style='font-size: 7.50px; font-family: "Arial";' textLength='2.26px' lengthAdjust='spacingAndGlyphs'>)</text>
-<text transform='translate(10.74,193.75) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='4.00px' lengthAdjust='spacingAndGlyphs'>P</text>
-<text transform='translate(10.74,189.75) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.99px' lengthAdjust='spacingAndGlyphs'>r</text>
-<text transform='translate(10.74,187.76) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>o</text>
-<text transform='translate(10.74,184.42) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>b</text>
-<text transform='translate(10.74,181.09) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>a</text>
-<text transform='translate(10.74,177.76) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>b</text>
-<text transform='translate(10.74,174.42) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.33px' lengthAdjust='spacingAndGlyphs'>i</text>
-<text transform='translate(10.74,173.09) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.33px' lengthAdjust='spacingAndGlyphs'>l</text>
-<text transform='translate(10.74,171.76) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.33px' lengthAdjust='spacingAndGlyphs'>i</text>
-<text transform='translate(10.74,170.43) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.66px' lengthAdjust='spacingAndGlyphs'>t</text>
-<text transform='translate(10.74,168.76) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.00px' lengthAdjust='spacingAndGlyphs'>y</text>
-<text transform='translate(10.74,165.76) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,164.12) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,162.48) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>o</text>
-<text transform='translate(10.74,159.14) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.66px' lengthAdjust='spacingAndGlyphs'>f</text>
-<text transform='translate(10.74,157.48) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,155.84) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,154.20) rotate(-90)' style='font-size: 6.00px; font-style: italic; font-family: "Arial";' textLength='1.66px' lengthAdjust='spacingAndGlyphs'>f</text>
-<text transform='translate(10.74,151.88) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='4.00px' lengthAdjust='spacingAndGlyphs'>A</text>
-<text transform='translate(10.74,147.88) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='4.33px' lengthAdjust='spacingAndGlyphs'>U</text>
-<text transform='translate(10.74,143.54) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='4.33px' lengthAdjust='spacingAndGlyphs'>C</text>
-<text transform='translate(11.83,139.21) rotate(-90)' style='font-size: 4.20px; font-family: "Arial";' textLength='2.33px' lengthAdjust='spacingAndGlyphs'>0</text>
-<text transform='translate(11.83,136.87) rotate(-90)' style='font-size: 4.20px; font-family: "Arial";' textLength='2.87px' lengthAdjust='spacingAndGlyphs'>−</text>
-<text transform='translate(11.83,134.01) rotate(-90)' style='font-size: 4.20px; font-family: "Arial";' textLength='4.67px' lengthAdjust='spacingAndGlyphs'>24</text>
-<text transform='translate(10.74,129.34) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,127.70) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,124.67) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='4.10px' lengthAdjust='spacingAndGlyphs'>≥</text>
-<text transform='translate(10.74,119.19) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='10.00px' lengthAdjust='spacingAndGlyphs'>200</text>
-<text transform='translate(10.74,107.52) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='5.00px' lengthAdjust='spacingAndGlyphs'>m</text>
-<text transform='translate(10.74,102.53) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>g</text>
-<text transform='translate(10.74,98.08) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='4.10px' lengthAdjust='spacingAndGlyphs'>×</text>
-<text transform='translate(10.74,92.87) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>h</text>
-<polyline points='11.62,88.75 5.56,87.20 ' style='stroke-width: 0.75;' />
-<text transform='translate(10.74,86.42) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>L</text>
-<text transform='translate(10.74,83.08) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,81.44) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,79.80) rotate(-90)' style='font-size: 7.50px; font-family: "Arial";' textLength='2.26px' lengthAdjust='spacingAndGlyphs'>(</text>
-<text transform='translate(10.74,77.54) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,75.90) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='4.91px' lengthAdjust='spacingAndGlyphs'>%</text>
-<text transform='translate(10.74,70.99) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,69.35) rotate(-90)' style='font-size: 7.50px; font-family: "Arial";' textLength='2.26px' lengthAdjust='spacingAndGlyphs'>)</text>
-<text x='466.72' y='87.76' style='font-size: 5.00px; font-family: "Arial";' textLength='34.99px' lengthAdjust='spacingAndGlyphs'>Dosing regimen</text>
-<line x1='468.45' y1='99.45' x2='482.27' y2='99.45' style='stroke-width: 2.13; stroke: #7AD151; stroke-linecap: butt;' />
-<line x1='468.45' y1='116.73' x2='482.27' y2='116.73' style='stroke-width: 2.13; stroke: #22A884; stroke-linecap: butt;' />
-<line x1='468.45' y1='134.01' x2='482.27' y2='134.01' style='stroke-width: 2.13; stroke: #2A788E; stroke-linecap: butt;' />
-<line x1='468.45' y1='151.29' x2='482.27' y2='151.29' style='stroke-width: 2.13; stroke: #414487; stroke-linecap: butt;' />
-<line x1='468.45' y1='168.57' x2='482.27' y2='168.57' style='stroke-width: 2.13; stroke: #440154; stroke-linecap: butt;' />
-<text x='486.49' y='101.24' style='font-size: 5.00px; font-family: "Arial";' textLength='39.73px' lengthAdjust='spacingAndGlyphs'>800  mg  q24h LD</text>
-<text x='486.49' y='118.52' style='font-size: 5.00px; font-family: "Arial";' textLength='41.12px' lengthAdjust='spacingAndGlyphs'>1000 mg  q24h LD</text>
-<text x='486.49' y='135.80' style='font-size: 5.00px; font-family: "Arial";' textLength='41.12px' lengthAdjust='spacingAndGlyphs'>1200 mg  q24h LD</text>
-<text x='486.49' y='153.08' style='font-size: 5.00px; font-family: "Arial";' textLength='41.12px' lengthAdjust='spacingAndGlyphs'>1400 mg  q24h LD</text>
-<text x='486.49' y='170.36' style='font-size: 5.00px; font-family: "Arial";' textLength='41.12px' lengthAdjust='spacingAndGlyphs'>1600 mg  q24h LD</text>
-<text x='240.23' y='11.21' text-anchor='middle' style='font-size: 8.00px; font-weight: bold; font-family: "Arial";' textLength='21.35px' lengthAdjust='spacingAndGlyphs'>Day 1</text>
-<text x='2.22' y='8.58' style='font-size: 8.00px; font-weight: bold; font-family: "Arial";' textLength='4.44px' lengthAdjust='spacingAndGlyphs'>a</text>
-</g>
-<defs>
-  <clipPath id='cpMC4wMHw1MzguNTh8MjY5LjI5fDUzOC41OA=='>
-    <rect x='0.000000000000050' y='269.29' width='538.58' height='269.29' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpMC4wMHw1MzguNTh8MjY5LjI5fDUzOC41OA==)'>
-</g>
-<g clip-path='url(#cpMC4wMHw1MzguNTh8MC4wMHw1MzguNTg=)'>
-</g>
-<defs>
-  <clipPath id='cpMzAuMTd8NDUzLjA2fDI4Ny43NHw1MTEuNjg='>
-    <rect x='30.17' y='287.74' width='422.89' height='223.94' />
-  </clipPath>
-</defs>
-<g clip-path='url(#cpMzAuMTd8NDUzLjA2fDI4Ny43NHw1MTEuNjg=)'>
-<polyline points='30.17,287.74 50.31,287.74 70.45,287.79 90.59,287.88 110.72,288.00 130.86,288.50 151.00,289.10 171.14,289.76 191.28,290.81 211.41,291.51 231.55,292.65 251.69,294.55 271.83,296.56 291.96,298.24 312.10,300.46 332.24,301.78 352.38,304.23 372.51,305.72 392.65,308.06 412.79,311.50 432.93,313.77 453.06,316.46 ' style='stroke-width: 2.13; stroke: #440154; stroke-linecap: butt;' />
-<line x1='30.17' y1='310.14' x2='453.06' y2='310.14' style='stroke-width: 1.28; stroke: #7F7F7F; stroke-dasharray: 6.83,6.83; stroke-linecap: butt;' />
-</g>
-<g clip-path='url(#cpMC4wMHw1MzguNTh8MC4wMHw1MzguNTg=)'>
-<text x='25.24' y='513.65' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='3.06px' lengthAdjust='spacingAndGlyphs'>0</text>
-<text x='25.24' y='502.45' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='3.06px' lengthAdjust='spacingAndGlyphs'>5</text>
-<text x='25.24' y='491.26' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>10</text>
-<text x='25.24' y='480.06' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>15</text>
-<text x='25.24' y='468.86' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>20</text>
-<text x='25.24' y='457.66' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>25</text>
-<text x='25.24' y='446.47' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>30</text>
-<text x='25.24' y='435.27' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>35</text>
-<text x='25.24' y='424.07' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>40</text>
-<text x='25.24' y='412.88' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>45</text>
-<text x='25.24' y='401.68' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>50</text>
-<text x='25.24' y='390.48' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>55</text>
-<text x='25.24' y='379.29' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>60</text>
-<text x='25.24' y='368.09' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>65</text>
-<text x='25.24' y='356.89' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>70</text>
-<text x='25.24' y='345.70' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>75</text>
-<text x='25.24' y='334.50' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>80</text>
-<text x='25.24' y='323.30' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>85</text>
-<text x='25.24' y='312.10' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>90</text>
-<text x='25.24' y='300.91' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>95</text>
-<text x='25.24' y='289.71' text-anchor='end' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>100</text>
-<text x='30.17' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='3.06px' lengthAdjust='spacingAndGlyphs'>5</text>
-<text x='50.31' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>15</text>
-<text x='70.45' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>25</text>
-<text x='90.59' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>35</text>
-<text x='110.72' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>45</text>
-<text x='130.86' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>55</text>
-<text x='151.00' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>65</text>
-<text x='171.14' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>75</text>
-<text x='191.28' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>85</text>
-<text x='211.41' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='6.12px' lengthAdjust='spacingAndGlyphs'>95</text>
-<text x='231.55' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>105</text>
-<text x='251.69' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='8.77px' lengthAdjust='spacingAndGlyphs'>115</text>
-<text x='271.83' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>125</text>
-<text x='291.96' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>135</text>
-<text x='312.10' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>145</text>
-<text x='332.24' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>155</text>
-<text x='352.38' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>165</text>
-<text x='372.51' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>175</text>
-<text x='392.65' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>185</text>
-<text x='412.79' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>195</text>
-<text x='432.93' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>205</text>
-<text x='453.06' y='520.55' text-anchor='middle' style='font-size: 5.50px;fill: #4D4D4D; font-family: "Arial";' textLength='9.18px' lengthAdjust='spacingAndGlyphs'>215</text>
-<text x='199.88' y='530.59' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>e</text>
-<text x='203.21' y='530.59' style='font-size: 6.00px; font-family: "Arial";' textLength='4.67px' lengthAdjust='spacingAndGlyphs'>G</text>
-<text x='207.88' y='530.59' style='font-size: 6.00px; font-family: "Arial";' textLength='3.66px' lengthAdjust='spacingAndGlyphs'>F</text>
-<text x='211.54' y='530.59' style='font-size: 6.00px; font-family: "Arial";' textLength='4.33px' lengthAdjust='spacingAndGlyphs'>R</text>
-<text x='215.88' y='531.68' style='font-size: 4.20px; font-family: "Arial";' textLength='3.02px' lengthAdjust='spacingAndGlyphs'>C</text>
-<text x='218.90' y='531.68' style='font-size: 4.20px; font-family: "Arial";' textLength='2.79px' lengthAdjust='spacingAndGlyphs'>K</text>
-<text x='221.69' y='531.68' style='font-size: 4.20px; font-family: "Arial";' textLength='3.02px' lengthAdjust='spacingAndGlyphs'>D</text>
-<text x='224.72' y='531.68' style='font-size: 4.20px; font-family: "Arial";' textLength='2.87px' lengthAdjust='spacingAndGlyphs'>−</text>
-<text x='227.58' y='531.68' style='font-size: 4.20px; font-family: "Arial";' textLength='2.79px' lengthAdjust='spacingAndGlyphs'>E</text>
-<text x='230.38' y='531.68' style='font-size: 4.20px; font-family: "Arial";' textLength='2.79px' lengthAdjust='spacingAndGlyphs'>P</text>
-<text x='233.17' y='531.68' style='font-size: 4.20px; font-family: "Arial";' textLength='1.17px' lengthAdjust='spacingAndGlyphs'>I</text>
-<text x='234.34' y='530.59' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text x='235.98' y='530.59' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text x='237.62' y='530.59' style='font-size: 7.50px; font-family: "Arial";' textLength='2.26px' lengthAdjust='spacingAndGlyphs'>(</text>
-<text x='239.88' y='530.59' style='font-size: 6.00px; font-family: "Arial";' textLength='5.00px' lengthAdjust='spacingAndGlyphs'>m</text>
-<text x='244.88' y='530.59' style='font-size: 6.00px; font-family: "Arial";' textLength='1.33px' lengthAdjust='spacingAndGlyphs'>l</text>
-<polyline points='246.99,531.47 248.55,525.41 ' style='stroke-width: 0.75;' />
-<text x='249.33' y='530.59' style='font-size: 6.00px; font-family: "Arial";' textLength='5.00px' lengthAdjust='spacingAndGlyphs'>m</text>
-<text x='254.32' y='530.59' style='font-size: 6.00px; font-family: "Arial";' textLength='1.33px' lengthAdjust='spacingAndGlyphs'>i</text>
-<text x='255.66' y='530.59' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>n</text>
-<polyline points='259.77,531.47 261.33,525.41 ' style='stroke-width: 0.75;' />
-<text x='262.11' y='530.59' style='font-size: 6.00px; font-family: "Arial";' textLength='11.66px' lengthAdjust='spacingAndGlyphs'>1.73</text>
-<text x='273.77' y='530.59' style='font-size: 6.00px; font-family: "Arial";' textLength='5.00px' lengthAdjust='spacingAndGlyphs'>m</text>
-<text x='278.77' y='527.63' style='font-size: 4.20px; font-family: "Arial";' textLength='2.33px' lengthAdjust='spacingAndGlyphs'>2</text>
-<text x='281.10' y='530.59' style='font-size: 7.50px; font-family: "Arial";' textLength='2.26px' lengthAdjust='spacingAndGlyphs'>)</text>
-<text transform='translate(10.74,463.05) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='4.00px' lengthAdjust='spacingAndGlyphs'>P</text>
-<text transform='translate(10.74,459.04) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.99px' lengthAdjust='spacingAndGlyphs'>r</text>
-<text transform='translate(10.74,457.05) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>o</text>
-<text transform='translate(10.74,453.71) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>b</text>
-<text transform='translate(10.74,450.38) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>a</text>
-<text transform='translate(10.74,447.05) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>b</text>
-<text transform='translate(10.74,443.71) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.33px' lengthAdjust='spacingAndGlyphs'>i</text>
-<text transform='translate(10.74,442.38) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.33px' lengthAdjust='spacingAndGlyphs'>l</text>
-<text transform='translate(10.74,441.05) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.33px' lengthAdjust='spacingAndGlyphs'>i</text>
-<text transform='translate(10.74,439.72) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.66px' lengthAdjust='spacingAndGlyphs'>t</text>
-<text transform='translate(10.74,438.05) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.00px' lengthAdjust='spacingAndGlyphs'>y</text>
-<text transform='translate(10.74,435.05) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,433.41) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,431.77) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>o</text>
-<text transform='translate(10.74,428.44) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.66px' lengthAdjust='spacingAndGlyphs'>f</text>
-<text transform='translate(10.74,426.77) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,425.13) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,423.49) rotate(-90)' style='font-size: 6.00px; font-style: italic; font-family: "Arial";' textLength='1.66px' lengthAdjust='spacingAndGlyphs'>f</text>
-<text transform='translate(10.74,421.17) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='4.00px' lengthAdjust='spacingAndGlyphs'>A</text>
-<text transform='translate(10.74,417.17) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='4.33px' lengthAdjust='spacingAndGlyphs'>U</text>
-<text transform='translate(10.74,412.83) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='4.33px' lengthAdjust='spacingAndGlyphs'>C</text>
-<text transform='translate(11.83,408.50) rotate(-90)' style='font-size: 4.20px; font-family: "Arial";' textLength='2.33px' lengthAdjust='spacingAndGlyphs'>0</text>
-<text transform='translate(11.83,406.17) rotate(-90)' style='font-size: 4.20px; font-family: "Arial";' textLength='2.87px' lengthAdjust='spacingAndGlyphs'>−</text>
-<text transform='translate(11.83,403.30) rotate(-90)' style='font-size: 4.20px; font-family: "Arial";' textLength='4.67px' lengthAdjust='spacingAndGlyphs'>24</text>
-<text transform='translate(10.74,398.63) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,396.99) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,393.96) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='4.10px' lengthAdjust='spacingAndGlyphs'>≥</text>
-<text transform='translate(10.74,388.48) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='10.00px' lengthAdjust='spacingAndGlyphs'>200</text>
-<text transform='translate(10.74,376.81) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='5.00px' lengthAdjust='spacingAndGlyphs'>m</text>
-<text transform='translate(10.74,371.82) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>g</text>
-<text transform='translate(10.74,367.37) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='4.10px' lengthAdjust='spacingAndGlyphs'>×</text>
-<text transform='translate(10.74,362.16) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>h</text>
-<polyline points='11.62,358.05 5.56,356.49 ' style='stroke-width: 0.75;' />
-<text transform='translate(10.74,355.71) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='3.33px' lengthAdjust='spacingAndGlyphs'>L</text>
-<text transform='translate(10.74,352.37) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,350.73) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,349.09) rotate(-90)' style='font-size: 7.50px; font-family: "Arial";' textLength='2.26px' lengthAdjust='spacingAndGlyphs'>(</text>
-<text transform='translate(10.74,346.83) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,345.19) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='4.91px' lengthAdjust='spacingAndGlyphs'>%</text>
-<text transform='translate(10.74,340.28) rotate(-90)' style='font-size: 6.00px; font-family: "Arial";' textLength='1.64px' lengthAdjust='spacingAndGlyphs'> </text>
-<text transform='translate(10.74,338.64) rotate(-90)' style='font-size: 7.50px; font-family: "Arial";' textLength='2.26px' lengthAdjust='spacingAndGlyphs'>)</text>
-<text x='469.50' y='391.61' style='font-size: 5.00px; font-family: "Arial";' textLength='34.99px' lengthAdjust='spacingAndGlyphs'>Dosing regimen</text>
-<line x1='471.23' y1='403.30' x2='485.06' y2='403.30' style='stroke-width: 2.13; stroke: #440154; stroke-linecap: butt;' />
-<text x='489.27' y='405.09' style='font-size: 5.00px; font-family: "Arial";' textLength='38.33px' lengthAdjust='spacingAndGlyphs'>400 mg q24h MD</text>
-<text x='241.62' y='280.50' text-anchor='middle' style='font-size: 8.00px; font-weight: bold; font-family: "Arial";' textLength='25.80px' lengthAdjust='spacingAndGlyphs'>Day 14</text>
-<text x='2.44' y='277.87' style='font-size: 8.00px; font-weight: bold; font-family: "Arial";' textLength='4.87px' lengthAdjust='spacingAndGlyphs'>b</text>
-</g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 538.6 538.6">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7, .cls-8 {
+        isolation: isolate;
+      }
+
+      .cls-1, .cls-2, .cls-4, .cls-6, .cls-7, .cls-8 {
+        fill: #000;
+      }
+
+      .cls-1, .cls-2, .cls-5 {
+        font-size: 7px;
+      }
+
+      .cls-1, .cls-4, .cls-5, .cls-7, .cls-8 {
+        font-family: ArialMT, Arial;
+      }
+
+      .cls-9 {
+        clip-path: url(#clippath-11);
+      }
+
+      .cls-2 {
+        font-family: Arial-ItalicMT, Arial;
+        font-style: italic;
+      }
+
+      .cls-10 {
+        clip-path: url(#clippath-2);
+      }
+
+      .cls-11 {
+        clip-path: url(#clippath-13);
+      }
+
+      .cls-12 {
+        clip-path: url(#clippath-6);
+      }
+
+      .cls-13 {
+        stroke-width: 0px;
+      }
+
+      .cls-13, .cls-14, .cls-15, .cls-16, .cls-17, .cls-18, .cls-19, .cls-20, .cls-21 {
+        fill: none;
+      }
+
+      .cls-4 {
+        font-size: 4.9px;
+      }
+
+      .cls-22 {
+        clip-path: url(#clippath-7);
+      }
+
+      .cls-23 {
+        clip-path: url(#clippath-1);
+      }
+
+      .cls-24 {
+        clip-path: url(#clippath-4);
+      }
+
+      .cls-25 {
+        clip-path: url(#clippath-12);
+      }
+
+      .cls-14 {
+        stroke-linecap: round;
+        stroke-width: .8px;
+      }
+
+      .cls-14, .cls-15, .cls-16, .cls-17, .cls-18, .cls-19, .cls-20, .cls-21 {
+        stroke-linejoin: round;
+      }
+
+      .cls-14, .cls-16 {
+        stroke: #000;
+      }
+
+      .cls-15 {
+        stroke: #4ac16d;
+      }
+
+      .cls-15, .cls-17, .cls-18, .cls-20, .cls-21 {
+        stroke-width: 2.1px;
+      }
+
+      .cls-26 {
+        clip-path: url(#clippath-9);
+      }
+
+      .cls-5 {
+        fill: #4d4d4d;
+      }
+
+      .cls-27 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-16 {
+        stroke-width: 1.1px;
+      }
+
+      .cls-17 {
+        stroke: #1fa187;
+      }
+
+      .cls-6 {
+        font-family: Arial-BoldMT, Arial;
+        font-size: 8px;
+        font-weight: 700;
+      }
+
+      .cls-28 {
+        clip-path: url(#clippath-3);
+      }
+
+      .cls-7 {
+        font-size: 8.8px;
+      }
+
+      .cls-8 {
+        font-size: 6px;
+      }
+
+      .cls-29 {
+        clip-path: url(#clippath-8);
+      }
+
+      .cls-18 {
+        stroke: #277f8e;
+      }
+
+      .cls-19 {
+        stroke: #7f7f7f;
+        stroke-dasharray: 0 0 0 0 0 0 6.8 6.8;
+        stroke-width: 1.3px;
+      }
+
+      .cls-20 {
+        stroke: #a0da39;
+      }
+
+      .cls-30 {
+        clip-path: url(#clippath-5);
+      }
+
+      .cls-21 {
+        stroke: #365c8d;
+      }
+
+      .cls-31 {
+        clip-path: url(#clippath-10);
+      }
+    </style>
+    <clipPath id="clippath">
+      <rect class="cls-13" x="47.8" y="29" width="378.1" height="130.9"/>
+    </clipPath>
+    <clipPath id="clippath-1">
+      <rect class="cls-13" y="0" width="538.6" height="538.6"/>
+    </clipPath>
+    <clipPath id="clippath-2">
+      <rect class="cls-13" x="47.8" y="165.4" width="378.1" height="65.4"/>
+    </clipPath>
+    <clipPath id="clippath-3">
+      <rect class="cls-13" y="0" width="538.6" height="538.6"/>
+    </clipPath>
+    <clipPath id="clippath-4">
+      <rect class="cls-13" y="0" width="538.6" height="538.6"/>
+    </clipPath>
+    <clipPath id="clippath-5">
+      <rect class="cls-13" y="0" width="538.6" height="538.6"/>
+    </clipPath>
+    <clipPath id="clippath-6">
+      <rect class="cls-13" y="0" width="538.6" height="538.6"/>
+    </clipPath>
+    <clipPath id="clippath-7">
+      <rect class="cls-13" x="39.2" y="287.3" width="398.9" height="216.6"/>
+    </clipPath>
+    <clipPath id="clippath-8">
+      <rect class="cls-13" y="0" width="538.6" height="538.6"/>
+    </clipPath>
+    <clipPath id="clippath-9">
+      <rect class="cls-13" y="0" width="538.6" height="538.6"/>
+    </clipPath>
+    <clipPath id="clippath-10">
+      <rect class="cls-13" y="0" width="538.6" height="538.6"/>
+    </clipPath>
+    <clipPath id="clippath-11">
+      <rect class="cls-13" y="0" width="538.6" height="538.6"/>
+    </clipPath>
+    <clipPath id="clippath-12">
+      <rect class="cls-13" y="0" width="538.6" height="538.6"/>
+    </clipPath>
+    <clipPath id="clippath-13">
+      <rect class="cls-13" y="0" width="538.6" height="538.6"/>
+    </clipPath>
+  </defs>
+  <rect class="cls-13" y="0" width="538.6" height="538.6"/>
+  <g class="cls-27">
+    <g>
+      <polyline class="cls-20" points="47.8 58.4 65.8 62.3 83.8 59.7 101.8 64.9 119.8 67 137.8 69.3 155.8 69.3 173.8 67.3 191.8 73.8 209.8 77.1 227.8 75.6 245.8 77.6 263.8 82 281.8 79.3 299.9 75.1 317.9 83.7 335.9 86.8 353.9 90.6 371.9 90.4 389.9 90.6 407.9 93.4 425.9 94.8"/>
+      <polyline class="cls-15" points="47.8 64 65.8 68.7 83.8 65.5 101.8 67.2 119.8 70.9 137.8 70.4 155.8 73.2 173.8 69.9 191.8 75.4 209.8 77.6 227.8 76.8 245.8 77.2 263.8 82.6 281.8 81.1 299.9 77.6 317.9 82 335.9 85.5 353.9 86.1 371.9 84.5 389.9 85.8 407.9 88.5 425.9 89.9"/>
+      <polyline class="cls-17" points="47.8 62.3 65.8 66.8 83.8 64.1 101.8 68.5 119.8 67.8 137.8 71.5 155.8 71.9 173.8 68.2 191.8 71 209.8 75.1 227.8 72.4 245.8 74.3 263.8 75.8 281.8 76.1 299.9 74.3 317.9 77.9 335.9 79.1 353.9 78.3 371.9 80.2 389.9 80.7 407.9 79.5 425.9 81.7"/>
+      <polyline class="cls-18" points="47.8 65.1 65.8 65.7 83.8 65.4 101.8 66.3 119.8 67.8 137.8 71.8 155.8 71.6 173.8 66.5 191.8 72.9 209.8 72.3 227.8 70.1 245.8 72.4 263.8 74.5 281.8 75.9 299.9 74.5 317.9 76.2 335.9 76.8 353.9 75.6 371.9 78 389.9 79.1 407.9 77 425.9 78.9"/>
+      <polyline class="cls-21" points="47.8 70.9 65.8 74 83.8 74.3 101.8 77.3 119.8 75.7 137.8 76.5 155.8 79.9 173.8 79.4 191.8 84.3 209.8 79.5 227.8 83.3 245.8 85 263.8 84.4 281.8 82 299.9 82.4 317.9 82.5 335.9 84.1 353.9 85.8 371.9 87.7 389.9 86.4 407.9 88.2 425.9 88.3"/>
+      <line class="cls-19" x1="47.8" y1="94.4" x2="425.9" y2="94.4"/>
+    </g>
+  </g>
+  <g class="cls-23">
+    <g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(35.1 156.4)"><tspan x="0" y="0">80</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(35.1 96.9)"><tspan x="0" y="0">90</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(31.2 37.4)"><tspan x="0" y="0">100</tspan></text>
+      </g>
+      <line class="cls-16" x1="45" y1="153.9" x2="47.8" y2="153.9"/>
+      <line class="cls-16" x1="45" y1="94.4" x2="47.8" y2="94.4"/>
+      <line class="cls-16" x1="45" y1="34.9" x2="47.8" y2="34.9"/>
+    </g>
+  </g>
+  <g class="cls-10">
+    <g>
+      <polyline class="cls-20" points="47.8 -343.6 65.8 -339.7 83.8 -342.3 101.8 -337.1 119.8 -335 137.8 -332.7 155.8 -332.6 173.8 -334.7 191.8 -328.2 209.8 -324.9 227.8 -326.4 245.8 -324.3 263.8 -320 281.8 -322.7 299.9 -326.9 317.9 -318.3 335.9 -315.2 353.9 -311.4 371.9 -311.6 389.9 -311.4 407.9 -308.5 425.9 -307.1"/>
+      <polyline class="cls-15" points="47.8 -338 65.8 -333.3 83.8 -336.5 101.8 -334.8 119.8 -331.1 137.8 -331.6 155.8 -328.8 173.8 -332.1 191.8 -326.5 209.8 -324.4 227.8 -325.2 245.8 -324.8 263.8 -319.4 281.8 -320.9 299.9 -324.4 317.9 -320 335.9 -316.5 353.9 -315.9 371.9 -317.4 389.9 -316.2 407.9 -313.5 425.9 -312.1"/>
+      <polyline class="cls-17" points="47.8 -339.7 65.8 -335.2 83.8 -337.8 101.8 -333.5 119.8 -334.2 137.8 -330.4 155.8 -330.1 173.8 -333.8 191.8 -331 209.8 -326.9 227.8 -329.6 245.8 -327.7 263.8 -326.1 281.8 -325.9 299.9 -327.7 317.9 -324.1 335.9 -322.8 353.9 -323.7 371.9 -321.7 389.9 -321.3 407.9 -322.5 425.9 -320.3"/>
+      <polyline class="cls-18" points="47.8 -336.9 65.8 -336.3 83.8 -336.5 101.8 -335.7 119.8 -334.2 137.8 -330.2 155.8 -330.4 173.8 -335.5 191.8 -329.1 209.8 -329.7 227.8 -331.9 245.8 -329.6 263.8 -327.5 281.8 -326.1 299.9 -327.5 317.9 -325.8 335.9 -325.2 353.9 -326.4 371.9 -324 389.9 -322.9 407.9 -325 425.9 -323.1"/>
+      <polyline class="cls-21" points="47.8 -331.1 65.8 -328 83.8 -327.6 101.8 -324.6 119.8 -326.2 137.8 -325.5 155.8 -322.1 173.8 -322.5 191.8 -317.6 209.8 -322.5 227.8 -318.7 245.8 -317 263.8 -317.6 281.8 -320 299.9 -319.6 317.9 -319.5 335.9 -317.8 353.9 -316.2 371.9 -314.3 389.9 -315.6 407.9 -313.8 425.9 -313.7"/>
+      <line class="cls-19" x1="47.8" y1="-307.6" x2="425.9" y2="-307.6"/>
+    </g>
+  </g>
+  <g class="cls-28">
+    <g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(39 230.4)"><tspan x="0" y="0">0</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(35.1 170.9)"><tspan x="0" y="0">10</tspan></text>
+      </g>
+      <line class="cls-16" x1="45" y1="227.9" x2="47.8" y2="227.9"/>
+      <line class="cls-16" x1="45" y1="168.4" x2="47.8" y2="168.4"/>
+    </g>
+  </g>
+  <g class="cls-24">
+    <g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(45.8 240.8)"><tspan x="0" y="0">5</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(61.9 240.8)"><tspan x="0" y="0">15</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(79.9 240.8)"><tspan x="0" y="0">25</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(97.9 240.8)"><tspan x="0" y="0">35</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(115.9 240.8)"><tspan x="0" y="0">45</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(133.9 240.8)"><tspan x="0" y="0">55</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(151.9 240.8)"><tspan x="0" y="0">65</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(169.9 240.8)"><tspan x="0" y="0">75</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(187.9 240.8)"><tspan x="0" y="0">85</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(205.9 240.8)"><tspan x="0" y="0">95</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(222 240.8)"><tspan x="0" y="0">105</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(239.8 240.8)"><tspan x="0" y="0">115</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text/>
+        <text/>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(258 240.8)"><tspan x="0" y="0">125</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(276 240.8)"><tspan x="0" y="0">135</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(294 240.8)"><tspan x="0" y="0">145</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(312 240.8)"><tspan x="0" y="0">155</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(330 240.8)"><tspan x="0" y="0">165</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(348 240.8)"><tspan x="0" y="0">175</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(366 240.8)"><tspan x="0" y="0">185</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(384 240.8)"><tspan x="0" y="0">195</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(402 240.8)"><tspan x="0" y="0">205</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(420 240.8)"><tspan x="0" y="0">215</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g class="cls-30">
+    <g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(190.5 252.5)"><tspan x="0" y="0">e</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(194.4 252.5)"><tspan x="0" y="0">G</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(199.8 252.5)"><tspan x="0" y="0">F</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(204.1 252.5)"><tspan x="0" y="0">R</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(209.1 253.8)"><tspan x="0" y="0">C</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(212.7 253.8)"><tspan x="0" y="0">K</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(215.9 253.8)"><tspan x="0" y="0">D</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(219.4 253.8)"><tspan x="0" y="0">−</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(222.8 253.8)"><tspan x="0" y="0">E</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(226.1 253.8)"><tspan x="0" y="0">P</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(229.3 253.8)"><tspan x="0" y="0">I</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-7" transform="translate(234.5 252.5)"><tspan x="0" y="0">(</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(237.1 252.5)"><tspan x="0" y="0">m</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(243 252.5)"><tspan x="0" y="0">l</tspan></text>
+      </g>
+      <line class="cls-14" x1="245.4" y1="253.5" x2="247.3" y2="246.5"/>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(248.2 252.5)"><tspan x="0" y="0">m</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(254 252.5)"><tspan x="0" y="0">i</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(255.5 252.5)"><tspan x="0" y="0">n</tspan></text>
+      </g>
+      <line class="cls-14" x1="260.4" y1="253.5" x2="262.2" y2="246.5"/>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(263.1 252.5)"><tspan x="0" y="0">1.73</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(276.7 252.5)"><tspan x="0" y="0">m</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(282.5 249.1)"><tspan x="0" y="0">2</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-7" transform="translate(285.3 252.5)"><tspan x="0" y="0">)</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g class="cls-12">
+    <g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(16.9 210) rotate(-90)"><tspan x="0" y="0">P</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 205.3) rotate(-90)"><tspan x="0" y="0">r</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 203) rotate(-90)"><tspan x="0" y="0">o</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 199.1) rotate(-90)"><tspan x="0" y="0">b</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 195.2) rotate(-90)"><tspan x="0" y="0">a</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 191.3) rotate(-90)"><tspan x="0" y="0">b</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 187.4) rotate(-90)"><tspan x="0" y="0">i</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 185.9) rotate(-90)"><tspan x="0" y="0">l</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 184.3) rotate(-90)"><tspan x="0" y="0">i</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 182.7) rotate(-90)"><tspan x="0" y="0">t</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 180.8) rotate(-90)"><tspan x="0" y="0">y</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 173.5) rotate(-90)"><tspan x="0" y="0">o</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 169.6) rotate(-90)"><tspan x="0" y="0">f</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-2" transform="translate(17.1 163.8) rotate(-90)"><tspan x="0" y="0">f</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 161.1) rotate(-90)"><tspan x="0" y="0">A</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 156.4) rotate(-90)"><tspan x="0" y="0">U</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 151.4) rotate(-90)"><tspan x="0" y="0">C</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(18.4 146.3) rotate(-90)"><tspan x="0" y="0">0</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(17.7 143.6) rotate(-90)"><tspan x="0" y="0">−</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(18.4 140.3) rotate(-90)"><tspan x="0" y="0">24</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(15.6 129.4) rotate(-90)"><tspan x="0" y="0">≥</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 123) rotate(-90)"><tspan x="0" y="0">200</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 109.3) rotate(-90)"><tspan x="0" y="0">m</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 103.5) rotate(-90)"><tspan x="0" y="0">g</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(16.1 98.3) rotate(-90)"><tspan x="0" y="0">×</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 92.2) rotate(-90)"><tspan x="0" y="0">h</tspan></text>
+      </g>
+      <line class="cls-14" x1="18.1" y1="87.4" x2="11.1" y2="85.6"/>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(16.7 84.7) rotate(-90)"><tspan x="0" y="0">L</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-7" transform="translate(17.1 77) rotate(-90)"><tspan x="0" y="0">(</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 72.4) rotate(-90)"><tspan x="0" y="0">%</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-7" transform="translate(17.1 64.8) rotate(-90)"><tspan x="0" y="0">)</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g class="cls-22">
+    <g>
+      <polyline class="cls-15" points="39.2 287.3 58.2 287.3 77.2 287.4 96.2 287.4 115.2 287.6 134.2 288 153.2 288.6 172.2 289.3 191.2 290.3 210.2 291 229.2 292.1 248.2 293.9 267.2 295.8 286.2 297.5 305.1 299.6 324.1 300.9 343.1 303.3 362.1 304.7 381.1 307 400.1 310.3 419.1 312.5 438.1 315.1"/>
+      <line class="cls-19" x1="39.2" y1="309" x2="438.1" y2="309"/>
+    </g>
+  </g>
+  <g class="cls-29">
+    <g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(30.4 506.4)"><tspan x="0" y="0">0</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(30.4 495.6)"><tspan x="0" y="0">5</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 484.8)"><tspan x="0" y="0">10</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 473.9)"><tspan x="0" y="0">15</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 463.1)"><tspan x="0" y="0">20</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 452.3)"><tspan x="0" y="0">25</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 441.4)"><tspan x="0" y="0">30</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 430.6)"><tspan x="0" y="0">35</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 419.8)"><tspan x="0" y="0">40</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 408.9)"><tspan x="0" y="0">45</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 398.1)"><tspan x="0" y="0">50</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 387.3)"><tspan x="0" y="0">55</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 376.5)"><tspan x="0" y="0">60</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 365.6)"><tspan x="0" y="0">65</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 354.8)"><tspan x="0" y="0">70</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 344)"><tspan x="0" y="0">75</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 333.1)"><tspan x="0" y="0">80</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 322.3)"><tspan x="0" y="0">85</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 311.5)"><tspan x="0" y="0">90</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(26.5 300.7)"><tspan x="0" y="0">95</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-5" transform="translate(22.6 289.8)"><tspan x="0" y="0">100</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g class="cls-26">
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(37.3 513.9)"><tspan x="0" y="0">5</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(54.3 513.9)"><tspan x="0" y="0">15</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(73.3 513.9)"><tspan x="0" y="0">25</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(92.3 513.9)"><tspan x="0" y="0">35</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(111.3 513.9)"><tspan x="0" y="0">45</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(130.3 513.9)"><tspan x="0" y="0">55</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(149.3 513.9)"><tspan x="0" y="0">65</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(168.3 513.9)"><tspan x="0" y="0">75</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(187.3 513.9)"><tspan x="0" y="0">85</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(206.3 513.9)"><tspan x="0" y="0">95</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(223.3 513.9)"><tspan x="0" y="0">105</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(242.3 513.9)"><tspan x="0" y="0">115</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(261.3 513.9)"><tspan x="0" y="0">125</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(280.3 513.9)"><tspan x="0" y="0">135</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(299.3 513.9)"><tspan x="0" y="0">145</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(318.3 513.9)"><tspan x="0" y="0">155</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(337.3 513.9)"><tspan x="0" y="0">165</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(356.3 513.9)"><tspan x="0" y="0">175</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(375.3 513.9)"><tspan x="0" y="0">185</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(394.3 513.9)"><tspan x="0" y="0">195</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(413.3 513.9)"><tspan x="0" y="0">205</tspan></text>
+    </g>
+    <g class="cls-3">
+      <text class="cls-5" transform="translate(432.3 513.9)"><tspan x="0" y="0">215</tspan></text>
+    </g>
+  </g>
+  <g class="cls-31">
+    <g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(190 524.9)"><tspan x="0" y="0">e</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(193.9 524.9)"><tspan x="0" y="0">G</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(199.3 524.9)"><tspan x="0" y="0">F</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(203.6 524.9)"><tspan x="0" y="0">R</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(208.6 526.2)"><tspan x="0" y="0">C</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(212.1 526.2)"><tspan x="0" y="0">K</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(215.4 526.2)"><tspan x="0" y="0">D</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(218.9 526.2)"><tspan x="0" y="0">−</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(222.3 526.2)"><tspan x="0" y="0">E</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(225.5 526.2)"><tspan x="0" y="0">P</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(228.8 526.2)"><tspan x="0" y="0">I</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-7" transform="translate(234 524.9)"><tspan x="0" y="0">(</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(236.6 524.9)"><tspan x="0" y="0">m</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(242.5 524.9)"><tspan x="0" y="0">l</tspan></text>
+      </g>
+      <line class="cls-14" x1="244.9" y1="525.9" x2="246.8" y2="518.8"/>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(247.7 524.9)"><tspan x="0" y="0">m</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(253.5 524.9)"><tspan x="0" y="0">i</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(255 524.9)"><tspan x="0" y="0">n</tspan></text>
+      </g>
+      <line class="cls-14" x1="259.9" y1="525.9" x2="261.7" y2="518.8"/>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(262.6 524.9)"><tspan x="0" y="0">1.73</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(276.2 524.9)"><tspan x="0" y="0">m</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(282 521.4)"><tspan x="0" y="0">2</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-7" transform="translate(284.8 524.9)"><tspan x="0" y="0">)</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g class="cls-9">
+    <g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(16.9 469.5) rotate(-90)"><tspan x="0" y="0">P</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 464.9) rotate(-90)"><tspan x="0" y="0">r</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 462.5) rotate(-90)"><tspan x="0" y="0">o</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 458.7) rotate(-90)"><tspan x="0" y="0">b</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 454.7) rotate(-90)"><tspan x="0" y="0">a</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 450.9) rotate(-90)"><tspan x="0" y="0">b</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 447) rotate(-90)"><tspan x="0" y="0">i</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 445.4) rotate(-90)"><tspan x="0" y="0">l</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 443.9) rotate(-90)"><tspan x="0" y="0">i</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 442.3) rotate(-90)"><tspan x="0" y="0">t</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 440.4) rotate(-90)"><tspan x="0" y="0">y</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 433) rotate(-90)"><tspan x="0" y="0">o</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 429.1) rotate(-90)"><tspan x="0" y="0">f</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-2" transform="translate(17.1 423.4) rotate(-90)"><tspan x="0" y="0">f</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 420.7) rotate(-90)"><tspan x="0" y="0">A</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 416) rotate(-90)"><tspan x="0" y="0">U</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 410.9) rotate(-90)"><tspan x="0" y="0">C</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(18.4 405.9) rotate(-90)"><tspan x="0" y="0">0</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(17.7 403.2) rotate(-90)"><tspan x="0" y="0">−</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-4" transform="translate(18.4 399.8) rotate(-90)"><tspan x="0" y="0">24</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(15.6 388.9) rotate(-90)"><tspan x="0" y="0">≥</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 382.5) rotate(-90)"><tspan x="0" y="0">200</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 368.9) rotate(-90)"><tspan x="0" y="0">m</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 363) rotate(-90)"><tspan x="0" y="0">g</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(16.1 357.9) rotate(-90)"><tspan x="0" y="0">×</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 351.8) rotate(-90)"><tspan x="0" y="0">h</tspan></text>
+      </g>
+      <line class="cls-14" x1="18.1" y1="347" x2="11.1" y2="345.2"/>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(16.7 344.2) rotate(-90)"><tspan x="0" y="0">L</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-7" transform="translate(17.1 336.5) rotate(-90)"><tspan x="0" y="0">(</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-1" transform="translate(17.1 332) rotate(-90)"><tspan x="0" y="0">%</tspan></text>
+      </g>
+      <g class="cls-3">
+        <text class="cls-7" transform="translate(17.1 324.3) rotate(-90)"><tspan x="0" y="0">)</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g class="cls-25">
+    <g>
+      <g class="cls-3">
+        <text class="cls-8" transform="translate(454.5 387.6)"><tspan x="0" y="0">Dosing regimen</tspan></text>
+      </g>
+      <line class="cls-15" x1="456.3" y1="400.4" x2="470.1" y2="400.4"/>
+      <g class="cls-3">
+        <text class="cls-8" transform="translate(474.8 402.6)"><tspan x="0" y="0">400 mg q24h MD</tspan></text>
+      </g>
+    </g>
+  </g>
+  <g class="cls-11">
+    <g class="cls-3">
+      <text class="cls-6" transform="translate(225.8 280.5)"><tspan x="0" y="0">Day 14</tspan></text>
+    </g>
+  </g>
+  <g id="panel_b" data-name="panel b">
+    <g>
+      <g class="cls-3">
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-6" transform="translate(225.8 280.5)"><tspan x="0" y="0">Day 14</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+      <g class="cls-3">
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-6" transform="translate(10.9 280.5)"><tspan x="0" y="0">b</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="cls-3">
+    <g class="cls-3">
+      <g class="cls-3">
+        <g class="cls-3">
+          <text class="cls-6" transform="translate(224.8 13.2)"><tspan x="0" y="0">Day 1</tspan></text>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g class="cls-3">
+    <g class="cls-3">
+      <g class="cls-3">
+        <g class="cls-3">
+          <text class="cls-6" transform="translate(10.9 16.7)"><tspan x="0" y="0">a</tspan></text>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g id="load_label" data-name="load label">
+    <g id="dose_reg" data-name="dose reg">
+      <g id="dosereg" class="cls-3">
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(447.1 33.2)"><tspan x="0" y="0">Dosing regimen</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="_1st_bar" data-name=" 1st bar">
+      <line id="_1st_bar-2" data-name=" 1st bar-2" class="cls-20" x1="448.8" y1="46" x2="462.6" y2="46"/>
+    </g>
+    <g id="_2nd_bar" data-name=" 2nd bar">
+      <line id="_2nd_bar-2" data-name=" 2nd bar-2" class="cls-15" x1="448.8" y1="63.3" x2="462.6" y2="63.3"/>
+    </g>
+    <g id="_3rd_bar" data-name=" 3rd bar">
+      <line id="_3rd_bar-2" data-name=" 3rd bar-2" class="cls-17" x1="448.8" y1="80.6" x2="462.6" y2="80.6"/>
+    </g>
+    <g id="_4th_bar" data-name=" 4th bar">
+      <line id="_4th_bar-2" data-name=" 4th bar-2" class="cls-18" x1="448.8" y1="97.8" x2="462.6" y2="97.8"/>
+    </g>
+    <g id="_5th_bar" data-name=" 5th bar">
+      <line id="_5th_bar-2" data-name=" 5th bar-2" class="cls-21" x1="448.8" y1="115.1" x2="462.6" y2="115.1"/>
+    </g>
+    <g id="_800mg" data-name=" 800mg">
+      <g id="_800_mg" data-name=" 800 mg" class="cls-3">
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(467.3 48.2)"><tspan x="0" y="0">800</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(480.1 48.2)"><tspan x="0" y="0">mg</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(491.2 48.2)"><tspan x="0" y="0">q24h</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(507.3 48.2)"><tspan x="0" y="0">LD</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="_1000mg" data-name=" 1000mg">
+      <g id="_1000_mg" data-name=" 1000 mg" class="cls-3">
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(467.3 65.4)"><tspan x="0" y="0">1000</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(482.9 65.4)"><tspan x="0" y="0">mg</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(493.4 65.4)"><tspan x="0" y="0">q24h</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(509 65.4)"><tspan x="0" y="0">LD</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="_1200mg" data-name=" 1200mg">
+      <g id="_1200_mg" data-name=" 1200 mg">
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(467.3 82.7)"><tspan x="0" y="0">1200</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(482.9 82.7)"><tspan x="0" y="0">mg</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(493.4 82.7)"><tspan x="0" y="0">q24h</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(509 82.7)"><tspan x="0" y="0">LD</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="_1400mg" data-name=" 1400mg">
+      <g id="_1400_mg" data-name=" 1400 mg" class="cls-3">
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(467.3 100)"><tspan x="0" y="0">1400</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(482.9 100)"><tspan x="0" y="0">mg</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(493.4 100)"><tspan x="0" y="0">q24h</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(509 100)"><tspan x="0" y="0">LD</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="_1600mg" data-name=" 1600mg">
+      <g id="_1600_mg" data-name=" 1600 mg" class="cls-3">
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(467.3 117.3)"><tspan x="0" y="0">1600</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(482.9 117.3)"><tspan x="0" y="0">mg</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(493.4 117.3)"><tspan x="0" y="0">q24h</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(509 117.3)"><tspan x="0" y="0">LD</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g id="bw_label" data-name="bw label">
+    <g id="dose_reg-2" data-name="dose reg-2">
+      <g id="dosereg-2" class="cls-3">
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(447.1 151.6)"><tspan x="0" y="0">Total body weight</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="_1st_bar-3" data-name=" 1st bar-3">
+      <line id="_1st_bar-4" data-name=" 1st bar-4" class="cls-20" x1="448.8" y1="164.4" x2="462.6" y2="164.4"/>
+    </g>
+    <g id="_2nd_bar-3" data-name=" 2nd bar-3">
+      <line id="_2nd_bar-4" data-name=" 2nd bar-4" class="cls-15" x1="448.8" y1="181.7" x2="462.6" y2="181.7"/>
+    </g>
+    <g id="_3rd_bar-3" data-name=" 3rd bar-3">
+      <line id="_3rd_bar-4" data-name=" 3rd bar-4" class="cls-17" x1="448.8" y1="199" x2="462.6" y2="199"/>
+    </g>
+    <g id="_4th_bar-3" data-name=" 4th bar-3">
+      <line id="_4th_bar-4" data-name=" 4th bar-4" class="cls-18" x1="448.8" y1="216.2" x2="462.6" y2="216.2"/>
+    </g>
+    <g id="_5th_bar-3" data-name=" 5th bar-3">
+      <line id="_5th_bar-4" data-name=" 5th bar-4" class="cls-21" x1="448.8" y1="233.5" x2="462.6" y2="233.5"/>
+    </g>
+    <g id="_800mg-2" data-name=" 800mg-2">
+      <g id="_800_mg-2" data-name=" 800 mg-2" class="cls-3">
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(467.3 166.6)"><tspan x="0" y="0">30.0</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(480.1 166.6)"><tspan x="0" y="0" xml:space="preserve"> kg -  </tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(491.2 166.6)"><tspan x="0" y="0" xml:space="preserve">  60.0</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(507.3 166.6)"><tspan x="0" y="0" xml:space="preserve">   kg</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="_1000mg-2" data-name=" 1000mg-2">
+      <g id="_1000_mg-2" data-name=" 1000 mg-2" class="cls-3">
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(467.3 183.8)"><tspan x="0" y="0" xml:space="preserve">60.1  kg -</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(482.9 183.8)"><tspan x="0" y="0"> </tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(493.4 183.8)"><tspan x="0" y="0" xml:space="preserve"> 80.0</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(509 183.8)"><tspan x="0" y="0" xml:space="preserve">   kg</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="_1200mg-2" data-name=" 1200mg-2">
+      <g id="_1200_mg-2" data-name=" 1200 mg-2">
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(467.3 201.1)"><tspan x="0" y="0" xml:space="preserve">80.1  kg -</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(482.9 201.1)"><tspan x="0" y="0" xml:space="preserve">  </tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(493.4 201.1)"><tspan x="0" y="0" xml:space="preserve"> 100.0</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(509 201.1)"><tspan x="0" y="0" xml:space="preserve">   kg</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="_1400mg-2" data-name=" 1400mg-2">
+      <g id="_1400_mg-2" data-name=" 1400 mg-2" class="cls-3">
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(467.3 218.4)"><tspan x="0" y="0">100.1 kg -</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(482.9 218.4)"><tspan x="0" y="0" xml:space="preserve">  </tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(493.4 218.4)"><tspan x="0" y="0" xml:space="preserve"> 120.0</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(509 218.4)"><tspan x="0" y="0" xml:space="preserve">   kg</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g id="_1600mg-2" data-name=" 1600mg-2">
+      <g id="_1600_mg-2" data-name=" 1600 mg-2" class="cls-3">
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(467.3 235.7)"><tspan x="0" y="0">120.1 kg -</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(482.9 235.7)"><tspan x="0" y="0" xml:space="preserve">  </tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(493.4 235.7)"><tspan x="0" y="0" xml:space="preserve">  150.0</tspan></text>
+            </g>
+          </g>
+        </g>
+        <g class="cls-3">
+          <g class="cls-3">
+            <g class="cls-3">
+              <text class="cls-8" transform="translate(509 235.7)"><tspan x="0" y="0" xml:space="preserve">   kg</tspan></text>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
 </svg>
