@@ -3999,7 +3999,7 @@ ggsave("box_pop_auc.svg",
 
 ## GOF plots -------------------------------------------------------------------
 
-### Overall plot -----------------------------------------------------------------
+### Overall plot --------------------------------------------------------------
 
 # import GOF dataset
 setwd("./Datasets/GOF")
@@ -4287,3 +4287,87 @@ ggsave("DV_TIME_plot.jpeg", DV_TIME_plot, dpi = 300, width = 19, height = 11.08,
 # DV_TIME_HOSPITAL_plot
 ggsave("DV_TIME_HOSPITAL_plot.svg", DV_TIME_HOSPITAL_plot, dpi = 300, width = 19, height = 11.08, unit = "cm")
 ggsave("DV_TIME_HOSPITAL_plot.jpeg", DV_TIME_HOSPITAL_plot, dpi = 300, width = 19, height = 11.08, unit = "cm")
+
+## Pop simulation characterics -----------------------------------------------
+
+# read in pop_box_std dataset
+setwd("./Datasets/Dosing_simulations/Pop_sim")
+pop_box_std <- read.csv("pop_box_std.csv")
+# return to the main directory
+Path = getwd()
+setwd(dirname(dirname(dirname(Path))))
+# extract unique days to create histogram
+hist_df <- pop_box_std |> 
+  dplyr::filter(TAD == 0)
+
+# for now will make two plots, histogram of BW and CKDEPI, stratified by CRRT
+p <- ggplot(hist_df, aes(x = BW, color = factor(CRRT))) +
+  geom_histogram(fill = "white", position = "dodge") +
+  theme(legend.position = "top")
+p
+
+## Try box plot instead
+
+# BW distribution over CRRT status
+p_box_BW <- ggplot(hist_df, aes(x = factor(CRRT), y = BW, fill = factor(CRRT))) +
+  geom_boxplot(alpha = 0.6, lwd = 0.8, fatten = 1, outlier.size = 1) +
+  # fatten controls a median line in a boxplot
+  ylab("Total body weight (kg)") +
+  xlab("CRRT status") +
+  scale_fill_manual(values = c("#21918c", "#440154")) +
+  scale_y_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5)) +
+  scale_x_discrete(labels = c("off-CRRT", "on-CRRT")) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), 
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "none")
+p_box_BW
+
+# CKDEPI distribution over CRRT status
+p_box_CKDEPI <- ggplot(hist_df, aes(x = factor(CRRT), y = CKDEPI, fill = factor(CRRT))) +
+  geom_boxplot(alpha = 0.6, lwd = 0.8, fatten = 1, outlier.size = 1) +
+  ylab(TeX(r"($\eGFR_{CKD-EPI}\ (ml/min/1.73m^2)$)")) +
+  xlab("CRRT status") +
+  scale_fill_manual(values = c("#21918c", "#440154")) +
+  scale_y_continuous(limits = c(0, 220), breaks = seq(0, 220, by = 10)) +
+  scale_x_discrete(labels = c("off-CRRT", "on-CRRT")) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), 
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "none")
+p_box_CKDEPI
+
+# Export the box plots
+setwd("./Plots/Box_plots")
+ggsave("p_box_BW.svg", 
+       p_box_BW, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+ggsave("p_box_BW.jpeg",
+       p_box_BW, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+ggsave("p_box_CKDEPI.svg",
+       p_box_CKDEPI, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+ggsave("p_box_CKDEPI.jpeg",
+       p_box_CKDEPI, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+

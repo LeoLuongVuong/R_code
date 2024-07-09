@@ -2361,7 +2361,7 @@ dosing_CRRT_std <- dosing_CRRT_combined %>%
   )
 
 # Export pop_opt_conc & pop_std_conc datasets
-setwd("./Pop_sim")
+setwd("./Datasets/Dosing_simulations/Pop_sim")
 write.csv(dosing_CRRT_combined,"pop_opt_conc.csv", quote = F, row.names = F)
 write.csv(dosing_CRRT_std,"pop_std_conc.csv", quote = F, row.names = F)
 
