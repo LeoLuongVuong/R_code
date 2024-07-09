@@ -3291,10 +3291,22 @@ pop_dosing_opt <- read_nonmem_table(opt_tablefile)
 # Extract only TIME and DV columns
 DV_TIME_opt <- pop_dosing_opt %>% select(DV, TIME)
 setwd('/lustre1/scratch/357/vsc35700/Fluco_revised/Pop_sim/')
-# write.csv(DV_TIME_opt, "DV_TIME_opt.csv",quote = F,row.names = FALSE)
+write.csv(DV_TIME_opt, "DV_TIME_opt.csv",quote = F,row.names = FALSE)
 
 # Remove the rows where DV is 0 and TIME is not 0
 DV_TIME_opt <- DV_TIME_opt[DV_TIME_opt$DV != 0 | DV_TIME_opt$TIME == 0, ]
+
+# Calculate percentage of DV <= 80
+
+# Calculate the total number of observations
+total_observations <- nrow(DV_TIME_opt)
+
+# Calculate the number of observations where DV >= 80
+observations_dv_80_or_more <- sum(DV_TIME_opt$DV >= 80)
+
+# Calculate the percentage
+percentage <- (observations_dv_80_or_more / total_observations) * 100
+
 
 # Calculate 5th and 95th percentiles
 data_summary_opt <- DV_TIME_opt %>%
