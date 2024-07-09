@@ -2032,7 +2032,7 @@ BW_CRRT_dos_06 <- BW_CRRT_dos_06 |>
   ungroup()
 
 BW_CRRT_dos_06 <- BW_CRRT_dos_06 |> 
-  mutate(AUC24 = ifelse(DAY == "1", AUC2,AUC24))
+  mutate(AUC24 = ifelse(DAY == "1", AUC2, AUC24))
 
 # Create a new variable fAUC, which equals AUC24*89 (we assume protein binding is 11%)
 BW_CRRT_dos_06$fAUC <- BW_CRRT_dos_06$AUC24 * 0.89
@@ -4006,4 +4006,380 @@ ggsave("box_pop_auc.svg",
        width = 19, 
        height = 19,
        unit = "cm")
+
+# Supplementary file ----------------------------------------------------------
+
+## GOF plots -------------------------------------------------------------------
+
+### Overall plot --------------------------------------------------------------
+
+# import GOF dataset
+setwd("./Datasets/GOF")
+GOF_overall <- read_nonmem_table("GOF_overall.npctab.dta")
+GOF_overall <- subset(GOF_overall, EVID == 0)
+# set back wd
+Path = getwd()
+setwd(dirname(dirname(Path)))
+
+# Overall PRED_CWRES
+PRED_CWRES <- ggplot(data = GOF_overall, aes(x = PRED, y = CWRES)) +
+  geom_point(colour = "#21918c", shape = 21, size = 2) +
+  xlab('Population predicted fluconazole concentration (mg/L)') +
+  ylab('Conditional weighted residual error') +
+  geom_hline(yintercept = 0, color = "gray50",size = 0.6,linetype = "dotdash") +
+  geom_hline(yintercept = -2, linetype = "dashed",color = "gray50", size = 0.6) +  
+  geom_hline(yintercept = 2, linetype = "dashed",color = "gray50", size = 0.6) +
+  scale_x_continuous(limits = c(0, 61),breaks = seq(0, 60, by = 10),expand = c(0,0)) +
+  scale_y_continuous(limits = c(-5, 9), breaks = seq(-5, 9, by = 1),expand = c(0,0)) +
+  geom_smooth(se = F, colour = "#440154", method = "loess", size = 1) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+
+# Overall TAD_CWRES
+TAD_CWRES <- ggplot(data = GOF_overall, aes(x = TAD, y = CWRES)) +
+  geom_point(colour = "#21918c", shape = 21, size = 2) +
+  xlab('Time since last dose (hours)') +
+  ylab('Conditional weighted residual error') +
+  geom_hline(yintercept = 0, color = "gray50",size = 0.6,linetype = "dotdash") +
+  geom_hline(yintercept = -2, linetype = "dashed",color = "gray50", size = 0.6) +  
+  geom_hline(yintercept = 2, linetype = "dashed",color = "gray50", size = 0.6) +
+  scale_x_continuous(limits = c(0, 75),breaks = seq(0, 75, by = 10),expand = c(0,0)) +
+  scale_y_continuous(limits = c(-5, 9), breaks = seq(-5, 9, by = 1),expand = c(0,0)) +
+  geom_smooth(se = F, colour = "#440154", method = "loess", size = 1) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+
+# Overall PRED_DV
+
+PRED_DV <- ggplot(data = GOF_overall, aes(x = PRED, y = DV)) +
+  geom_point(colour = "#21918c", shape = 21, size = 2) +
+  xlab('Population predicted concentration (mg/L)') +
+  ylab('Observed concentration (mg/L)') +
+  geom_abline(intercept = 0, slope = 1,linetype = "dotdash",size = 0.6,color = "gray50") +
+  scale_x_continuous(limits = c(0,65), breaks = seq(0, 999, by = 10),expand = c(0,0)) +
+  scale_y_continuous(limits = c(0,100), breaks = seq(0, 999, by = 10),expand = c(0,0)) +
+  geom_smooth(se = F, colour = "#440154", method = "loess", size = 1) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+PRED_DV
+
+# Overall IPRED_DV
+
+IPRED_DV <- ggplot(data = GOF_overall, aes(x = IPRED, y = DV)) +
+  geom_point(colour = "#21918c", shape = 21, size = 2) +
+  xlab('Individual predicted concentration (mg/L)') +
+  ylab('Observed concentration (mg/L)') +
+  geom_abline(intercept = 0, slope = 1,linetype = "dotdash",size = 0.6,color = "gray50") +
+  scale_x_continuous(limits = c(0,80), breaks = seq(0, 999, by = 10),expand = c(0,0)) +
+  scale_y_continuous(limits = c(0,100), breaks = seq(0, 999, by = 10),expand = c(0,0)) +
+  geom_smooth(se = F, colour = "#440154", method = "loess", size = 1) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+IPRED_DV
+
+# Combine 4 overall plots
+
+overall_GOF <- ggarrange(PRED_CWRES, TAD_CWRES,
+                         PRED_DV, IPRED_DV,
+                         labels = c("a", "b", "c", "d"),
+                         ncol = 2, 
+                         nrow = 2,
+                         font.label = list(size = 8, face = "bold"))
+overall_GOF
+
+### Per hospital plot ----------------------------
+
+## PRED_CWRES per hospital
+
+# make title for each hospital
+
+hospital.labs <- c("Van Daele et al.", "Muilwijk et al.", "Bergner et al.", "Buijk et al.","Sandaradura et al.", "Sinnollareddy et al.", "Alobaid et al.", "Boonstra et al.")
+
+names(hospital.labs) <- c("1", "2", "3", "4", "5", "6", "7", "8")
+
+# ggplot code
+PRED_CWRES_HOSPITAL <- ggplot(data = GOF_overall, aes(x = PRED, y = CWRES)) +
+  geom_point(colour = "#21918c", shape = 21, size = 2) +
+  xlab('Population predicted fluconazole concentration (mg/L)') +
+  ylab('Conditional weighted residual error') +
+  geom_hline(yintercept = 0, color = "gray50", size = 0.6,linetype = "dotdash") +
+  geom_hline(yintercept = -2, linetype = "dashed", color = "gray50", size = 0.6) +
+  geom_hline(yintercept = 2, linetype = "dashed", color = "gray50", size = 0.6) +
+  scale_x_continuous(limits = c(0, 61),breaks = seq(0, 60, by = 10),expand = c(0,0)) +
+  scale_y_continuous(limits = c(-5, 9), breaks = seq(-5, 9, by = 1),expand = c(0,0)) +
+  geom_smooth(se = F, colour = "#440154", method = "loess", size = 1) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), 
+    axis.title = element_text(size = 7, family = "sans"),
+    axis.text = element_text(size = 7, family = "sans"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Facet
+    strip.text = element_text(size = 8, face = "bold", family = "sans"),
+    strip.background = element_blank(),
+    panel.spacing = unit(1, "lines")
+  ) + facet_wrap(~HOSPITAL, labeller = labeller(HOSPITAL = hospital.labs), nrow = 2)
+PRED_CWRES_HOSPITAL
+
+# TAD_CWRES per hospital
+
+# hospital.labs created above
+
+TAD_CWRES_HOSPITAL <- ggplot(data = GOF_overall, aes(x = TAD, y = CWRES)) +
+  geom_point(colour = "#21918c", shape = 21, size = 2) +
+  xlab('Time since last dose (hours)') +
+  ylab('Conditional weighted residual error') +
+  geom_hline(yintercept = 0, color = "gray50", size = 0.6, linetype = "dotdash") +
+  geom_hline(yintercept = -2, linetype = "dashed", color = "gray50", size = 0.6) +
+  geom_hline(yintercept = 2, linetype = "dashed", color = "gray50", size = 0.6) +
+  scale_x_continuous(limits = c(0, 75),breaks = seq(0, 75, by = 10),expand = c(0,0)) +
+  scale_y_continuous(limits = c(-5, 9), breaks = seq(-5, 9, by = 1),expand = c(0,0)) +
+  geom_smooth(se = F, colour = "#440154", method = "loess", size = 1) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), 
+    axis.title = element_text(size = 7, family = "sans"),
+    axis.text = element_text(size = 7, family = "sans"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Facet
+    strip.text = element_text(size = 8, face = "bold", family = "sans"),
+    strip.background = element_blank(),
+    panel.spacing = unit(1, "lines")
+  ) + facet_wrap(~HOSPITAL, labeller = labeller(HOSPITAL = hospital.labs), nrow = 2)
+TAD_CWRES_HOSPITAL
+
+# PRED_DV per hospital
+
+# hospital.labs created above
+
+PRED_DV_HOSPITAL <- ggplot(data = GOF_overall, aes(x = PRED, y = DV)) +
+  geom_point(colour = "#21918c", shape = 21, size = 2) +
+  xlab('Population predicted concentration (mg/L)') +
+  ylab('Observed concentration (mg/L)') +
+  geom_abline(intercept = 0, slope = 1,linetype = "dotdash",size = 0.6,color = "gray50") +
+  scale_x_continuous(limits = c(0,65), breaks = seq(0, 999, by = 10),expand = c(0,0)) +
+  scale_y_continuous(limits = c(0,100), breaks = seq(0, 999, by = 10),expand = c(0,0)) +
+  geom_smooth(se = F, colour = "#440154", method = "loess", size = 1) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), 
+    axis.title = element_text(size = 7, family = "sans"),
+    axis.text = element_text(size = 7, family = "sans"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Facet
+    strip.text = element_text(size = 8, face = "bold", family = "sans"),
+    strip.background = element_blank(),
+    panel.spacing = unit(1, "lines")
+  ) + facet_wrap(~HOSPITAL, labeller = labeller(HOSPITAL = hospital.labs), nrow = 2)
+PRED_DV_HOSPITAL
+
+# IPRED_DV per hospital
+
+# hospital.labs created above
+
+IPRED_DV_HOSPITAL <- ggplot(data = GOF_overall, aes(x = IPRED, y = DV)) +
+  geom_point(colour = "#21918c", shape = 21, size = 2) +
+  xlab('Individual predicted concentration (mg/L)') +
+  ylab('Observed concentration (mg/L)') +
+  geom_abline(intercept = 0, slope = 1,linetype = "dotdash",size = 0.6,color = "gray50") +
+  scale_x_continuous(limits = c(0,80), breaks = seq(0, 999, by = 10),expand = c(0,0)) +
+  scale_y_continuous(limits = c(0,100), breaks = seq(0, 999, by = 10),expand = c(0,0)) +
+  geom_smooth(se = F, colour = "#440154", method = "loess", size = 1) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), 
+    axis.title = element_text(size = 7, family = "sans"),
+    axis.text = element_text(size = 7, family = "sans"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Facet
+    strip.text = element_text(size = 8, face = "bold", family = "sans"),
+    strip.background = element_blank(),
+    panel.spacing = unit(1, "lines")
+  ) + facet_wrap(~HOSPITAL, labeller = labeller(HOSPITAL = hospital.labs), nrow = 2)
+IPRED_DV_HOSPITAL
+
+## Export overall and per hospital plots
+
+setwd("./Plots/GOF")
+# IPRED_DV_HOSPITAL
+ggsave("IPRED_DV_HOSPITAL.svg", IPRED_DV_HOSPITAL, dpi = 300, width = 19, height = 11.08, unit = "cm")
+ggsave("IPRED_DV_HOSPITAL.jpeg", IPRED_DV_HOSPITAL, dpi = 300, width = 19, height = 11.08, unit = "cm")
+# PRED_DV_HOSPITAL
+ggsave("PRED_DV_HOSPITAL.svg", PRED_DV_HOSPITAL, dpi = 300, width = 19, height = 11.08, unit = "cm")
+ggsave("PRED_DV_HOSPITAL.jpeg", PRED_DV_HOSPITAL, dpi = 300, width = 19, height = 11.08, unit = "cm")
+# TAD_CWRES_HOSPITAL
+ggsave("TAD_CWRES_HOSPITAL.svg", TAD_CWRES_HOSPITAL, dpi = 300, width = 19, height = 11.08, unit = "cm")
+ggsave("TAD_CWRES_HOSPITAL.jpeg", TAD_CWRES_HOSPITAL, dpi = 300, width = 19, height = 11.08, unit = "cm")
+# PRED_CWRES_HOSPITAL
+ggsave("PRED_CWRES_HOSPITAL.svg", PRED_CWRES_HOSPITAL, dpi = 300, width = 19, height = 11.08, unit = "cm")
+ggsave("PRED_CWRES_HOSPITAL.jpeg", PRED_CWRES_HOSPITAL, dpi = 300, width = 19, height = 11.08, unit = "cm")
+# overall_GOF
+ggsave("overall_GOF.svg", overall_GOF, dpi = 300, width = 19, height = 11.08, unit = "cm")
+ggsave("overall_GOF.jpeg", overall_GOF, dpi = 300, width = 19, height = 11.08, unit = "cm")
+# return the original working directory
+Path = getwd()
+setwd(dirname(dirname(Path)))
+
+### DV vs TIME plot --------------------------------------------
+
+# read in the original dataset
+setwd("./Datasets/Original")
+Fluco_clean_revised <- read.csv("Fluco_clean_revised.csv", na.strings = "NA")
+# get back to the main directory
+Path = getwd()
+setwd(dirname(dirname(Path)))
+
+# Exclude BW2 <0
+DV_TIME <- Fluco_clean_revised %>%
+  dplyr::filter(EVID == 0)
+
+# Make a plot
+DV_TIME_plot <- ggplot(data = DV_TIME, aes(x = TIME, y = DV)) +
+  geom_point(colour = "#21918c", size = 2, shape = 21) +
+  xlab('Time (hours)') +
+  ylab('Total fluconazole plasma concentration (mg/L)') +
+  scale_x_continuous(limits = c(0, 1100),breaks = seq(0, 1100, by = 50),expand = c(0.005,0)) +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10),expand = c(0.005,0)) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank())
+DV_TIME_plot
+
+# Plot per hospital
+# hospital.labs created above
+
+DV_TIME_HOSPITAL_plot <- ggplot(data = DV_TIME, aes(x = TIME, y = DV)) +
+  geom_point(colour = "#21918c", shape = 21, size = 2) +
+  xlab('Time (hours)') +
+  ylab('Total fluconazole plasma concentration (mg/L)') +
+  scale_x_continuous(limits = c(0, 1100),breaks = seq(0, 1100, by = 150),expand = c(0.005,0)) +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10),expand = c(0.005,0)) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), 
+    axis.title = element_text(size = 7, family = "sans"),
+    axis.text = element_text(size = 7, family = "sans"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    # Facet
+    strip.text = element_text(size = 8, face = "bold", family = "sans"),
+    strip.background = element_blank(),
+    panel.spacing = unit(1, "lines")
+  ) + facet_wrap(~HOSPITAL, labeller = labeller(HOSPITAL = hospital.labs), nrow = 2)
+DV_TIME_HOSPITAL_plot
+
+# Export the plot
+setwd("./Plots/GOF")
+# DV_TIME_plot
+ggsave("DV_TIME_plot.svg", DV_TIME_plot, dpi = 300, width = 19, height = 11.08, unit = "cm")
+ggsave("DV_TIME_plot.jpeg", DV_TIME_plot, dpi = 300, width = 19, height = 11.08, unit = "cm")
+# DV_TIME_HOSPITAL_plot
+ggsave("DV_TIME_HOSPITAL_plot.svg", DV_TIME_HOSPITAL_plot, dpi = 300, width = 19, height = 11.08, unit = "cm")
+ggsave("DV_TIME_HOSPITAL_plot.jpeg", DV_TIME_HOSPITAL_plot, dpi = 300, width = 19, height = 11.08, unit = "cm")
+
+## Pop simulation characterics -----------------------------------------------
+
+# read in pop_box_std dataset
+setwd("./Datasets/Dosing_simulations/Pop_sim")
+pop_box_std <- read.csv("pop_box_std.csv")
+# return to the main directory
+Path = getwd()
+setwd(dirname(dirname(dirname(Path))))
+# extract unique days to create histogram
+hist_df <- pop_box_std |> 
+  dplyr::filter(TAD == 0)
+
+# for now will make two plots, histogram of BW and CKDEPI, stratified by CRRT
+p <- ggplot(hist_df, aes(x = BW, color = factor(CRRT))) +
+  geom_histogram(fill = "white", position = "dodge") +
+  theme(legend.position = "top")
+p
+
+## Try box plot instead
+
+# BW distribution over CRRT status
+p_box_BW <- ggplot(hist_df, aes(x = factor(CRRT), y = BW, fill = factor(CRRT))) +
+  geom_boxplot(alpha = 0.6, lwd = 0.8, fatten = 1, outlier.size = 1) +
+  # fatten controls a median line in a boxplot
+  ylab("Total body weight (kg)") +
+  xlab("CRRT status") +
+  scale_fill_manual(values = c("#21918c", "#440154")) +
+  scale_y_continuous(limits = c(30, 150), breaks = seq(30, 150, by = 5)) +
+  scale_x_discrete(labels = c("off-CRRT", "on-CRRT")) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), 
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "none")
+p_box_BW
+
+# CKDEPI distribution over CRRT status
+p_box_CKDEPI <- ggplot(hist_df, aes(x = factor(CRRT), y = CKDEPI, fill = factor(CRRT))) +
+  geom_boxplot(alpha = 0.6, lwd = 0.8, fatten = 1, outlier.size = 1) +
+  ylab(TeX(r"($\eGFR_{CKD-EPI}\ (ml/min/1.73m^2)$)")) +
+  xlab("CRRT status") +
+  scale_fill_manual(values = c("#21918c", "#440154")) +
+  scale_y_continuous(limits = c(0, 220), breaks = seq(0, 220, by = 10)) +
+  scale_x_discrete(labels = c("off-CRRT", "on-CRRT")) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), 
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.position = "none")
+p_box_CKDEPI
+
+# Export the box plots
+setwd("./Plots/Box_plots")
+ggsave("p_box_BW.svg", 
+       p_box_BW, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+ggsave("p_box_BW.jpeg",
+       p_box_BW, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+ggsave("p_box_CKDEPI.svg",
+       p_box_CKDEPI, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+ggsave("p_box_CKDEPI.jpeg",
+       p_box_CKDEPI, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
 
