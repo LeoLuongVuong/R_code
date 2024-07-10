@@ -522,6 +522,14 @@ ggsave("PTA_CKDEPI200_DAY114.EPS",
        height = 19,
        unit = "cm")
 
+# TIFF for submission
+ggsave("PTA_CKDEPI200_DAY114.TIFF", 
+       PTA_CKDEPI200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
 # go back 3 levels to the original dr
 Path = getwd()
 setwd(dirname(dirname(dirname(Path))))
@@ -3264,6 +3272,8 @@ data_summary_std <- data_summary_std %>%
   mutate(across(everything(), ~ round(., 2)))
 
 # ribbon plot std dosing
+data_summary_std <- read.csv("Pop_sim/data_summary_std.csv")
+
 pop_sim_std <- ggplot(data = data_summary_std, aes(x = TIME/24, y = median)) +
   geom_ribbon(aes(ymin = min, ymax = max), fill = "#21918c", alpha = 0.5) +
   geom_line(color = "#440154", size = 0.8) +
@@ -3309,10 +3319,12 @@ data_summary_opt <- data_summary_opt %>%
   mutate(across(everything(), ~ round(., 2)))
 
 # Export data to the project folder
-setwd('/data/leuven/357/vsc35700/Fluco_revised/R_code/Pop_sim/')
+setwd('/data/leuven/357/vsc35700/Fluco_revised/R_code/Pop_sim/') # not correct anymore
 write.csv(data_summary_opt, "data_summary_opt.csv", quote = F, row.names = F)
 
 # ribbon plot opt dosing
+data_summary_opt <- read.csv("Pop_sim/data_summary_opt.csv")
+
 pop_sim_opt <- ggplot(data = data_summary_opt, aes(x = TIME/24, y = median)) +
   geom_ribbon(aes(ymin = min, ymax = max), fill = "#21918c", alpha = 0.5) +
   geom_line(color = "#440154", size = 0.8) +
@@ -3329,6 +3341,45 @@ pop_sim_opt <- ggplot(data = data_summary_opt, aes(x = TIME/24, y = median)) +
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank())
 pop_sim_opt
+
+### Overlay std and opt conc-time plots ---------------------------------------
+
+data_summary_std$regimen <- "Standard"
+data_summary_opt$regimen <- "Optimised"
+data_summary_opt_std <- rbind(data_summary_std, data_summary_opt)
+
+ggplot(data = data_summary_opt_std, aes(x = TIME/24, y = median, color = as.factor(regimen))) +
+  geom_ribbon(aes(ymin = min, ymax = max), fill = NA, linetype = 2) +
+  geom_line(size = 0.8) +
+  geom_hline(yintercept = 80, linetype = "dashed", color = "gray50",size = 0.6) +
+  xlab("Day") +
+  ylab("Fluconazole total concentration (mg/L)") +
+  scale_x_continuous(limits = c(0, 14), breaks = seq(0, 14, by = 1),expand = c(0,0.01)) +
+  scale_y_continuous(limits = c(0, 80), breaks = seq(0, 80, by = 10),expand = c(0,0.01)) +
+  ggtitle("Optimised dosing regimen results in higher concentrations over time compared to the standard dosing regimen") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), 
+        axis.title = element_text(size = 7, family = "sans"),
+        axis.text = element_text(size = 7, family = "sans"),
+        legend.title = element_text(size = 7, family = "sans"),
+        legend.text = element_text(size = 6, family = "sans"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()) +
+  labs(color = "Dosing regimen") +
+  scale_color_manual(values = c("#440154", "#21918c"))
+
+ggsave("Plots/Pop_sim/conc_time_std_opt_overlay.svg",
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# for submitting to IJAA
+ggsave("Plots/Pop_sim/Figure6_Conc_Time_Ribbon.TIFF",
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
 
 ### Save the plot -----------------------------------------------
 
