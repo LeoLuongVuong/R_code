@@ -1204,7 +1204,7 @@ lower_bound_PropErr
 
 upper_bound_PropErr
 
-# Table 2 - Manucript ------------------------------------------
+# Table 2 - Manuscript ------------------------------------------
 
 ## Base model ------------------------------------------
 

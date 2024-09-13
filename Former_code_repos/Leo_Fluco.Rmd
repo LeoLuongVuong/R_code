@@ -2011,8 +2011,7 @@ consume_std_total<-10^3*(1000*800+13*1000*400) #there are 1000 LD of 800mg, and 
 
 #difference in drug consumption per 1000 patient days - using WHO DDD equation ( https://asap.nebraskamed.com/wp-content/uploads/sites/3/2018/06/Antibiotic-Stewardship-Metrics-How-Do-you-Measure-Up_Kuper.pdf)
 (consume_opt_total-consume_std_total)/(10^6*14)*10^3
-### With DDD of Fluconazole equals 200mg, this can be translated to
-74828.57/200 374
+### With DDD of Fluconazole equals 200mg, this can be translated to 74828.57/200 374
 
 ```
 
