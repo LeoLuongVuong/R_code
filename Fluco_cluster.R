@@ -32,6 +32,7 @@ library(ggbreak) #  set breakpoints for both x and y axes
 font_import()
 loadfonts(device = "win")
 library(patchwork) # combing plots when there's y-axis break
+library(here)
 
 
 # Analyzing simulation datasets -------------------------------------------
@@ -354,6 +355,15 @@ dosing_colors_CKDEPI_day14 <-   c("#a0da39",
 # Reorder the levels of the dosing regimens
 PTA_CKDEPI$Regimen <- factor(PTA_CKDEPI$Regimen,
                              levels = c(6, 2, 5, 4, 3, 1))
+
+manuscript <- here("manuscript/checklist-ijaa/Artwork/Figures + captions")
+
+theme_plots <- theme(plot.title = element_text(hjust = 0.5, size = 10, 
+                                               face = "bold", family = "sans"), 
+                     axis.title = element_text(size = 9, family = "sans"),
+                     axis.text = element_text(size = 9, family = "sans"),
+                     legend.title = element_text(size = 8, family = "sans"),
+                     legend.text = element_text(size = 8, family = "sans"))
 
 #### Day 1 -------------------------------------------
 
@@ -1170,16 +1180,10 @@ PTA_BW_noCRRT200_DAY1 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 1 & !PTA_BW_
   xlab(TeX(r"(Total body weight (kg))")) + 
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
   ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
-  theme_minimal() +
+  theme_classic() +
   ggtitle("Day 1") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7, family = "sans"),
-        axis.text = element_text(size = 7, family = "sans"),
-        legend.title = element_text(size = 6, family = "sans"),
-        legend.text = element_text(size = 6, family = "sans"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  theme_plots + 
   labs(color = "Regimen") +
   scale_color_manual(values = dosing_colors_day127, 
                      name = "Dosing regimen",
@@ -1215,16 +1219,10 @@ PTA_BW_noCRRT200_DAY2 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 2 & !PTA_BW_
   xlab(TeX(r"(Total body weight (kg))")) + 
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
   ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
-  theme_minimal() +
+  theme_classic() +
   ggtitle("Day 2") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7, family = "sans"),
-        axis.text = element_text(size = 7, family = "sans"),
-        legend.title = element_text(size = 6, family = "sans"),
-        legend.text = element_text(size = 6, family = "sans"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  theme_plots +
   labs(color = "Regimen") +
   scale_color_manual(values = dosing_colors_day127, 
                      name = "Dosing regimen",
@@ -1260,16 +1258,10 @@ PTA_BW_noCRRT200_DAY14 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 14 & PTA_BW
   xlab(TeX(r"(Total body weight (kg))")) + 
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
   ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
-  theme_minimal() +
+  theme_classic() +
   ggtitle("Day 14") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7, family = "sans"),
-        axis.text = element_text(size = 7, family = "sans"),
-        legend.title = element_text(size = 6, family = "sans"),
-        legend.text = element_text(size = 6, family = "sans"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  theme_plots +
   labs(color = "Regimen") +
   scale_color_manual(values = dosing_colors_day14, 
                      name = "Dosing regimen",
@@ -1293,16 +1285,10 @@ PTA_BW_noCRRT200_DAY7 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 7 & !PTA_BW_
   xlab(TeX(r"(Total body weight (kg))")) + 
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
   ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
-  theme_minimal() +
+  theme_classic() +
   ggtitle("Day 7") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7, family = "sans"),
-        axis.text = element_text(size = 7, family = "sans"),
-        legend.title = element_text(size = 6, family = "sans"),
-        legend.text = element_text(size = 6, family = "sans"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  theme_plots +
   labs(color = "Regimen") +
   scale_color_manual(values = dosing_colors_day127, 
                      name = "Dosing regimen",
@@ -1323,10 +1309,8 @@ PTA_BW_noCRRT200_DAY114 <- ggarrange(PTA_BW_noCRRT200_DAY1,
                                                labels = c("a", "b"),
                                                ncol = 1, 
                                                nrow = 2,
-                                               font.label = list(size = 8, face = "bold"))
-
-# Export the combined plots
-setwd("./Plots/Dose_finding_simulations/BW_noCRRT")
+                                               font.label = list(size = 10,
+                                                                 face = "bold"))
 
 # SVG
 ggsave("PTA_BW_noCRRT200_DAY114.svg", 
@@ -1346,6 +1330,14 @@ ggsave("PTA_BW_noCRRT200_DAY114.JPEG",
 
 # EPS
 ggsave("PTA_BW_noCRRT200_DAY114.EPS", 
+       PTA_BW_noCRRT200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# TIFF
+ggsave(here(manuscript, "Figure1_BW_NoCRRT_200.tiff"), 
        PTA_BW_noCRRT200_DAY114, 
        dpi = 300, 
        width = 19, 
@@ -1550,16 +1542,10 @@ PTA_BW_noCRRT400_DAY1 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 1 & !PTA_BW_
   xlab(TeX(r"(Total body weight (kg))")) + 
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
   ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 400 \, \mg \times h/L\ (\%)$)")) +
-  theme_minimal() +
+  theme_classic() +
   ggtitle("Day 1") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7, family = "sans"),
-        axis.text = element_text(size = 7, family = "sans"),
-        legend.title = element_text(size = 6, family = "sans"),
-        legend.text = element_text(size = 6, family = "sans"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  theme_plots +
   labs(color = "Regimen") +
   scale_color_manual(values = dosing_colors_day127, 
                      name = "Dosing regimen",
@@ -1583,16 +1569,10 @@ PTA_BW_noCRRT400_DAY14 <-  ggplot(PTA_BW_noCRRT[PTA_BW_noCRRT$DAY == 14 & PTA_BW
   xlab(TeX(r"(Total body weight (kg))")) + 
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
   ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 400 \, \mg \times h/L\ (\%)$)")) +
-  theme_minimal() +
+  theme_classic() +
   ggtitle("Day 14") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7, family = "sans"),
-        axis.text = element_text(size = 7, family = "sans"),
-        legend.title = element_text(size = 6, family = "sans"),
-        legend.text = element_text(size = 6, family = "sans"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  theme_plots +
   labs(color = "Regimen") +
   scale_color_manual(values = dosing_colors_day14, 
                      name = "Dosing regimen",
@@ -1613,10 +1593,11 @@ PTA_BW_noCRRT400_DAY114 <- ggarrange(PTA_BW_noCRRT400_DAY1,
                                      labels = c("a", "b"),
                                      ncol = 1, 
                                      nrow = 2,
-                                     font.label = list(size = 8, face = "bold"))
+                                     font.label = list(size = 10,
+                                                       face = "bold"))
 
 # Export the combined plots
-setwd("./Plots/Dose_finding_simulations/BW_noCRRT")
+# setwd("./Plots/Dose_finding_simulations/BW_noCRRT")
 
 # SVG
 ggsave("PTA_BW_noCRRT400_DAY114.svg", 
@@ -1642,9 +1623,13 @@ ggsave("PTA_BW_noCRRT400_DAY114.EPS",
        height = 19,
        unit = "cm")
 
-# go back 3 levels to the original dr
-Path = getwd()
-setwd(dirname(dirname(dirname(Path))))
+# TIFF
+ggsave(here(manuscript, "Figure4_BW_NoCRRT_400.tiff"), 
+       PTA_BW_noCRRT400_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
 
 ### Assessing toxicity PTA Cmin80 -------------------------------------------
 
@@ -2289,16 +2274,15 @@ PTA_BW_CRRT200_DAY1 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 1 & !PTA_BW_CRRT$R
   xlab(TeX(r"(Total body weight (kg))")) + 
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
   ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
-  theme_minimal() +
+  theme_classic() +
   ggtitle("Day 1") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7, family = "sans"),
-        axis.text = element_text(size = 7, family = "sans"),
-        legend.title = element_text(size = 6, family = "sans"),
-        legend.text = element_text(size = 6, family = "sans"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  theme(plot.title = element_text(hjust = 0.5, size = 10, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 9, family = "sans"),
+        axis.text = element_text(size = 9, family = "sans"),
+        legend.title = element_text(size = 8, family = "sans"),
+        legend.text = element_text(size = 8, family = "sans")
+  ) +
   labs(color = "Regimen") +
   scale_color_manual(values = dosing_colors_CRRT_day1, 
                      name = "Dosing regimen",
@@ -2412,16 +2396,15 @@ PTA_BW_CRRT200_DAY14 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 14 & PTA_BW_CRRT$
   xlab(TeX(r"(Total body weight (kg))")) + 
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
   ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
-  theme_minimal() +
+  theme_classic() +
   ggtitle("Day 14") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7, family = "sans"),
-        axis.text = element_text(size = 7, family = "sans"),
-        legend.title = element_text(size = 6, family = "sans"),
-        legend.text = element_text(size = 6, family = "sans"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  theme(plot.title = element_text(hjust = 0.5, size = 10, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
+        axis.title = element_text(size = 9, family = "sans"),
+        axis.text = element_text(size = 9, family = "sans"),
+        legend.title = element_text(size = 8, family = "sans"),
+        legend.text = element_text(size = 8, family = "sans")
+        ) + # remove all the clutters, i.e., grid minor & grid major
   labs(color = "Regimen") +
   scale_color_manual(values = dosing_colors_CRRT_day14, 
                      name = "Dosing regimen",
@@ -2442,10 +2425,13 @@ PTA_BW_CRRT200_DAY114 <- ggarrange(PTA_BW_CRRT200_DAY1,
                                      labels = c("a", "b"),
                                      ncol = 1, 
                                      nrow = 2,
-                                     font.label = list(size = 8, face = "bold"))
+                                     font.label = list(size = 10, 
+                                                       face = "bold"))
 
 # Export the combined plots
-setwd("./Plots/Dose_finding_simulations/BW_CRRT")
+# setwd("./Plots/Dose_finding_simulations/BW_CRRT")
+
+
 
 # SVG
 ggsave("PTA_BW_CRRT200_DAY114.svg", 
@@ -2471,9 +2457,17 @@ ggsave("PTA_BW_CRRT200_DAY114.EPS",
        height = 19,
        unit = "cm")
 
+# TIFF
+ggsave(here(manuscript, "Figure2_BW_CRRT_200.tiff"), 
+       PTA_BW_CRRT200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
 # go back 3 levels to the original dr
-Path = getwd()
-setwd(dirname(dirname(dirname(Path))))
+# Path = getwd()
+# setwd(dirname(dirname(dirname(Path))))
 
 ##### Combining DAY 2 & 7 - Supplementary -------------------------------------
 
@@ -2661,16 +2655,10 @@ PTA_BW_CRRT400_DAY1 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 1 & !PTA_BW_CRRT$R
   xlab(TeX(r"(Total body weight (kg))")) + 
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
   ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 400 \, \mg \times h/L\ (\%)$)")) +
-  theme_minimal() +
+  theme_classic() +
   ggtitle("Day 1") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7, family = "sans"),
-        axis.text = element_text(size = 7, family = "sans"),
-        legend.title = element_text(size = 6, family = "sans"),
-        legend.text = element_text(size = 6, family = "sans"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  theme_plots +
   labs(color = "Regimen") +
   scale_color_manual(values = dosing_colors_CRRT_day1, 
                      name = "Dosing regimen",
@@ -2694,16 +2682,10 @@ PTA_BW_CRRT400_DAY14 <-  ggplot(PTA_BW_CRRT[PTA_BW_CRRT$DAY == 14 & PTA_BW_CRRT$
   xlab(TeX(r"(Total body weight (kg))")) + 
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) +
   ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 400 \, \mg \times h/L\ (\%)$)")) +
-  theme_minimal() +
+  theme_classic() +
   ggtitle("Day 14") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7, family = "sans"),
-        axis.text = element_text(size = 7, family = "sans"),
-        legend.title = element_text(size = 6, family = "sans"),
-        legend.text = element_text(size = 6, family = "sans"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  theme_plots +
   labs(color = "Regimen") +
   scale_color_manual(values = dosing_colors_CRRT_day14, 
                      name = "Dosing regimen",
@@ -2724,10 +2706,11 @@ PTA_BW_CRRT400_DAY114 <- ggarrange(PTA_BW_CRRT400_DAY1,
                                    labels = c("a", "b"),
                                    ncol = 1, 
                                    nrow = 2,
-                                   font.label = list(size = 8, face = "bold"))
+                                   font.label = list(size = 10,
+                                                     face = "bold"))
 
 # Export the combined plots
-setwd("./Plots/Dose_finding_simulations/BW_CRRT")
+# setwd("./Plots/Dose_finding_simulations/BW_CRRT")
 
 # SVG
 ggsave("PTA_BW_CRRT400_DAY114.svg", 
@@ -2746,16 +2729,12 @@ ggsave("PTA_BW_CRRT400_DAY114.JPEG",
        unit = "cm")
 
 # EPS
-ggsave("PTA_BW_CRRT400_DAY114.EPS", 
+ggsave(here(manuscript, "Figure5_BW_CRRT_400.tiff"), 
        PTA_BW_CRRT400_DAY114, 
        dpi = 300, 
        width = 19, 
        height = 19,
        unit = "cm")
-
-# go back 3 levels to the original dr
-Path = getwd()
-setwd(dirname(dirname(dirname(Path))))
 
 ### Assessing toxicity PTA Cmin80 -------------------------------------------
 
@@ -2977,31 +2956,34 @@ PTA_CKDEPI_Opt200_DAY1 <-  ggplot(PTA_CKDEPI_Opt[PTA_CKDEPI_Opt$DAY == 1, ],
                                    y = PTA_fAUC_200, 
                                    color = factor(Regimen))) +
   geom_line(size = 1) +
+  geom_point(aes(shape = factor(BW), fill = factor(BW),
+                 alpha = 0.5), size = 3) +
   scale_x_continuous(limits = c(5, 215), breaks = seq(5, 215, by = 10), expand = c(0,0)) +
   xlab(TeX(r"($\eGFR_{CKD-EPI}\ (ml/min/1.73m^2)$)")) + 
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 10), expand = c(0,0)) + 
   scale_y_break(c(10, 80)) +
-  # The y-axis ranging from 80 to 100 to make the distinction clearer
   ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
-  theme_minimal() +
+  theme_classic() +
   ggtitle("Day 1") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7, family = "sans"), # update title and text size 240424
-        axis.text = element_text(size = 7, family = "sans"),
-        legend.title = element_text(size = 6, family = "sans"),
-        legend.text = element_text(size = 6, family = "sans"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        axis.ticks.y = element_line(),
+  theme_plots +
+  theme(axis.ticks.y = element_line(),
         axis.text.y.right = element_blank(),
         axis.line.y.right = element_blank(),
-        axis.ticks.y.right = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
-  labs(color = "Regimen") +
+        axis.ticks.y.right = element_blank()) + 
   scale_color_manual(values = dosing_colors_day127, 
                      name = "Dosing regimen",
                      labels = dosing_labels_day1) +
-  geom_hline(yintercept = 90, linetype = "dashed", color = "gray50", size = 0.6) #+ 
+  scale_shape_manual(values = c(25, 22, 23, 24, 21),
+                     name = "Total body weight") +
+  scale_fill_manual(values = dosing_colors_day127) +
+  guides(size = "none",
+         fill = "none",
+         alpha = "none",
+         color = guide_legend(order = 1, override.aes = list(linetype = 1, 
+                                                             shape = NA)), 
+         shape = guide_legend(order = 2)) +
+  geom_hline(yintercept = 90, linetype = "dashed", color = "gray50", size = 0.6)
   
   # Aparently it's not possible to do this in R, so I'll do it in Illustrator
   #new_scale_color() +
@@ -3012,7 +2994,7 @@ PTA_CKDEPI_Opt200_DAY1 <-  ggplot(PTA_CKDEPI_Opt[PTA_CKDEPI_Opt$DAY == 1, ],
   #labs(color = "BW") +
   #scale_color_manual(values = dosing_colors_day127,
                      #name = "Total body weight") + 
-  PTA_CKDEPI_Opt200_DAY1
+PTA_CKDEPI_Opt200_DAY1
 
 #### Day 14 -------------------------------------------
 
@@ -3028,16 +3010,10 @@ PTA_CKDEPI_Opt200_DAY14 <-  ggplot(PTA_CKDEPI_Opt[PTA_CKDEPI_Opt$DAY == 14 & PTA
   scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, by = 5), expand = c(0,0)) + 
   # The y-axis ranging from 80 to 100 to make the distinction clearer
   ylab(TeX(r"($Probability\ of\ \textit{f}AUC_{0-24}\ \geq 200 \, \mg \times h/L\ (\%)$)")) +
-  theme_minimal() +
+  theme_classic() +
   ggtitle("Day 14") +
   theme(legend.position = "right") +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), # following Nature: label: 8 pt, other text: 7 pt, min: 5 pt
-        axis.title = element_text(size = 7, family = "sans"),
-        axis.text = element_text(size = 7, family = "sans"),
-        legend.title = element_text(size = 6, family = "sans"),
-        legend.text = element_text(size = 6, family = "sans"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) + # remove all the clutters, i.e., grid minor & grid major
+  theme_plots + 
   labs(color = "Regimen") +
   scale_color_manual(values = dosing_colors_day14, 
                      name = "Dosing regimen",
@@ -3053,27 +3029,24 @@ PTA_CKDEPI_Opt200_DAY14
 ## Combining DAY 1 & 14 into 1
 
 # Combine the two plots - these two ways don't work with scale_y_break()
-PTA_CKDEPI_Opt200_DAY114 <- ggarrange(PTA_CKDEPI_Opt200_DAY1, 
-                                   PTA_CKDEPI_Opt200_DAY14,
-                                   labels = c("a", "b"),
-                                   ncol = 1, 
-                                   nrow = 2,
-                                   font.label = list(size = 8, face = "bold"))
+# PTA_CKDEPI_Opt200_DAY114 <- ggarrange(PTA_CKDEPI_Opt200_DAY1, 
+#                                    PTA_CKDEPI_Opt200_DAY14,
+#                                    labels = c("a", "b"),
+#                                    ncol = 1, 
+#                                    nrow = 2,
+#                                    font.label = list(size = 10, 
+#                                                      face = "bold"))
 
-PTA_CKDEPI_Opt200_DAY114 <- plot_grid(PTA_CKDEPI_Opt200_DAY1, 
-                                      PTA_CKDEPI_Opt200_DAY14,
-                                      labels = c("a", "b"),
-                                      align = "h",
-                                      label_fontfamily = "sans",
-                                      label_fontface = "bold",
-                                      label_size = 8)
+# PTA_CKDEPI_Opt200_DAY114 <- plot_grid(PTA_CKDEPI_Opt200_DAY1, 
+#                                       PTA_CKDEPI_Opt200_DAY14,
+#                                       labels = c("a", "b"),
+#                                       align = "v",
+#                                       label_fontfamily = "sans",
+#                                       label_fontface = "bold",
+#                                       label_size = 10)
 
 # Combine with patchwork - this is the only way that works
 PTA_CKDEPI_Opt200_DAY114 <- PTA_CKDEPI_Opt200_DAY1 / PTA_CKDEPI_Opt200_DAY14
-
-# Export the combined plots
-#setwd("C:/Users/u0164053/OneDrive - KU Leuven/Fluconazole PoPPK/Fluconazol_project/Revision 210324/Plots/Dose_finding_simulations/CKDEPI_Opt")
-setwd("./Plots/Dose_finding_simulations/CKDEPI_Opt")
 
 # SVG
 ggsave("PTA_CKDEPI_Opt200_DAY114.svg", 
@@ -3093,6 +3066,14 @@ ggsave("PTA_CKDEPI_Opt200_DAY114.JPEG",
 
 # EPS
 ggsave("PTA_CKDEPI_Opt200_DAY114.EPS", 
+       PTA_CKDEPI_Opt200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# TIFF
+ggsave(here(manuscript, "Figure3_CKDEPI_200.tiff"), 
        PTA_CKDEPI_Opt200_DAY114, 
        dpi = 300, 
        width = 19, 
@@ -3361,36 +3342,30 @@ data_summary_opt$regimen <- "Optimised"
 data_summary_opt_std <- rbind(data_summary_std, data_summary_opt)
 
 ggplot(data = data_summary_opt_std, aes(x = TIME/24, y = median, color = as.factor(regimen))) +
-  geom_ribbon(aes(ymin = min, ymax = max), fill = NA, linetype = 2) +
-  geom_line(size = 0.8) +
-  geom_hline(yintercept = 80, linetype = "dashed", color = "gray50",size = 0.6) +
+  geom_ribbon(aes(ymin = min, ymax = max), fill = NA, linetype = 2, size = 0.8) +
+  geom_line(size = 1) +
+  geom_hline(yintercept = 80, linetype = "dashed", color = "gray50", size = 0.8) +
   xlab("Day") +
   ylab("Fluconazole total concentration (mg/L)") +
   scale_x_continuous(limits = c(0, 14), breaks = seq(0, 14, by = 1),expand = c(0,0.01)) +
   scale_y_continuous(limits = c(0, 80), breaks = seq(0, 80, by = 10),expand = c(0,0.01)) +
-  ggtitle("Optimised dosing regimen results in higher concentrations over time compared to the standard dosing regimen") +
-  theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5, size = 8, face = "bold", family = "sans"), 
-        axis.title = element_text(size = 7, family = "sans"),
-        axis.text = element_text(size = 7, family = "sans"),
-        legend.title = element_text(size = 7, family = "sans"),
-        legend.text = element_text(size = 6, family = "sans"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank()) +
+  # ggtitle("Optimised dosing regimen results in higher concentrations over time compared to the standard dosing regimen") +
+  theme_classic() +
+  theme_plots +
   labs(color = "Dosing regimen") +
   scale_color_manual(values = c("#440154", "#21918c"))
 
-ggsave("Plots/Pop_sim/conc_time_std_opt_overlay.svg",
-       dpi = 300, 
-       width = 19, 
-       height = 19,
-       unit = "cm")
+# ggsave("Plots/Pop_sim/conc_time_std_opt_overlay.svg",
+#        dpi = 300, 
+#        width = 19, 
+#        height = 19,
+#        unit = "cm")
 
 # for submitting to IJAA
-ggsave("Plots/Pop_sim/Figure6_Conc_Time_Ribbon.TIFF",
+ggsave(here(manuscript, "Figure6_Conc_Time_Ribbon.TIFF"),
        dpi = 300, 
-       width = 19, 
-       height = 19,
+       width = 9, 
+       height = 9,
        unit = "cm")
 
 ### Save the plot -----------------------------------------------
