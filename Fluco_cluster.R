@@ -499,7 +499,7 @@ PTA_CKDEPI200_DAY114 <- ggarrange(PTA_CKDEPI200_DAY1,
                                      font.label = list(size = 8, face = "bold"))
 
 # Export the combined plots
-setwd("./Plots/Dose_finding_simulations/CKDEPI")
+# setwd("./Plots/Dose_finding_simulations/CKDEPI")
 
 # This is the part when I realised that PTA of day 2 is affected by not just
 # the loading dose, but also the maintenance dose. The same for PTA of day 7,
@@ -541,8 +541,8 @@ ggsave("PTA_CKDEPI200_DAY114.TIFF",
        unit = "cm")
 
 # go back 3 levels to the original dr
-Path = getwd()
-setwd(dirname(dirname(dirname(Path))))
+# Path = getwd()
+# setwd(dirname(dirname(dirname(Path))))
 
 ### Assessing toxicity PTA Cmin80 --------------------------------------------
 
@@ -1336,6 +1336,14 @@ ggsave("PTA_BW_noCRRT200_DAY114.EPS",
        height = 19,
        unit = "cm")
 
+# png
+ggsave(here(manuscript, "Figure1_BW_NoCRRT_200.png"), 
+       PTA_BW_noCRRT200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
 # TIFF
 ggsave(here(manuscript, "Figure1_BW_NoCRRT_200.tiff"), 
        PTA_BW_noCRRT200_DAY114, 
@@ -1513,7 +1521,7 @@ PTA_BW_noCRRT200_DAY114 <- ggarrange(PTA_BW_noCRRT200_DAY1,
                                      font.label = list(size = 7, face = "bold"))
 
 # Export the combined plots
-setwd("./Plots/ECCMID")
+# setwd("./Plots/ECCMID")
 
 # SVG
 ggsave("PTA_BW_noCRRT200_DAY114.svg", 
@@ -1597,7 +1605,6 @@ PTA_BW_noCRRT400_DAY114 <- ggarrange(PTA_BW_noCRRT400_DAY1,
                                                        face = "bold"))
 
 # Export the combined plots
-# setwd("./Plots/Dose_finding_simulations/BW_noCRRT")
 
 # SVG
 ggsave("PTA_BW_noCRRT400_DAY114.svg", 
@@ -1617,6 +1624,14 @@ ggsave("PTA_BW_noCRRT400_DAY114.JPEG",
 
 # EPS
 ggsave("PTA_BW_noCRRT400_DAY114.EPS", 
+       PTA_BW_noCRRT400_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# png
+ggsave(here(manuscript, "Figure4_BW_NoCRRT_400.png"), 
        PTA_BW_noCRRT400_DAY114, 
        dpi = 300, 
        width = 19, 
@@ -2429,9 +2444,6 @@ PTA_BW_CRRT200_DAY114 <- ggarrange(PTA_BW_CRRT200_DAY1,
                                                        face = "bold"))
 
 # Export the combined plots
-# setwd("./Plots/Dose_finding_simulations/BW_CRRT")
-
-
 
 # SVG
 ggsave("PTA_BW_CRRT200_DAY114.svg", 
@@ -2451,6 +2463,14 @@ ggsave("PTA_BW_CRRT200_DAY114.JPEG",
 
 # EPS
 ggsave("PTA_BW_CRRT200_DAY114.EPS", 
+       PTA_BW_CRRT200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# png
+ggsave(here(manuscript, "Figure2_BW_CRRT_200.png"), 
        PTA_BW_CRRT200_DAY114, 
        dpi = 300, 
        width = 19, 
@@ -2710,7 +2730,6 @@ PTA_BW_CRRT400_DAY114 <- ggarrange(PTA_BW_CRRT400_DAY1,
                                                      face = "bold"))
 
 # Export the combined plots
-# setwd("./Plots/Dose_finding_simulations/BW_CRRT")
 
 # SVG
 ggsave("PTA_BW_CRRT400_DAY114.svg", 
@@ -2728,7 +2747,15 @@ ggsave("PTA_BW_CRRT400_DAY114.JPEG",
        height = 19,
        unit = "cm")
 
-# EPS
+# PNG
+ggsave(here(manuscript, "Figure5_BW_CRRT_400.png"), 
+       PTA_BW_CRRT400_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
+# TIFF
 ggsave(here(manuscript, "Figure5_BW_CRRT_400.tiff"), 
        PTA_BW_CRRT400_DAY114, 
        dpi = 300, 
@@ -3072,6 +3099,14 @@ ggsave("PTA_CKDEPI_Opt200_DAY114.EPS",
        height = 19,
        unit = "cm")
 
+# png
+ggsave(here(manuscript, "Figure3_CKDEPI_200.png"), 
+       PTA_CKDEPI_Opt200_DAY114, 
+       dpi = 300, 
+       width = 19, 
+       height = 19,
+       unit = "cm")
+
 # TIFF
 ggsave(here(manuscript, "Figure3_CKDEPI_200.tiff"), 
        PTA_CKDEPI_Opt200_DAY114, 
@@ -3312,8 +3347,8 @@ data_summary_opt <- data_summary_opt %>%
   mutate(across(everything(), ~ round(., 2)))
 
 # Export data to the project folder
-setwd('/data/leuven/357/vsc35700/Fluco_revised/R_code/Pop_sim/') # not correct anymore
-write.csv(data_summary_opt, "data_summary_opt.csv", quote = F, row.names = F)
+# setwd('/data/leuven/357/vsc35700/Fluco_revised/R_code/Pop_sim/') # not correct anymore
+# write.csv(data_summary_opt, "data_summary_opt.csv", quote = F, row.names = F)
 
 # ribbon plot opt dosing
 data_summary_opt <- read.csv("Pop_sim/data_summary_opt.csv")
@@ -3362,6 +3397,12 @@ ggplot(data = data_summary_opt_std, aes(x = TIME/24, y = median, color = as.fact
 #        unit = "cm")
 
 # for submitting to IJAA
+ggsave(here(manuscript, "Figure6_Conc_Time_Ribbon.png"),
+       dpi = 300, 
+       width = 9, 
+       height = 9,
+       unit = "cm")
+
 ggsave(here(manuscript, "Figure6_Conc_Time_Ribbon.TIFF"),
        dpi = 300, 
        width = 9, 
